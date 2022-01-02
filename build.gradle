@@ -1,0 +1,85 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'java'
+    id "com.dorongold.task-tree" version "1.4"
+}
+
+group 'qilin'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 16
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(project(':qilin.pta'))
+    implementation(project(':qilin.core'))
+    implementation(project(':qilin.microben'))
+    implementation(project(':qilin.util'))
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+task fatJar(type: Jar, dependsOn: ['build']) {
+    manifest {
+        attributes 'artifact': 'qilin',
+                'Version': getArchiveVersion(),
+                'Main-Class': 'driver.Main'
+    }
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+    doLast {
+        copy {
+            from "$buildDir/libs/${archiveBaseName.get()}-${getArchiveVersion().get()}.jar"
+            into "$rootDir/artifact/pta/"
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'maven-publish'
+
+    group rootProject.group
+    version rootProject.version
+
+//    sourceCompatibility = 11
+    sourceCompatibility = 16
+
+
+    task sourcesJar(type: Jar) {
+        archiveClassifier.set('sources')
+        from sourceSets.main.allJava
+    }
+
+    task javadocJar(type: Jar) {
+        archiveClassifier.set('javadoc')
+        from javadoc.destinationDir
+    }
+
+    publishing.publications {
+        qilin(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+
+    publishing.repositories {
+        maven {
+            url = "http://corg-kungfu.cse.unsw.edu.au:8765/repository/maven-snapshots/"
+            // url = "http://127.0.0.1:8081/repository/maven-snapshots/"
+            credentials {
+                username "admin"
+                password "admin123"
+            }
+        }
+    }
+}

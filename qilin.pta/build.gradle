@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+}
+
+sourceSets.main {
+    java.srcDirs = ['src']
+}
+
+repositories {
+    maven { url "https://repo1.maven.org/maven2/" }
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    api(project(':qilin.core'))
+    // https://mvnrepository.com/artifact/commons-cli/commons-cli
+    implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'
+
+    implementation group: 'junit', name: 'junit', version: '4.12'
+}
+

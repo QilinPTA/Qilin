@@ -1,0 +1,184 @@
+/* Qilin - a Java Pointer Analysis Framework
+ * Copyright (C) 2021-2030 Qilin developers
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation, either version 3.0 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Lesser Public License for more details.
+ *
+ * You should have received a copy of the GNU General Lesser Public
+ * License along with this program.  If not, see
+ * <https://www.gnu.org/licenses/lgpl-3.0.en.html>.
+ */
+
+package qilin.core.sets;
+
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import soot.Type;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Implementation of points-to set that holds two sets: one for new elements that have not yet been propagated, and the other
+ * for elements that have already been propagated.
+ *
+ * @author Ondrej Lhotak
+ */
+public class DoublePointsToSet extends PointsToSetInternal {
+    public static P2SetFactory newSetFactory;
+    public static P2SetFactory oldSetFactory;
+    protected PointsToSetInternal newSet;
+    protected PointsToSetInternal oldSet;
+    private final PAG pag;
+
+    public DoublePointsToSet(Type type, PAG pag) {
+        super(type);
+        newSet = newSetFactory.newSet(type, pag);
+        oldSet = oldSetFactory.newSet(type, pag);
+        this.pag = pag;
+    }
+
+    public static P2SetFactory getFactory(P2SetFactory newFactory, P2SetFactory oldFactory) {
+        newSetFactory = newFactory;
+        oldSetFactory = oldFactory;
+        return new P2SetFactory() {
+            public PointsToSetInternal newSet(Type type1, PAG pag1) {
+                return new DoublePointsToSet(type1, pag1);
+            }
+        };
+    }
+
+    /**
+     * Returns true if this set contains no run-time objects.
+     */
+    public boolean isEmpty() {
+        return oldSet.isEmpty() && newSet.isEmpty();
+    }
+
+    /**
+     * Returns true if this set shares some objects with other.
+     */
+    public boolean hasNonEmptyIntersection(PointsToSet other) {
+        return oldSet.hasNonEmptyIntersection(other) || newSet.hasNonEmptyIntersection(other);
+    }
+
+    /**
+     * Set of all possible run-time types of objects in the set.
+     */
+    public Set<Type> possibleTypes() {
+        Set<Type> ret = new HashSet<>();
+        ret.addAll(oldSet.possibleTypes());
+        ret.addAll(newSet.possibleTypes());
+        return ret;
+    }
+
+    /*
+     * Empty this set.
+     * */
+    @Override
+    public void clear() {
+        oldSet.clear();
+        newSet.clear();
+    }
+
+    /**
+     * Adds contents of other into this set, returns true if this set changed.
+     */
+    public boolean addAll(PointsToSetInternal other, PointsToSetInternal exclude) {
+        if (exclude != null) {
+            throw new RuntimeException("NYI");
+        }
+        return newSet.addAll(other, oldSet);
+    }
+
+    /**
+     * Calls v's visit method on all nodes in this set.
+     */
+    public boolean forall(P2SetVisitor v) {
+        oldSet.forall(v);
+        newSet.forall(v);
+        return v.getReturnValue();
+    }
+
+    /**
+     * Adds n to this set, returns true if n was not already in this set.
+     */
+    public boolean add(Node n) {
+        if (oldSet.contains(n)) {
+            return false;
+        }
+        return newSet.add(n);
+    }
+
+    /**
+     * Returns set of nodes already present before last call to flushNew.
+     */
+    public PointsToSetInternal getOldSet() {
+        return oldSet;
+    }
+
+    @Override
+    public PointsToSetInternal mapToCIPointsToSet() {
+        DoublePointsToSet ret = new DoublePointsToSet(type, pag);
+        ret.newSet.addAll(newSet.mapToCIPointsToSet(), null);
+        ret.oldSet.addAll(oldSet.mapToCIPointsToSet(), null);
+        return ret;
+    }
+
+    /**
+     * Returns set of newly-added nodes since last call to flushNew.
+     */
+    public PointsToSetInternal getNewSet() {
+        return newSet;
+    }
+
+    /**
+     * Sets all newly-added nodes to old nodes.
+     */
+    public void flushNew() {
+        oldSet.addAll(newSet, null);
+        newSet = newSetFactory.newSet(type, pag);
+    }
+
+    /**
+     * Merges other into this set.
+     */
+    public void mergeWith(PointsToSetInternal other) {
+        if (!(other instanceof final DoublePointsToSet o)) {
+            throw new RuntimeException("NYI");
+        }
+        if (other.type != null && !(other.type.equals(type))) {
+            throw new RuntimeException("different types " + type + " and " + other.type);
+        }
+        if (other.type == null && type != null) {
+            throw new RuntimeException("different types " + type + " and " + other.type);
+        }
+        final PointsToSetInternal newNewSet = newSetFactory.newSet(type, pag);
+        final PointsToSetInternal newOldSet = oldSetFactory.newSet(type, pag);
+        oldSet.forall(new P2SetVisitor() {
+            public final void visit(Node n) {
+                if (o.oldSet.contains(n)) {
+                    newOldSet.add(n);
+                }
+            }
+        });
+        newNewSet.addAll(this, newOldSet);
+        newNewSet.addAll(o, newOldSet);
+        newSet = newNewSet;
+        oldSet = newOldSet;
+    }
+
+    /**
+     * Returns true iff the set contains n.
+     */
+    public boolean contains(Node n) {
+        return oldSet.contains(n) || newSet.contains(n);
+    }
+}

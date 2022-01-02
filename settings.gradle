@@ -1,0 +1,6 @@
+rootProject.name = 'Qilin'
+include 'qilin.util'
+include 'qilin.core'
+include 'qilin.pta'
+include 'qilin.microben'
+
