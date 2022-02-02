@@ -20,6 +20,13 @@ $ python3 run.py antlr ci -print
 The above command will analyze `antlr` with a context-insensitive pointer analysis and some metrics will be displayed on the screen. 
 We will optimize the `run.py` script to make its help info more user-friendly.
 
+## Documentation
+
+| About QiLin       | Setup  Guide         | User Guide  | Developer Guide  |
+| ------------- |:-------------:| -----:|-----:|
+| Introducing QiLin -- [what it does](https://github.com/QiLinPTA/QiLin/wiki/About#what-is-qilin) and [how we design it](https://github.com/QiLinPTA/QiLin/wiki/QiLin-Design#qilin-design)      | A step by step [setup guide](https://github.com/QiLinPTA/QiLin/wiki/Setup-Guide#getting-started) to build QiLin | Command-line options to [run QiLin](https://github.com/svf-tools/SVF/wiki/User-Guide#quick-start), get [analysis outputs](https://github.com/QiLinPTA/QiLin/wiki/User-Guide#analysis-outputs), and test QiLin with [an example](https://github.com/QiLinPTA/QiLin/wiki/Analyze-a-Simple-Java-Program) | Detailed [technical documentation](https://github.com/QiLinPTA/QiLin/wiki/Technical-documentation) and how to [write your own analyses](https://github.com/QiLinPTA/QiLin/wiki/Write-your-own-analysis-in-QiLin) in QiLin or [use QiLin as a lib](https://github.com/QiLinPTA/QiLin/wiki/QiLin-as-a-lib) for your tool  |
+
+
 ## Contributing to QiLin
 Contributions are always welcome. QiLin is an open source project that we published in the hope that it will be useful to the research community as a whole. 
 If you have a new feature or a bug fix that you would like to see in the official code repository, please open a merge request here on Github and contact 
