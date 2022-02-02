@@ -1,14 +1,26 @@
 # QiLin: A fully imperative Java Pointer Analysis Framework.
 The repository hosts QiLin, A new Java Pointer Analysis Framework for supporting fine-grained context-sensitivity.
 
-## Building QiLin with Gradle
+QiLin is introduced in our ECOOP'22 paper. You might want to cite our paper by copying the following BibTeX text:
+```
+@InProceedings{he2022qilin,
+  author = {He, Dongjie and Lu, Jingbo and Xue, Jingling},
+  title =	{Qilin: A New Framework for Supporting Fine-Grained Context-Sensitivity in Java Pointer Analysis},
+  booktitle =	{36th European Conference on Object-Oriented Programming (ECOOP 2022)},
+  year =	{2022},
+  publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
+  address =	{Dagstuhl, Germany},
+}
+```
+## A Quick Start
+### Building QiLin with Gradle
 We use Gradle as the build automation tool. To build Qilin, use
 ```
 $ ./run.sh
 ```
 This script contains command to generate `Qilin-VERSION-SNAPSHOT.jar` which will be automatically moved into `artifact/pta/`.
 
-## Using Qilin
+### Using Qilin
 You can use Qilin either through its command-line interface (e.g., `driver.Main`) or as a library.
 For researchers who are working on Java pointer analysis, we have provided a whole set of scripts, benchmarks (e.g., `DaCapo2006`) and jdk libraries in `artifact/`.
 
