@@ -41,8 +41,7 @@ We will optimize the `run.py` script to make its help info more user-friendly.
 
 ## Contributing to QiLin
 Contributions are always welcome. QiLin is an open source project that we published in the hope that it will be useful to the research community as a whole. 
-If you have a new feature or a bug fix that you would like to see in the official code repository, please open a merge request here on Github and contact 
-us (see below) with a short description of what you have done.
+If you have a new feature or a bug fix that you would like to see in the official code repository, please open a merge request here on Github and leave a short description of what you have done.
 
 ## License
 QiLin is licenced under the GPL v2.1 license, see LICENSE file.
