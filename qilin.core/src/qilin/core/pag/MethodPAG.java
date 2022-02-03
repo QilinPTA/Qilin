@@ -19,14 +19,13 @@
 package qilin.core.pag;
 
 import qilin.CoreConfig;
-import qilin.core.PTAScene;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.util.PTAUtils;
 import soot.*;
-import soot.jimple.*;
-import soot.jimple.internal.JArrayRef;
-import soot.jimple.internal.JAssignStmt;
-import soot.jimple.internal.JimpleLocal;
+import soot.jimple.Jimple;
+import soot.jimple.StaticFieldRef;
+import soot.jimple.Stmt;
+import soot.jimple.ThrowStmt;
 import soot.util.Chain;
 import soot.util.queue.ChunkedQueue;
 import soot.util.queue.QueueReader;
@@ -43,6 +42,7 @@ public class MethodPAG {
     private final QueueReader<Node> internalReader = internalEdges.reader();
     private final Set<SootMethod> clinits = new HashSet<>();
     public Collection<Unit> invokeStmts = new HashSet<>();
+    public Body body;
     /**
      * Since now the exception analysis is handled on-the-fly, we should record the
      * exception edges explicitly for Eagle and Turner.
@@ -60,10 +60,11 @@ public class MethodPAG {
     public final Map<Stmt, List<Trap>> stmt2wrapperedTraps = new HashMap<>();
     public final Map<Node, Map<Stmt, List<Trap>>> node2wrapperedTraps = new HashMap<>();
 
-    public MethodPAG(PAG pag, SootMethod m) {
+    public MethodPAG(PAG pag, SootMethod m, Body body) {
         this.pag = pag;
         this.method = m;
         this.nodeFactory = new MethodNodeFactory(pag, this);
+        this.body = body;
         build();
     }
 
@@ -84,87 +85,16 @@ public class MethodPAG {
         if (method.getSignature().equals("<org.apache.xerces.parsers.XML11Configuration: boolean getFeature0(java.lang.String)>")) {
             return;
         }
-        buildReflective();
-        buildNative();
         buildException();
         buildNormal();
         addMiscEdges();
-    }
-
-    protected void buildReflective() {
-        if (method.isConcrete()) {
-            pag.reflectionModel.buildReflection(method);
-        }
-    }
-
-    protected void buildNative() {
-        if (method.isNative()) {
-            pag.nativeDriver.buildNative(method);
-        } else {
-            // we will revert these back in the future.
-            /*
-             * To keep same with Doop, we move the simulation of
-             * <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>
-             * directly to its caller methods.
-             * */
-            if (PTAScene.v().arraycopyBuilt.add(method)) {
-                handleArrayCopy();
-            }
-        }
-    }
-
-    private void handleArrayCopy() {
-        Map<Unit, Collection<Unit>> newUnits = new HashMap<>();
-        Body body = PTAUtils.getMethodBody(method);
-        for (Unit unit : body.getUnits()) {
-            Stmt s = (Stmt) unit;
-            if (s.containsInvokeExpr()) {
-                InvokeExpr invokeExpr = s.getInvokeExpr();
-                if (invokeExpr instanceof StaticInvokeExpr sie) {
-                    SootMethod sm = sie.getMethod();
-                    String sig = sm.getSignature();
-                    if (sig.equals("<java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>")) {
-                        Value srcArr = sie.getArg(0);
-                        if (PTAUtils.isPrimitiveArrayType(srcArr.getType())) {
-                            continue;
-                        }
-                        Type objType = RefType.v("java.lang.Object");
-                        if (srcArr.getType() == objType) {
-                            Local localSrc = new JimpleLocal("intermediate/" + body.getLocalCount(), ArrayType.v(objType, 1));
-                            body.getLocals().add(localSrc);
-                            newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(localSrc, srcArr));
-                            srcArr = localSrc;
-                        }
-                        Value dstArr = sie.getArg(2);
-                        if (PTAUtils.isPrimitiveArrayType(dstArr.getType())) {
-                            continue;
-                        }
-                        if (dstArr.getType() == objType) {
-                            Local localDst = new JimpleLocal("intermediate/" + body.getLocalCount(), ArrayType.v(objType, 1));
-                            body.getLocals().add(localDst);
-                            newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(localDst, dstArr));
-                            dstArr = localDst;
-                        }
-                        Value src = new JArrayRef(srcArr, IntConstant.v(0));
-                        Value dst = new JArrayRef(dstArr, IntConstant.v(0));
-                        Local local = new JimpleLocal("nativeArrayCopy" + body.getLocalCount(), RefType.v("java.lang.Object"));
-                        body.getLocals().add(local);
-                        newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(local, src));
-                        newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(dst, local));
-                    }
-                }
-            }
-        }
-        for (Unit unit : newUnits.keySet()) {
-            body.getUnits().insertAfter(newUnits.get(unit), unit);
-        }
     }
 
     protected void buildNormal() {
         if (method.isStatic()) {
             PTAUtils.clinitsOf(method.getDeclaringClass()).forEach(this::addTriggeredClinit);
         }
-        for (Unit unit : PTAUtils.getMethodBody(method).getUnits()) {
+        for (Unit unit : body.getUnits()) {
             try {
                 nodeFactory.handleStmt((Stmt) unit);
             } catch (Exception e) {
@@ -178,7 +108,6 @@ public class MethodPAG {
         if (!CoreConfig.v().getPtaConfig().preciseExceptions) {
             return;
         }
-        Body body = PTAUtils.getMethodBody(method);
         Chain<Trap> traps = body.getTraps();
         PatchingChain<Unit> units = body.getUnits();
         Set<Unit> inTraps = new HashSet<>();

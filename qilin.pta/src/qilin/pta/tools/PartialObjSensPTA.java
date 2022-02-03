@@ -18,7 +18,6 @@
 
 package qilin.pta.tools;
 
-import qilin.core.CorePTA;
 import qilin.core.pag.*;
 import qilin.parm.ctxcons.ObjCtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
@@ -38,10 +37,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class PartialObjSensPTA extends CorePTA {
+public abstract class PartialObjSensPTA extends BasePTA {
     protected Set<Object> csnodes = new HashSet<>();
     protected Set<SootMethod> csmethods = new HashSet<>();
-    protected CorePTA prePTA;
+    protected BasePTA prePTA;
     protected PAG prePAG;
 
     // just for stats
@@ -118,7 +117,7 @@ public abstract class PartialObjSensPTA extends CorePTA {
 
     protected void extraStats() {
         int[] RM = new int[1], PCN = new int[1], NPCN = new int[1], totalN = new int[1];
-        for(MethodOrMethodContext momc : prePTA.getReachableMethods()) {
+        for (MethodOrMethodContext momc : prePTA.getReachableMethods()) {
             SootMethod method = momc.method();
             Set<Object> nodes = new HashSet<>();
             if (method.isPhantom()) {

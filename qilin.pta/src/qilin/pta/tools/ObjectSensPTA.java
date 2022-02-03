@@ -31,7 +31,7 @@ import qilin.pta.PTAConfig;
 /*
  * refer to "Parameterized object sensitivity for points-to analysis for Java" (TSE'05)
  * */
-public class ObjectSensPTA extends CorePTA {
+public class ObjectSensPTA extends BasePTA {
     public ObjectSensPTA(int k, int hk) {
         this.ctxCons = new ObjCtxConstructor();
         CtxSelector us = new UniformSelector(k, hk);

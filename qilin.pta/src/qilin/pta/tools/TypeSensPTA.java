@@ -31,7 +31,7 @@ import qilin.pta.PTAConfig;
 /*
  * refer to "Pick Your Contexts Well: Understanding Object-Sensitivity" (PLDI'11)
  * */
-public class TypeSensPTA extends CorePTA {
+public class TypeSensPTA extends BasePTA {
 
     public TypeSensPTA(int k, int hk) {
         this.ctxCons = new TypeCtxConstructor();

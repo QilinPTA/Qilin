@@ -25,7 +25,6 @@ import qilin.core.VirtualCalls;
 import qilin.core.pag.*;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
-import qilin.util.Pair;
 import soot.*;
 import soot.jimple.*;
 import soot.jimple.internal.JInvokeStmt;
@@ -40,7 +39,6 @@ import java.util.*;
 public class CallGraphBuilder {
     protected final RefType clRunnable = RefType.v("java.lang.Runnable");
 
-    protected final Map<VarNode, Collection<Pair<MethodOrMethodContext, Unit>>> receiverToStaticSites;
     protected final Map<VarNode, Collection<VirtualCallSite>> receiverToSites;
     protected final Map<Type, Map<Unit, Set<SootMethod>>> dispatchCache;
     protected final Map<SootMethod, Map<Object, Stmt>> methodToInvokeStmt;
@@ -55,7 +53,6 @@ public class CallGraphBuilder {
         this.pta = pta;
         this.pag = pta.getPag();
         PTAScene.v().setCallGraph(new CallGraph());
-        receiverToStaticSites = new HashMap<>(PTAScene.v().getLocalNumberer().size());
         receiverToSites = new HashMap<>(PTAScene.v().getLocalNumberer().size());
         dispatchCache = new HashMap<>();
         methodToInvokeStmt = new HashMap<>();
@@ -66,11 +63,6 @@ public class CallGraphBuilder {
 
     public Collection<MethodOrMethodContext> getReachableMethods() {
         return reachMethods;
-    }
-
-    // for Manu's ondemand pta.
-    public Map<VarNode, Collection<Pair<MethodOrMethodContext, Unit>>> getReceiverToStaticSitesMap() {
-        return receiverToStaticSites;
     }
 
     // initialize the receiver to sites map with the number of locals * an
@@ -201,7 +193,7 @@ public class CallGraphBuilder {
         handleCallEdge(new Edge(caller, callStmt, callee, kind));
     }
 
-    private void handleCallEdge(Edge edge) {
+    protected void handleCallEdge(Edge edge) {
         if (calledges.add(edge)) {
             MethodOrMethodContext callee = edge.getTgt();
             if (reachMethods.add(callee)) {
@@ -214,11 +206,6 @@ public class CallGraphBuilder {
     public boolean recordVirtualCallSite(VarNode receiver, VirtualCallSite site) {
         Collection<VirtualCallSite> sites = receiverToSites.computeIfAbsent(receiver, k -> new HashSet<>());
         return sites.add(site);
-    }
-
-    public void recordStaticCallSite(VarNode receiver, Pair<MethodOrMethodContext, Unit> site) {
-        Collection<Pair<MethodOrMethodContext, Unit>> sites = receiverToStaticSites.computeIfAbsent(receiver, k -> new HashSet<>());
-        sites.add(site);
     }
 
     public void virtualCallDispatch(PointsToSetInternal p2set, VirtualCallSite site) {

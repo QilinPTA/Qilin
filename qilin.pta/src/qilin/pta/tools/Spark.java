@@ -19,6 +19,7 @@
 package qilin.pta.tools;
 
 import qilin.core.CorePTA;
+import qilin.core.pag.PAG;
 import qilin.parm.ctxcons.InsensCtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
 import qilin.parm.heapabst.HeuristicAbstractor;
@@ -28,7 +29,7 @@ import qilin.pta.PTAConfig;
 /*
  * refer to "Scaling Java Points-To Analysis using SPARK" (CC'03)
  * */
-public class Spark extends CorePTA {
+public class Spark extends BasePTA {
     public Spark() {
         this.ctxCons = new InsensCtxConstructor();
         this.ctxSel = new InsenSelector();

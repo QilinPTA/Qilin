@@ -134,7 +134,6 @@ public final class Solver extends Propagator {
                     if (tgt != null) { // static invoke or dynamic invoke
                         VarNode recNode = pag.getMethodPAG(m.method()).nodeFactory().caseThis();
                         recNode = (VarNode) pta.parameterize(recNode, m.context());
-                        cgb.recordStaticCallSite(recNode, new Pair<>(m, s));
                         if (ie instanceof DynamicInvokeExpr) {
                             // !TODO dynamicInvoke is provided in JDK after Java 7.
                             // currently, PTA does not handle dynamicInvokeExpr.
@@ -242,11 +241,13 @@ public final class Solver extends Propagator {
 
     private void activateConstraints(QueueReader<VirtualCallSite> newCalls, QueueReader<MethodOrMethodContext> newRMs, QueueReader<ExceptionThrowSite> newThrows, QueueReader<Node> addedEdges) {
         while (newCalls.hasNext()) {
-            final VirtualCallSite site = newCalls.next();
-            final VarNode receiver = site.recNode();
-            cgb.virtualCallDispatch(receiver.getP2Set().getOldSet(), site);
+            while (newCalls.hasNext()) {
+                final VirtualCallSite site = newCalls.next();
+                final VarNode receiver = site.recNode();
+                cgb.virtualCallDispatch(receiver.getP2Set().getOldSet(), site);
+            }
+            processStmts(newRMs); // may produce new calls, thus an out-loop is a must.
         }
-        processStmts(newRMs);
 
         while (newThrows.hasNext()) {
             final ExceptionThrowSite ets = newThrows.next();

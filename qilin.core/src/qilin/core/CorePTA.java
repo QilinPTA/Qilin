@@ -23,13 +23,12 @@ import qilin.core.sets.EmptyPointsToSet;
 import qilin.core.sets.PointsToSet;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.core.solver.Propagator;
-import qilin.core.solver.Solver;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.HeapAbstractor;
 import qilin.parm.select.CtxSelector;
 import soot.*;
 
-import java.util.*;
+import java.util.Collections;
 
 /*
  * This represents a parameterized PTA which could be concreted to many pointer analyses.
@@ -54,9 +53,7 @@ public abstract class CorePTA extends PTA {
         return heapAbst;
     }
 
-    public Propagator getPropagator() {
-        return new Solver(this);
-    }
+    public abstract Propagator getPropagator();
 
     @Override
     public Context createCalleeCtx(MethodOrMethodContext caller, AllocNode receiverNode, CallSite callSite, SootMethod target) {
@@ -229,8 +226,7 @@ public abstract class CorePTA extends PTA {
 
     public PointsToSet reachingObjectsInternal(PointsToSet s, final SparkField f) {
         PointsToSetInternal bases = (PointsToSetInternal) s;
-        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null,
-                pag);
+        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null, pag);
         for (ContextField contextField : pag.getContextFieldVarNodeMap().getOrDefault(f, Collections.emptyMap()).values()) {
             AllocNode base = contextField.getBase();
             if (bases.contains(base)) {

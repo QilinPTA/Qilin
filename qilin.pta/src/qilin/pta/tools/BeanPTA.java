@@ -36,7 +36,7 @@ import java.util.Map;
 /*
  * refer to "Making k-Object-Sensitive Pointer Analysis More Precise with Still k-Limiting" (SAS'16)
  * */
-public class BeanPTA extends CorePTA {
+public class BeanPTA extends BasePTA {
     private final CorePTA prePTA;
     // currently, we only support k = 2 and hk = 1;
     // [current heap, [allocator heap, [heap ctx, new ctx]]] only for B-2obj;

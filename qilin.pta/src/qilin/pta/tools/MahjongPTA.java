@@ -38,7 +38,7 @@ import java.util.Set;
 /*
  * refer to "Efficient and Precise Points-to Analysis: Modeling the Heap by Merging Equivalent Automata" (PLDI'17)
  * */
-public class MahjongPTA extends CorePTA {
+public class MahjongPTA extends BasePTA {
     protected final Map<Object, Object> heapModelMap = new HashMap<>();
     public Set<Object> mergedHeap = new HashSet<>();
     public Set<Object> csHeap = new HashSet<>();

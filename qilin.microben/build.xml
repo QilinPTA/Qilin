@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="compile" name="PTA Build File">
+
+    <property name="JAVA_HOME" value="/usr/local/java/jdk8/"/>
+
+	<!-- setup the classpath -->
+
+    <target name="compile">
+		<mkdir dir="classes"/>
+		<javac srcdir="src" destdir="classes" debug="true" includeantruntime="false" executable="${JAVA_HOME}/bin/javac">
+		</javac>
+    </target>
+	
+	<target name="clean">
+		<delete dir="classes"/>
+	</target>
+
+</project>

@@ -6,11 +6,22 @@ sourceSets.main {
     java.srcDirs = ['src']
 }
 
+sourceSets.test {
+    java.srcDirs = ['test']
+}
+
 repositories {
     maven { url "https://repo1.maven.org/maven2/" }
     flatDir {
         dirs 'libs'
     }
+}
+
+sourceCompatibility = 16
+
+test {
+    useJUnit()
+    maxHeapSize = '30G'
 }
 
 dependencies {

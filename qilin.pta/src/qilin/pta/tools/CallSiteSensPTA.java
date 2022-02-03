@@ -32,7 +32,7 @@ import qilin.pta.PTAConfig;
  * refer to "Two approaches to interprocedural data flow analysis" (PFA 1981)
  * */
 
-public class CallSiteSensPTA extends CorePTA {
+public class CallSiteSensPTA extends BasePTA {
 
     public CallSiteSensPTA(int k, int hk) {
         this.ctxCons = new CallsiteCtxConstructor();

@@ -18,7 +18,6 @@
 
 package qilin.pta.tools;
 
-import qilin.core.CorePTA;
 import qilin.core.pag.*;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
@@ -41,8 +40,8 @@ import java.util.Set;
  * refer to "Precision-Guided Context Sensitivity for Pointer Analysis" (OOPSLA'18)
  * and "A Principled Approach to Selective Context Sensitivity for Pointer Analysis" (TOPLAS'20)
  * */
-public class ZipperPTA extends CorePTA {
-    private final CorePTA prePTA;
+public class ZipperPTA extends BasePTA {
+    private final BasePTA prePTA;
     private final Set<SootMethod> PCMs = new HashSet<>();
 
     /*
@@ -87,7 +86,7 @@ public class ZipperPTA extends CorePTA {
     protected void extraStats() {
         int[] RM = new int[1], PCN = new int[1], NPCN = new int[1];
         int[] totalN = new int[1];
-        for(MethodOrMethodContext momc : prePTA.getReachableMethods()) {
+        for (MethodOrMethodContext momc : prePTA.getReachableMethods()) {
             SootMethod method = momc.method();
             Set<Object> nodes = new HashSet<>();
 

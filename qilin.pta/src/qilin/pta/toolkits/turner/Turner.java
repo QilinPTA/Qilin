@@ -198,8 +198,8 @@ public class Turner {
         int sccCntGtW = 0;
         int maxScc = 0;
         double avgScc = 0.0;
-        double avgSccGtW  = 0.0;
-        for(MergedNode<SootMethod> scc: scccg.allNodes()) {
+        double avgSccGtW = 0.0;
+        for (MergedNode<SootMethod> scc : scccg.allNodes()) {
             int sccSize = scc.getContent().size();
             if (sccSize > maxScc) {
                 maxScc = sccSize;
@@ -213,9 +213,9 @@ public class Turner {
         avgScc /= sccCnt;
         avgSccGtW /= sccCntGtW;
         int[] dist = new int[maxScc + 1];
-        for(MergedNode<SootMethod> scc: scccg.allNodes()) {
+        for (MergedNode<SootMethod> scc : scccg.allNodes()) {
             int sccSize = scc.getContent().size();
-            dist[sccSize] ++;
+            dist[sccSize]++;
         }
         System.out.println("#scc count:" + sccCnt);
         System.out.println("#scc count (exclude singleton):" + sccCntGtW);
@@ -223,7 +223,7 @@ public class Turner {
         System.out.println("Average scc size(exclude singleton):" + avgSccGtW);
         System.out.println("Maximum scc size:" + maxScc);
         System.out.println("Scc size distribution (size, count):");
-        for(int i = 0; i <= maxScc; ++i) {
+        for (int i = 0; i <= maxScc; ++i) {
             if (dist[i] > 0) {
                 System.out.println(i + "," + dist[i]);
             }

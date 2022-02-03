@@ -27,10 +27,12 @@ import qilin.core.reflection.NopReflectionModel;
 import qilin.core.reflection.ReflectionModel;
 import qilin.core.reflection.TamiflexModel;
 import qilin.parm.heapabst.HeapAbstractor;
+import qilin.util.PTAUtils;
 import soot.*;
-import soot.jimple.ClassConstant;
-import soot.jimple.Stmt;
-import soot.jimple.StringConstant;
+import soot.jimple.*;
+import soot.jimple.internal.JArrayRef;
+import soot.jimple.internal.JAssignStmt;
+import soot.jimple.internal.JimpleLocal;
 import soot.util.ArrayNumberer;
 import soot.util.queue.ChunkedQueue;
 import soot.util.queue.QueueReader;
@@ -49,7 +51,7 @@ public class PAG {
     protected final Map<AllocNode, Map<Context, ContextAllocNode>> contextAllocNodeMap;
     protected final Map<SootMethod, Map<Context, MethodOrMethodContext>> contextMethodMap;
     protected final Map<MethodPAG, Set<Context>> addedContexts;
-    protected final Map<SparkField, Map<Context, ContextField>> contextFieldMap;
+    protected final Map<Context, Map<SparkField, ContextField>> contextFieldMap;
 
     // ========================= ir to Node ==============================================
     protected final Map<Object, AllocNode> valToAllocNode;
@@ -185,7 +187,75 @@ public class PAG {
     }
 
     public MethodPAG getMethodPAG(SootMethod m) {
-        return methodToPag.computeIfAbsent(m, k -> new MethodPAG(this, m));
+        Body body = PTAUtils.getMethodBody(m);
+        if (m.isConcrete()) {
+            reflectionModel.buildReflection(m);
+        }
+        if (m.isNative()) {
+            nativeDriver.buildNative(m);
+        } else {
+            // we will revert these back in the future.
+            /*
+             * To keep same with Doop, we move the simulation of
+             * <java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>
+             * directly to its caller methods.
+             * */
+            if (PTAScene.v().arraycopyBuilt.add(m)) {
+                handleArrayCopy(m);
+            }
+        }
+        return methodToPag.computeIfAbsent(m, k -> new MethodPAG(this, m, body));
+    }
+
+    private void handleArrayCopy(SootMethod method) {
+        Map<Unit, Collection<Unit>> newUnits = new HashMap<>();
+        Body body = PTAUtils.getMethodBody(method);
+        for (Unit unit : body.getUnits()) {
+            Stmt s = (Stmt) unit;
+            if (s.containsInvokeExpr()) {
+                InvokeExpr invokeExpr = s.getInvokeExpr();
+                if (invokeExpr instanceof StaticInvokeExpr sie) {
+                    SootMethod sm = sie.getMethod();
+                    String sig = sm.getSignature();
+                    if (sig.equals("<java.lang.System: void arraycopy(java.lang.Object,int,java.lang.Object,int,int)>")) {
+                        Value srcArr = sie.getArg(0);
+                        if (PTAUtils.isPrimitiveArrayType(srcArr.getType())) {
+                            continue;
+                        }
+                        Type objType = RefType.v("java.lang.Object");
+                        if (srcArr.getType() == objType) {
+                            Local localSrc = new JimpleLocal("intermediate/" + body.getLocalCount(), ArrayType.v(objType, 1));
+                            body.getLocals().add(localSrc);
+                            newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(localSrc, srcArr));
+                            srcArr = localSrc;
+                        }
+                        Value dstArr = sie.getArg(2);
+                        if (PTAUtils.isPrimitiveArrayType(dstArr.getType())) {
+                            continue;
+                        }
+                        if (dstArr.getType() == objType) {
+                            Local localDst = new JimpleLocal("intermediate/" + body.getLocalCount(), ArrayType.v(objType, 1));
+                            body.getLocals().add(localDst);
+                            newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(localDst, dstArr));
+                            dstArr = localDst;
+                        }
+                        Value src = new JArrayRef(srcArr, IntConstant.v(0));
+                        Value dst = new JArrayRef(dstArr, IntConstant.v(0));
+                        Local local = new JimpleLocal("nativeArrayCopy" + body.getLocalCount(), RefType.v("java.lang.Object"));
+                        body.getLocals().add(local);
+                        newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(local, src));
+                        newUnits.computeIfAbsent(unit, k -> new HashSet<>()).add(new JAssignStmt(dst, local));
+                    }
+                }
+            }
+        }
+        for (Unit unit : newUnits.keySet()) {
+            body.getUnits().insertAfter(newUnits.get(unit), unit);
+        }
+    }
+
+    public boolean containsMethodPAG(SootMethod m) {
+        return methodToPag.containsKey(m);
     }
 
     public Collection<ContextField> getContextFields() {
@@ -204,14 +274,14 @@ public class PAG {
         return contextMethodMap;
     }
 
-    public Map<SparkField, Map<Context, ContextField>> getContextFieldVarNodeMap() {
+    public Map<Context, Map<SparkField, ContextField>> getContextFieldVarNodeMap() {
         return contextFieldMap;
     }
 
     public ContextField makeContextField(Context context, FieldValNode fieldValNode) {
         SparkField field = fieldValNode.getField();
-        Map<Context, ContextField> ctx2field = contextFieldMap.computeIfAbsent(field, k -> new HashMap<>());
-        return ctx2field.computeIfAbsent(context, k -> new ContextField(this, context, field));
+        Map<SparkField, ContextField> field2odotf = contextFieldMap.computeIfAbsent(context, k -> new HashMap<>());
+        return field2odotf.computeIfAbsent(field, k -> new ContextField(this, context, field));
     }
 
     public Collection<VarNode> getVarNodes(Local local) {

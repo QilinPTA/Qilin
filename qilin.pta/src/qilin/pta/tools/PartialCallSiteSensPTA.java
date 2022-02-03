@@ -38,7 +38,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class PartialCallSiteSensPTA extends CorePTA {
+public abstract class PartialCallSiteSensPTA extends BasePTA {
     protected Set<Object> csnodes = new HashSet<>();
     protected Set<SootMethod> csmethods = new HashSet<>();
     protected CorePTA prePTA;
@@ -118,7 +118,7 @@ public abstract class PartialCallSiteSensPTA extends CorePTA {
 
     protected void extraStats() {
         int[] RM = new int[1], PCN = new int[1], NPCN = new int[1], totalN = new int[1];
-        for(MethodOrMethodContext momc : prePTA.getReachableMethods()) {
+        for (MethodOrMethodContext momc : prePTA.getReachableMethods()) {
             SootMethod method = momc.method();
             Set<Object> nodes = new HashSet<>();
             if (method.isPhantom()) {

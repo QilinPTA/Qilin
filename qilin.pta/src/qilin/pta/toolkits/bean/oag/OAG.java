@@ -189,11 +189,11 @@ public class OAG {
     }
 
     /*
-    * utilities
-    * */
+     * utilities
+     * */
     public void dumpToDot() {
         Vector<String> vec = constructOAGDotString();
-        for(int idx = 0; idx < vec.size(); ++idx) {
+        for (int idx = 0; idx < vec.size(); ++idx) {
             String fileName = "a" + idx + ".dot";
             try {
                 FileOutputStream fos = new FileOutputStream(fileName);
@@ -221,11 +221,11 @@ public class OAG {
 
     private Vector<String> constructOAGDotString() {
         Vector<String> vector = new Vector<>();
-        rootNodes().stream().filter(x -> !tailNodes().contains(x)).forEach( root -> {
+        rootNodes().stream().filter(x -> !tailNodes().contains(x)).forEach(root -> {
             Set<Node> reachs = computeReachableNodes(root);
             StringBuilder dumpString = new StringBuilder();
             dumpString.append("digraph G {\n");
-            for(Node x : reachs) {
+            for (Node x : reachs) {
                 x.getSuccs().forEach(y -> {
                     dumpString.append(addEdgeString(x, y));
                 });

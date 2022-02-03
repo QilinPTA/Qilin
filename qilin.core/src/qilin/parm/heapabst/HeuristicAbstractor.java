@@ -19,6 +19,7 @@
 package qilin.parm.heapabst;
 
 import qilin.core.pag.AllocNode;
+import qilin.core.pag.MergedNewExpr;
 import qilin.core.pag.PAG;
 import qilin.util.PTAUtils;
 import soot.RefType;
@@ -41,7 +42,7 @@ public class HeuristicAbstractor implements HeapAbstractor {
     @Override
     public AllocNode abstractHeap(Object newExpr, Type type, SootMethod m) {
         if (mergedTypes.contains(type) || (PTAUtils.isThrowable(type) && mergedTypes.add(type))) {
-            return pag.makeAllocNode("new " + type, type, null);
+            return pag.makeAllocNode(MergedNewExpr.v((RefType) type), type, null);
         } else {
             return pag.makeAllocNode(newExpr, type, m);
         }

@@ -8,13 +8,6 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
-sourceSets.test {
+sourceSets.main {
     java.srcDirs = ['src']
-}
-test {
-    useJUnit()
-    maxHeapSize = '30G'
-}
-dependencies {
-    implementation(project(':qilin.pta'))
 }

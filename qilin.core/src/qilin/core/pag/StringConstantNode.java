@@ -28,7 +28,7 @@ import soot.jimple.StringConstant;
  */
 public class StringConstantNode extends ConstantNode {
     StringConstantNode(PAG pag, StringConstant sc) {
-        super(pag, sc.value, RefType.v("java.lang.String"), null);
+        super(pag, sc, RefType.v("java.lang.String"), null);
     }
 
     public String toString() {

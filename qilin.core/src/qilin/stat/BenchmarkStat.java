@@ -21,12 +21,9 @@ package qilin.stat;
 import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
-import soot.MethodOrMethodContext;
 import soot.SootClass;
 import soot.SootMethod;
-import soot.util.queue.QueueReader;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

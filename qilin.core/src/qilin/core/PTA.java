@@ -33,10 +33,16 @@ import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.HeapAbstractor;
 import qilin.stat.PTAEvaluator;
 import qilin.util.PTAUtils;
-import soot.*;
+import soot.Context;
+import soot.MethodOrMethodContext;
+import soot.RefType;
+import soot.SootMethod;
 import soot.jimple.toolkits.callgraph.CallGraph;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class PTA implements PointsToAnalysis {
     private static final Logger logger = LoggerFactory.getLogger(PTA.class);
@@ -50,8 +56,8 @@ public abstract class PTA implements PointsToAnalysis {
     protected PTAEvaluator evaluator;
 
     public PTA() {
-        this.pag = new PAG(this);
-        this.cgb = new CallGraphBuilder(this);
+        this.pag = createPAG();
+        this.cgb = createCallGraphBuilder();
         this.eh = new ExceptionHandler(this);
         this.evaluator = new PTAEvaluator(this);
         AllocNode rootBase = new AllocNode(pag, "ROOT", RefType.v("java.lang.Object"), null);
@@ -60,6 +66,10 @@ public abstract class PTA implements PointsToAnalysis {
         P2SetFactory newF = HybridPointsToSet.getFactory();
         this.setFactory = DoublePointsToSet.getFactory(newF, oldF);
     }
+
+    protected abstract PAG createPAG();
+
+    protected abstract CallGraphBuilder createCallGraphBuilder();
 
     public void pureRun() {
         for (int i = 0; i < 5; i++) {

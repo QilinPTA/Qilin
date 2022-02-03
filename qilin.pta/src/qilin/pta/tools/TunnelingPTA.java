@@ -19,6 +19,7 @@
 package qilin.pta.tools;
 
 import qilin.core.CorePTA;
+import qilin.core.pag.PAG;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
 import qilin.parm.heapabst.HeuristicAbstractor;
@@ -34,7 +35,7 @@ import qilin.pta.toolkits.dd.TunnelingConstructor;
  * Context Tunneling" (OOPSLA 2018). We reuse the trained formula from the paper. However, our evaluation does
  * not show the claimed effectiveness. Maybe we should train the benchmarks to get new formulas?
  * */
-public class TunnelingPTA extends CorePTA {
+public class TunnelingPTA extends BasePTA {
     public TunnelingPTA(CtxConstructor ctxCons, int k, int hk) {
         this.ctxCons = new TunnelingConstructor(ctxCons);
         CtxSelector us = new UniformSelector(k, hk);

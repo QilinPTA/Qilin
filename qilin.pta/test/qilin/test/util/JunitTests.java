@@ -35,10 +35,11 @@ public abstract class JunitTests {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        File currentDir = new File(".");
-        File testDir = new File(currentDir, "build" + File.separator + "classes" + File.separator + "java" + File.separator + "test");
+        File rootDir = new File("../");
+        File testDir = new File(rootDir, "qilin.microben" + File.separator + "classes");
         appPath = testDir.getCanonicalPath();
-        File refLogDir = new File(currentDir, "src" + File.separator + "qilin" + File.separator + "microben" + File.separator + "core" + File.separator + "reflog");
+        System.out.println(appPath);
+        File refLogDir = new File(rootDir, "src" + File.separator + "qilin" + File.separator + "microben" + File.separator + "core" + File.separator + "reflog");
         refLogPath = refLogDir.getCanonicalPath();
         File jreFile = new File(".." + File.separator + "artifact" + File.separator + "pta" +
                 File.separator + "lib" + File.separator + "jre" + File.separator + "jre1.6.0_45");

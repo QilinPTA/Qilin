@@ -32,7 +32,7 @@ import qilin.pta.PTAConfig;
  * refer to "Hybrid Context-Sensitivity for Points-To Analysis" (PLDI'13)
  */
 
-public class HybridTypeSensPTA extends CorePTA {
+public class HybridTypeSensPTA extends BasePTA {
 
     public HybridTypeSensPTA(int k, int hk) {
         this.ctxCons = new HybTypeCtxConstructor();

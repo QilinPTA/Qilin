@@ -28,6 +28,7 @@ public class UniqueQueue<T> implements Queue<T> {
         this.set = new HashSet<>();
         this.queue = new LinkedList<>();
     }
+
     @Override
     public boolean add(T t) {
         if (set.contains(t)) {

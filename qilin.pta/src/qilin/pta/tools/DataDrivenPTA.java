@@ -37,7 +37,7 @@ import qilin.pta.toolkits.dd.DataDrivenSelector;
  * as claimed in the paper. Maybe we should retrain the formulas in our framework.
  * */
 
-public class DataDrivenPTA extends CorePTA {
+public class DataDrivenPTA extends BasePTA {
 
     public DataDrivenPTA(CtxConstructor ctxCons) {
         this.ctxCons = ctxCons;

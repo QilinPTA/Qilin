@@ -29,7 +29,6 @@ import soot.jimple.*;
 import soot.jimple.internal.JNewArrayExpr;
 
 /**
- *
  * @author Ondrej Lhotak
  */
 public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {

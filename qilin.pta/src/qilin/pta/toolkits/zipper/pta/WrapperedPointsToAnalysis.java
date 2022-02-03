@@ -351,7 +351,7 @@ public class WrapperedPointsToAnalysis implements PointsToAnalysis {
 
     private void computeAllocatedObjects() {
         this.allocatedHeaps = new HashMap<>();
-        for(AllocNode alloc : prePTA.getPag().getAllocNodeNumberer()) {
+        for (AllocNode alloc : prePTA.getPag().getAllocNodeNumberer()) {
             if (alloc.getMethod() == null) {//TODO special objects?
                 continue;
             }
@@ -367,7 +367,7 @@ public class WrapperedPointsToAnalysis implements PointsToAnalysis {
         final Map<Unit, SootMethod> callIn = new HashMap<>();
         final Map<Unit, Object> callBase = new HashMap<>();
 
-        for(final MethodOrMethodContext momc : prePTA.getReachableMethods()) {
+        for (final MethodOrMethodContext momc : prePTA.getReachableMethods()) {
             SootMethod sig = momc.method();
             prePTA.getPag().getMethodPAG(sig).invokeStmts.forEach(s -> {
                 callIn.put(s, sig);
@@ -418,7 +418,7 @@ public class WrapperedPointsToAnalysis implements PointsToAnalysis {
     private void buildVarDeclaringMethods() {
         this.var2declaringMethod = new HashMap<>();
         this.declaringMethod2var = new HashMap<>();
-        for(ValNode valnode : prePTA.getPag().getValNodeNumberer()) {
+        for (ValNode valnode : prePTA.getPag().getValNodeNumberer()) {
             if (!(valnode instanceof LocalVarNode lvn)) {
                 continue;
             }
@@ -430,7 +430,7 @@ public class WrapperedPointsToAnalysis implements PointsToAnalysis {
 
     private void buildObjectAssignedVariables() {
         this.objAssignedTo = new HashMap<>();
-        for(final MethodOrMethodContext momc : prePTA.getReachableMethods()) {
+        for (final MethodOrMethodContext momc : prePTA.getReachableMethods()) {
             MethodPAG mpag = prePTA.getPag().getMethodPAG(momc.method());
             QueueReader<Node> reader = mpag.getInternalReader().clone();
             while (reader.hasNext()) {
