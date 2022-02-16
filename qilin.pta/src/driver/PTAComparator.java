@@ -52,7 +52,7 @@ public class PTAComparator {
         comparator.record(Main.run(ptaArg1));
         PTAConfig.v().getPtaConfig().ptaPattern = new PTAPattern(ptaPtn2);
         PTA pta = PTAFactory.createPTA(PTAConfig.v().getPtaConfig().ptaPattern);
-        pta.run();
+        pta.pureRun();
         comparator.compare(pta);
         comparator.out.close();
         count = comparator.count;

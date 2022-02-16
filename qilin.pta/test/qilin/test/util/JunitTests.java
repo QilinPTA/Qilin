@@ -36,7 +36,7 @@ public abstract class JunitTests {
     @BeforeClass
     public static void setUp() throws IOException {
         File rootDir = new File("../");
-        File testDir = new File(rootDir, "qilin.microben" + File.separator + "classes");
+        File testDir = new File(rootDir, "qilin.microben" + File.separator + "build" + File.separator + "classes" + File.separator + "java" + File.separator + "main");
         appPath = testDir.getCanonicalPath();
         System.out.println(appPath);
         File refLogDir = new File(rootDir, "src" + File.separator + "qilin" + File.separator + "microben" + File.separator + "core" + File.separator + "reflog");
@@ -44,21 +44,6 @@ public abstract class JunitTests {
         File jreFile = new File(".." + File.separator + "artifact" + File.separator + "pta" +
                 File.separator + "lib" + File.separator + "jre" + File.separator + "jre1.6.0_45");
         jrePath = jreFile.getCanonicalPath();
-//        ptaPattern = "e-3o";
-//        ptaPattern = "2c";
-//        ptaPattern = "insens";
-//        ptaPattern = "1c";
-//          ptaPattern = "2t";
-//          ptaPattern = "2o";
-//        ptaPattern = "3o";
-//        ptaPattern = "1o";
-//        ptaPattern = "2h";
-//        ptaPattern = "j-ci";
-//        ptaPattern = "m-ci";
-//        ptaPattern = "p-ci";
-//        ptaPattern = "a-3o";
-//        ptaPattern = "n-3h";
-//        ptaPattern = "E-2o";
     }
 
     @Before
@@ -83,6 +68,7 @@ public abstract class JunitTests {
                 "-pta=" + ptaPattern,
                 "-apppath",
                 appPath,
+                "-se",
                 "-mainclass", mainClass,
                 "-jre=" + jrePath,
                 "-clinit=ONFLY",

@@ -76,6 +76,9 @@ public abstract class PartialCallSiteSensPTA extends BasePTA {
         extraStats();
         if (!PTAConfig.v().getPtaConfig().preAnalysisOnly) {
             System.out.println("selective cs-qilin.pta starts!");
+            for (int i = 0; i < 5; i++) {
+                System.gc();
+            }
             super.run();
         }
     }

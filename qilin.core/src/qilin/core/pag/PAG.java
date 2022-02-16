@@ -315,7 +315,7 @@ public class PAG {
         return valueList.add(value);
     }
 
-    public boolean addAllocEdge(AllocNode from, VarNode to) {
+    private boolean addAllocEdge(AllocNode from, VarNode to) {
         if (addToMap(alloc, from, to)) {
             addToMap(allocInv, to, from);
             return true;
@@ -323,7 +323,7 @@ public class PAG {
         return false;
     }
 
-    public boolean addSimpleEdge(ValNode from, ValNode to) {
+    private boolean addSimpleEdge(ValNode from, ValNode to) {
         if (addToMap(simple, from, to)) {
             addToMap(simpleInv, to, from);
             return true;
@@ -331,7 +331,7 @@ public class PAG {
         return false;
     }
 
-    public boolean addStoreEdge(VarNode from, FieldRefNode to) {
+    private boolean addStoreEdge(VarNode from, FieldRefNode to) {
         if (addToMap(storeInv, to, from)) {
             addToMap(store, from, to);
             return true;
@@ -339,7 +339,7 @@ public class PAG {
         return false;
     }
 
-    public boolean addLoadEdge(FieldRefNode from, VarNode to) {
+    private boolean addLoadEdge(FieldRefNode from, VarNode to) {
         if (addToMap(load, from, to)) {
             addToMap(loadInv, to, from);
             return true;

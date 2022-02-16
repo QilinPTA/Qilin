@@ -91,15 +91,23 @@ public class PointsToStat implements AbstractStat {
             "<java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction,java.security.AccessControlContext)>"
     );
 
+    protected Set<Object> getPointsToNewExpr(PointsToSetInternal pts) {
+        final Set<Object> allocSites = new HashSet<>();
+        pts.forall(new P2SetVisitor() {
+            public void visit(Node n) {
+                allocSites.add(((AllocNode) n).getNewExpr());
+            }
+        });
+        return allocSites;
+    }
+
     private void init() {
         ciAllocs = pag.getAllocNodes().size();
         csAllocs = pag.getAlloc().keySet().size();
         // globals
-        for (Object global : pag.getGlobalPointers()) {
+        for (SootField global : pag.getGlobalPointers()) {
             try {
-                if (!(global instanceof SootField))
-                    continue;
-                if (!((SootField) global).isStatic())
+                if (!global.isStatic())
                     continue;
                 GlobalVarNode gvn = pag.findGlobalVarNode(global);
                 boolean app = gvn.getDeclaringClass().isApplicationClass();
@@ -109,14 +117,8 @@ public class PointsToStat implements AbstractStat {
                     appGlobalPointers++;
                 }
 
-                final Set<Object> allocSites = new HashSet<>();
-
                 PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjects(gvn);
-                pts.forall(new P2SetVisitor() {
-                    public void visit(Node n) {
-                        allocSites.add(((AllocNode) n).getNewExpr());
-                    }
-                });
+                final Set<Object> allocSites = getPointsToNewExpr(pts);
 
                 totalGlobalPointsToCi += allocSites.size();
                 totalGlobalPointsToCs += pts.size();
@@ -151,14 +153,9 @@ public class PointsToStat implements AbstractStat {
                     appLocalPointersCs += varNodes.size();
                 }
 
-                final Set<Object> allocSites = new HashSet<>();
+
                 PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjects(local);
-                pts.forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        allocSites.add(((AllocNode) n).getNewExpr());
-                    }
-                });
+                final Set<Object> allocSites = getPointsToNewExpr(pts);
 //                if (lvn.getMethod().toString().equals("<fine.B: fine.O id(fine.O,fine.A)>")) {
 //                    System.out.println("hello2333:" + lvn + lvn.getType());
 //                    pts.forall(new P2SetVisitor() {
@@ -178,14 +175,8 @@ public class PointsToStat implements AbstractStat {
                 }
 
                 for (VarNode cvn : varNodes) {
-                    final Set<Object> callocSites = new HashSet<>();
                     PointsToSetInternal cpts = (PointsToSetInternal) pta.reachingObjects(cvn);
-                    cpts.forall(new P2SetVisitor() {
-                        @Override
-                        public void visit(Node n) {
-                            callocSites.add(((AllocNode) n).getNewExpr());
-                        }
-                    });
+                    final Set<Object> callocSites = getPointsToNewExpr(cpts);
                     totalLocalCsToCi += callocSites.size();
                     totalLocalCsToCs += cpts.size();
                     if (app) {
@@ -250,14 +241,8 @@ public class PointsToStat implements AbstractStat {
                 tmp.add(lvn);
                 continue;
             }
-            final Set<Object> callocSites = new HashSet<>();
             PointsToSetInternal cpts = (PointsToSetInternal) pta.reachingObjects(lvn);
-            cpts.forall(new P2SetVisitor() {
-                @Override
-                public void visit(Node n) {
-                    callocSites.add(((AllocNode) n).getNewExpr());
-                }
-            });
+            final Set<Object> callocSites = getPointsToNewExpr(cpts);
             if (callocSites.size() > 0) {
                 ptsCnt += callocSites.size();
                 varCnt++;

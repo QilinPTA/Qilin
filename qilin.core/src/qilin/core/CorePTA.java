@@ -41,7 +41,7 @@ public abstract class CorePTA extends PTA {
     protected CtxSelector ctxSel;
     protected HeapAbstractor heapAbst;
 
-    public CtxSelector getContextSelector() {
+    public CtxSelector ctxSelector() {
         return ctxSel;
     }
 
@@ -52,6 +52,11 @@ public abstract class CorePTA extends PTA {
     public HeapAbstractor heapAbstractor() {
         return heapAbst;
     }
+
+    public CtxConstructor ctxConstructor() {
+        return ctxCons;
+    }
+
 
     public abstract Propagator getPropagator();
 
@@ -226,7 +231,8 @@ public abstract class CorePTA extends PTA {
 
     public PointsToSet reachingObjectsInternal(PointsToSet s, final SparkField f) {
         PointsToSetInternal bases = (PointsToSetInternal) s;
-        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null, pag);
+        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null,
+                pag);
         for (ContextField contextField : pag.getContextFieldVarNodeMap().getOrDefault(f, Collections.emptyMap()).values()) {
             AllocNode base = contextField.getBase();
             if (bases.contains(base)) {

@@ -236,17 +236,14 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
     @Override
     final public void caseNewMultiArrayExpr(NewMultiArrayExpr nmae) {
         ArrayType type = (ArrayType) nmae.getType();
+        type = (ArrayType) type.getElementType();
         int pos = 0;
-        AllocNode prevAn = pag.heapAbstractor().abstractHeap(new JNewArrayExpr(type, nmae.getSize(pos)), type, method);
+        AllocNode prevAn = pag.heapAbstractor().abstractHeap(new JNewArrayExpr(type, nmae.getSize(pos)), nmae.getType(), method);
         VarNode prevVn = pag.makeLocalVarNode(prevAn.getNewExpr(), prevAn.getType(), method);
         mpag.addInternalEdge(prevAn, prevVn); // new
         setResult(prevAn);
         while (true) {
             Type t = type.getElementType();
-            if (!(t instanceof ArrayType)) {
-                break;
-            }
-            type = (ArrayType) t;
             ++pos;
             Value sizeVal;
             if (pos < nmae.getSizeCount()) {
@@ -254,11 +251,15 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
             } else {
                 sizeVal = IntConstant.v(1);
             }
-            AllocNode an = pag.heapAbstractor().abstractHeap(new JNewArrayExpr(type, sizeVal), type, method);
+            AllocNode an = pag.heapAbstractor().abstractHeap(new JNewArrayExpr(t, sizeVal), type, method);
             VarNode vn = pag.makeLocalVarNode(an.getNewExpr(), an.getType(), method);
             mpag.addInternalEdge(an, vn); // new
             mpag.addInternalEdge(vn, pag.makeFieldRefNode(prevVn, ArrayElement.v())); // store
             prevVn = vn;
+            if (!(t instanceof ArrayType)) {
+                break;
+            }
+            type = (ArrayType) t;
         }
     }
 

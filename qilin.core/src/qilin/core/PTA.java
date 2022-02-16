@@ -31,6 +31,7 @@ import qilin.core.sets.PointsToSet;
 import qilin.core.solver.Propagator;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.HeapAbstractor;
+import qilin.parm.select.CtxSelector;
 import qilin.stat.PTAEvaluator;
 import qilin.util.PTAUtils;
 import soot.Context;
@@ -53,13 +54,11 @@ public abstract class PTA implements PointsToAnalysis {
     protected CallGraphBuilder cgb;
     protected ExceptionHandler eh;
     protected P2SetFactory setFactory;
-    protected PTAEvaluator evaluator;
 
     public PTA() {
         this.pag = createPAG();
         this.cgb = createCallGraphBuilder();
         this.eh = new ExceptionHandler(this);
-        this.evaluator = new PTAEvaluator(this);
         AllocNode rootBase = new AllocNode(pag, "ROOT", RefType.v("java.lang.Object"), null);
         this.rootNode = new ContextAllocNode(pag, rootBase, CtxConstructor.emptyContext);
         P2SetFactory oldF = HybridPointsToSet.getFactory();
@@ -71,45 +70,20 @@ public abstract class PTA implements PointsToAnalysis {
 
     protected abstract CallGraphBuilder createCallGraphBuilder();
 
+    public void run() {
+        pureRun();
+    }
+
     public void pureRun() {
-        for (int i = 0; i < 5; i++) {
-            System.gc();
-        }
         Date startProp = new Date();
         getPropagator().propagate();
         Date endProp = new Date();
         reportTime("Points-to resolution:", startProp, endProp);
     }
 
-    private void dumpStats() {
-        if (CoreConfig.v().getOutConfig().dumppts) {
-            PTAUtils.dumpPts(this, !CoreConfig.v().getOutConfig().dumplibpts);
-        }
-        if (CoreConfig.v().getOutConfig().dumpCallGraph)
-            PTAUtils.dumpSlicedCallGraph(getCallGraph(),
-                    parameterize(PTAScene.v().getMethod("<java.lang.String: java.lang.String valueOf(java.lang.Object)>"), emptyContext()));
-        if (CoreConfig.v().getOutConfig().dumppag) {
-            PTAUtils.dumpPAG(pag, "final_pag");
-            PTAUtils.dumpMPAGs(this, "mpags");
-            PTAUtils.dumpNodeNames("nodeNames");
-        }
-    }
-
     private static void reportTime(String desc, Date start, Date end) {
         long time = end.getTime() - start.getTime();
         logger.info("[PTA] " + desc + " in " + time / 1000 + "." + (time / 100) % 10 + " seconds.");
-    }
-
-    public void run() {
-        evaluator.begin();
-        pureRun();
-        evaluator.end();
-        dumpStats();
-        pag.dumpPagStructureSize();
-    }
-
-    public PTAEvaluator evaluator() {
-        return this.evaluator;
     }
 
     public PAG getPag() {
@@ -165,4 +139,7 @@ public abstract class PTA implements PointsToAnalysis {
 
     public abstract HeapAbstractor heapAbstractor();
 
+    public abstract CtxConstructor ctxConstructor();
+
+    public abstract CtxSelector ctxSelector();
 }

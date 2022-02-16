@@ -73,6 +73,9 @@ public class BeanPTA extends BasePTA {
         System.out.println(beanTimer);
         if (!PTAConfig.v().getPtaConfig().preAnalysisOnly) {
             System.out.println("selective cs-pta starts!");
+            for (int i = 0; i < 5; i++) {
+                System.gc();
+            }
             super.run();
         }
     }

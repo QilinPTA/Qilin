@@ -56,8 +56,7 @@ public class Main {
         long pid = ProcessHandle.current().pid();
         MemoryWatcher memoryWatcher = new MemoryWatcher(pid, "Main PTA");
         memoryWatcher.start();
-        PTA pta = run(args);
-        System.out.println(pta.evaluator());
+        run(args);
         ptaTimer.stop();
         System.out.println(ptaTimer);
         memoryWatcher.stop();

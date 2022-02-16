@@ -17,14 +17,13 @@ repositories {
     }
 }
 
-sourceCompatibility = 16
-
 test {
     useJUnit()
     maxHeapSize = '30G'
 }
 
 dependencies {
+    api(project(':qilin.microben'))
     api(project(':qilin.core'))
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'

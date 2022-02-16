@@ -103,6 +103,9 @@ public class FakeMainFactory extends ArtificialMethod {
                 }
             }
         }
+        if (CoreConfig.v().getPtaConfig().singleentry) {
+            return;
+        }
         Value sv = getNextLocal(RefType.v("java.lang.String"));
         Value mainThread = getNew(RefType.v("java.lang.Thread"));
         Value mainThreadGroup = getNew(RefType.v("java.lang.ThreadGroup"));

@@ -33,12 +33,10 @@ import qilin.core.PTA;
  * target methods) - Number of pointers (local and global) - Total points to
  * sets size (local and global) context insensitive (convert to alloc site)
  */
-public class PTAEvaluator {
-
-    private static final int GB = 1024 * 1024 * 1024;
-    private final RuntimeStat runtimeStat;
-    private final Exporter exporter;
-    private final PTA pta;
+public class PTAEvaluator implements IEvaluator {
+    protected final RuntimeStat runtimeStat;
+    protected final Exporter exporter;
+    protected final PTA pta;
 
     public PTAEvaluator(PTA pta) {
         this.pta = pta;
@@ -49,6 +47,7 @@ public class PTAEvaluator {
     /**
      * Note the start of a qilin.pta run.
      */
+    @Override
     public void begin() {
         Runtime runtime = Runtime.getRuntime();// Getting the runtime reference
         // from system
@@ -62,9 +61,14 @@ public class PTAEvaluator {
         runtimeStat.begin();
     }
 
+    protected PointsToStat createPointsToStat() {
+        return new PointsToStat(pta);
+    }
+
     /**
      * Note the end of a qilin.pta run.
      */
+    @Override
     public void end() {
         // done with processing
         runtimeStat.end();
@@ -75,7 +79,7 @@ public class PTAEvaluator {
         BenchmarkStat benchmarkStat = new BenchmarkStat(pta);
         CallGraphStat callGraphStat = new CallGraphStat(pta);
         TypeClientStat typeClientStat = new TypeClientStat(pta);
-        PointsToStat ptsStat = new PointsToStat(pta);
+        PointsToStat ptsStat = createPointsToStat();
         YummyStat yummyStat = new YummyStat(pta);
         runtimeStat.export(exporter);
         // memory stats
@@ -101,6 +105,7 @@ public class PTAEvaluator {
 
     }
 
+    @Override
     public String toString() {
         return exporter.report();
     }

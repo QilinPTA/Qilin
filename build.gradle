@@ -11,16 +11,21 @@ plugins {
 
 group 'qilin'
 version '1.0-SNAPSHOT'
-sourceCompatibility = 16
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(16)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation(project(':qilin.microben'))
     implementation(project(':qilin.pta'))
     implementation(project(':qilin.core'))
-    implementation(project(':qilin.microben'))
     implementation(project(':qilin.util'))
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
@@ -50,10 +55,6 @@ subprojects {
     group rootProject.group
     version rootProject.version
 
-//    sourceCompatibility = 11
-    sourceCompatibility = 16
-
-
     task sourcesJar(type: Jar) {
         archiveClassifier.set('sources')
         from sourceSets.main.allJava
@@ -64,6 +65,12 @@ subprojects {
         from javadoc.destinationDir
     }
 
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(16)
+            vendor = JvmVendorSpec.ADOPTIUM
+        }
+    }
     publishing.publications {
         qilin(MavenPublication) {
             from components.java
