@@ -1,3 +1,4 @@
+![Docker](https://github.com/DongjieHe/Turner/actions/workflows/docker-image.yml/badge.svg?event=push)
 # QiLin: A fully imperative Java Pointer Analysis Framework.
 The repository hosts QiLin, A new Java Pointer Analysis Framework for supporting fine-grained context-sensitivity.
 
