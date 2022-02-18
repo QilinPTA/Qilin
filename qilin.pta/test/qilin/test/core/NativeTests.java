@@ -18,7 +18,6 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Ignore;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
@@ -26,80 +25,67 @@ import qilin.test.util.JunitTests;
 public class NativeTests extends JunitTests {
     @Test
     public void testArrayCopy() {
-        String[] args = generateArguments("qilin.microben.core.natives.ArrayCopy");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.ArrayCopy"));
     }
 
     @Test
     public void testObjectClone() {
-        String[] args = generateArguments("qilin.microben.core.natives.ObjectClone");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.ObjectClone"));
     }
 
     @Test
     public void testPrivilegedActions0() {
-        String[] args = generateArguments("qilin.microben.core.natives.PrivilegedActions0");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.PrivilegedActions0"));
     }
 
     @Test
     public void testPrivilegedActions1() {
-        String[] args = generateArguments("qilin.microben.core.natives.PrivilegedActions1");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.PrivilegedActions1"));
     }
 
     @Test
     public void testPrivilegedActions2() {
-        String[] args = generateArguments("qilin.microben.core.natives.PrivilegedActions2", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.PrivilegedActions2", "2o"));
     }
 
     @Test
     public void testSystemIn() {
-        String[] args = generateArguments("qilin.microben.core.natives.SystemIn");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.SystemIn"));
     }
 
     @Test
     public void testSystemOut() {
-        String[] args = generateArguments("qilin.microben.core.natives.SystemOut");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.SystemOut"));
     }
 
     @Test
     public void testSystemErr() {
-        String[] args = generateArguments("qilin.microben.core.natives.SystemErr");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.SystemErr"));
     }
 
     @Test
     public void testFinalize() {
-        String[] args = generateArguments("qilin.microben.core.natives.Finalize");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.Finalize"));
     }
 
     @Test
     public void testTreadRun() {
-        String[] args = generateArguments("qilin.microben.core.natives.TreadRun");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.TreadRun"));
     }
 
     @Test
     @Ignore
     public void testCurrentThread() {
-        String[] args = generateArguments("qilin.microben.core.natives.CurrentThread");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.CurrentThread"));
     }
 
     @Test
     public void testRefArrayGet() {
-        String[] args = generateArguments("qilin.microben.core.natives.RefArrayGet");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.RefArrayGet"));
     }
 
     @Test
     public void testRefArraySet() {
-        String[] args = generateArguments("qilin.microben.core.natives.RefArraySet");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.natives.RefArraySet"));
     }
 }

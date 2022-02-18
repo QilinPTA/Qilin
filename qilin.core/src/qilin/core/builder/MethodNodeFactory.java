@@ -228,7 +228,8 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
 
     @Override
     final public void caseNewExpr(NewExpr ne) {
-        SootClass cl = PTAScene.v().loadClassAndSupport(ne.getType().toString());
+        RefType refType = (RefType) ne.getType();
+        SootClass cl = refType.getSootClass();
         PTAUtils.clinitsOf(cl).forEach(mpag::addTriggeredClinit);
         setResult(pag.heapAbstractor().abstractHeap(ne, ne.getType(), method));
     }

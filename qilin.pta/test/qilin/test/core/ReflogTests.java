@@ -18,99 +18,71 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.core.PTA;
 import qilin.test.util.JunitTests;
-import qilin.util.Util;
-
-import java.io.File;
 
 public class ReflogTests extends JunitTests {
     @Test
     public void testFieldGetStatic() {
-        String[] args = generateArguments("qilin.microben.core.reflog.FieldGetStatic");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "FieldGetStatic.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.FieldGetStatic"));
     }
 
     @Test
     public void testFieldGet() {
-        String[] args = generateArguments("qilin.microben.core.reflog.FieldGet");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "FieldGet.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.FieldGet"));
     }
 
     @Test
     public void testFieldSetStatic() {
-        String[] args = generateArguments("qilin.microben.core.reflog.FieldSetStatic");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "FieldSetStatic.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.FieldSetStatic"));
     }
 
     @Test
     public void testFieldSet() {
-        String[] args = generateArguments("qilin.microben.core.reflog.FieldSet");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "FieldSet.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.FieldSet"));
     }
 
     @Test
     public void testArrayNewInstance() {
-        String[] args = generateArguments("qilin.microben.core.reflog.ArrayNewInstance");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "ArrayNewInstance.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.ArrayNewInstance"));
     }
 
     @Test
     public void testConstructorNewInstance() {
-        String[] args = generateArguments("qilin.microben.core.reflog.ConstructorNewInstance");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "ConstructorNewInstance.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.ConstructorNewInstance"));
     }
 
     @Test
     public void testMethodInvokeStatic() {
-        String[] args = generateArguments("qilin.microben.core.reflog.MethodInvokeStatic");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "MethodInvokeStatic.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.MethodInvokeStatic"));
     }
 
     @Test
     public void testMethodInvoke() {
-        String[] args = generateArguments("qilin.microben.core.reflog.MethodInvoke");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "MethodInvoke.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.MethodInvoke"));
     }
 
     @Test
     public void testClassNewInstance() {
-        String[] args = generateArguments("qilin.microben.core.reflog.ClassNewInstance");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "ClassNewInstance.log"});
-        checkAssertions(Main.run(newArgs));
+        checkAssertions(run("qilin.microben.core.reflog.ClassNewInstance"));
     }
 
     @Test
     public void testDoopRefBug() {
-        String[] args = generateArguments("qilin.microben.core.reflog.DoopRefBug");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "DoopRefBug.log"});
-        PTA pta = Main.run(newArgs);
+        PTA pta = run("qilin.microben.core.reflog.DoopRefBug");
         checkAssertions(pta);
     }
 
     @Test
     public void testClassForName() {
-        String[] args = generateArguments("qilin.microben.core.reflog.ClassForName");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "ClassForName.log"});
-        PTA pta = Main.run(newArgs);
+        PTA pta = run("qilin.microben.core.reflog.ClassForName");
         checkAssertions(pta);
     }
 
     @Test
     public void testClassForName1() {
-        String[] args = generateArguments("qilin.microben.core.reflog.ClassForName1");
-        String[] newArgs = Util.concat(args, new String[]{"-reflectionlog", refLogPath + File.separator + "ClassForName1.log"});
-        PTA pta = Main.run(newArgs);
+        PTA pta = run("qilin.microben.core.reflog.ClassForName1");
         checkAssertions(pta);
     }
 }

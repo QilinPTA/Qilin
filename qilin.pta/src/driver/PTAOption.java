@@ -150,8 +150,6 @@ public class PTAOption extends Options {
         // application configuration
         if (cmd.hasOption("mainclass")) {
             PTAConfig.v().getAppConfig().MAIN_CLASS = cmd.getOptionValue("mainclass");
-        } else if (PTAConfig.v().getPtaConfig().singleentry) {
-            throw new RuntimeException("Must specify MAINCLASS when appmode enabled!!!");
         }
         if (cmd.hasOption("jre")) {
             PTAConfig.v().getAppConfig().JRE = cmd.getOptionValue("jre");

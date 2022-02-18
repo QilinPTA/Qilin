@@ -44,6 +44,11 @@ public class PTAScene {
         return instance;
     }
 
+    public static void junitReset() {
+        VirtualCalls.reset();
+        instance = null;
+    }
+
     public static void reset() {
         G.reset();
         VirtualCalls.reset();
@@ -72,6 +77,10 @@ public class PTAScene {
 
     public Value getFieldGlobalThrow() {
         return this.fakeMainFactory.getFieldGlobalThrow();
+    }
+
+    public void setMainClass(SootClass m) {
+        sootScene.setMainClass(m);
     }
 
     /*

@@ -18,11 +18,16 @@
 
 package qilin.test.util;
 
+import driver.Main;
+import driver.PTAFactory;
+import driver.PTAOption;
+import driver.PTAPattern;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
 import qilin.pta.PTAConfig;
+import soot.options.Options;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,50 +37,65 @@ import static org.junit.Assert.assertTrue;
 
 public abstract class JunitTests {
     protected static String appPath, jrePath, refLogPath;
-
+    protected static boolean isSetUp = false;
     @BeforeClass
     public static void setUp() throws IOException {
+        if (isSetUp) {
+            return;
+        }
         File rootDir = new File("../");
         File testDir = new File(rootDir, "qilin.microben" + File.separator + "build" + File.separator + "classes" + File.separator + "java" + File.separator + "main");
         appPath = testDir.getCanonicalPath();
-        System.out.println(appPath);
-        File refLogDir = new File(rootDir, "src" + File.separator + "qilin" + File.separator + "microben" + File.separator + "core" + File.separator + "reflog");
+        System.out.println("APP_PATH:" + appPath);
+        File refLogDir = new File(rootDir, "qilin.microben" + File.separator + "src" + File.separator + "qilin" + File.separator + "microben" + File.separator + "core" + File.separator + "reflog");
         refLogPath = refLogDir.getCanonicalPath();
         File jreFile = new File(".." + File.separator + "artifact" + File.separator + "pta" +
                 File.separator + "lib" + File.separator + "jre" + File.separator + "jre1.6.0_45");
         jrePath = jreFile.getCanonicalPath();
+        String[] args = generateArgumentsx();
+        PTAOption ptaOption = new PTAOption();
+        ptaOption.parseCommandLine(args);
+        Main.setupSoot();
+        isSetUp = true;
     }
 
     @Before
-    public void resetSootAndStream() {
-        System.out.println("reset ...");
-        PTAConfig.reset();
-        PTAScene.reset();
-        System.gc();
-        System.gc();
-        System.gc();
-        System.gc();
-        System.gc();
+    public void reset() {
+        PTAScene.junitReset();
     }
 
-    public String[] generateArguments(String mainClass) {
-        return generateArguments(mainClass, "insens");
+    public PTA run(String mainClass) {
+        return run(mainClass, "insens");
     }
 
-    public String[] generateArguments(String mainClass, String ptaPattern) {
+    public PTA run(String mainClass, String ptaPattern) {
+        PTAConfig.v().getAppConfig().MAIN_CLASS = mainClass;
+        Options.v().set_main_class(mainClass);
+        PTAScene.v().setMainClass(PTAScene.v().getSootClass(mainClass));
+        PTAConfig.v().getPtaConfig().ptaPattern = new PTAPattern(ptaPattern);
+        PTAConfig.v().getPtaConfig().ptaName = PTAConfig.v().getPtaConfig().ptaPattern.toString();
+        System.out.println(PTAConfig.v().getAppConfig().APP_PATH);
+        PTA pta = PTAFactory.createPTA(PTAConfig.v().getPtaConfig().ptaPattern);
+        pta.pureRun();
+        return pta;
+    }
+
+    public static String[] generateArgumentsx() {
         return new String[]{
                 "-singleentry",
-                "-pta=" + ptaPattern,
                 "-apppath",
                 appPath,
+                "-mainclass",
+                "qilin.microben.core.exception.SimpleException",
                 "-se",
-                "-mainclass", mainClass,
                 "-jre=" + jrePath,
                 "-clinit=ONFLY",
                 "-lcs",
                 "-mh",
                 "-pae",
                 "-pe",
+                "-reflectionlog",
+                refLogPath + File.separator + "Reflection.log"
         };
     }
 

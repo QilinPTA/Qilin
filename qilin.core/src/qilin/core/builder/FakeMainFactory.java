@@ -59,7 +59,12 @@ public class FakeMainFactory extends ArtificialMethod {
         }
 
         if (CoreConfig.v().getPtaConfig().singleentry) {
-            ret.addAll(EntryPoints.v().application());
+            List<SootMethod> entries = EntryPoints.v().application();
+            if (entries.isEmpty()) {
+                throw new RuntimeException("Must specify MAINCLASS when appmode enabled!!!");
+            } else {
+                ret.addAll(entries);
+            }
         } else {
             System.out.println("include implicit entry!");
             ret.addAll(EntryPoints.v().application());

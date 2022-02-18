@@ -18,32 +18,27 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class ClinitTests extends JunitTests {
     @Test
     public void testClinitNewExpr() {
-        String[] args = generateArguments("qilin.microben.core.clinit.ClinitNewExpr");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.clinit.ClinitNewExpr"));
     }
 
     @Test
     public void testClinitStaticCall() {
-        String[] args = generateArguments("qilin.microben.core.clinit.ClinitStaticCall");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.clinit.ClinitStaticCall"));
     }
 
     @Test
     public void testClinitStaticLoad() {
-        String[] args = generateArguments("qilin.microben.core.clinit.ClinitStaticLoad");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.clinit.ClinitStaticLoad"));
     }
 
     @Test
     public void testClinitStaticStore() {
-        String[] args = generateArguments("qilin.microben.core.clinit.ClinitStaticStore");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.clinit.ClinitStaticStore"));
     }
 }

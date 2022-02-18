@@ -18,44 +18,38 @@
 
 package qilin.test;
 
-import driver.Main;
+import org.junit.Ignore;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class FlowSensTests extends JunitTests {
     @Test
     public void testLoops() {
-        String[] args = generateArguments("qilin.microben.flowsens.Loops");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.flowsens.Loops"));
     }
 
-    @Test
+    @Ignore
     public void testFlowSens0() {
-        String[] args = generateArguments("qilin.microben.flowsens.FlowSens0");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.flowsens.FlowSens0"));
     }
 
-    @Test
+    @Ignore
     public void testInstanceOf0() {
-        String[] args = generateArguments("qilin.microben.flowsens.InstanceOf0");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.flowsens.InstanceOf0"));
     }
 
-    @Test
+    @Ignore
     public void testBranching1() {
-        String[] args = generateArguments("qilin.microben.flowsens.Branching1");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.flowsens.Branching1"));
     }
 
-    @Test
+    @Ignore
     public void testStrongUpdate1() {
-        String[] args = generateArguments("qilin.microben.flowsens.StrongUpdate1");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.flowsens.StrongUpdate1"));
     }
 
-    @Test
+    @Ignore
     public void testStrongUpdate2() {
-        String[] args = generateArguments("qilin.microben.flowsens.StrongUpdate2");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.flowsens.StrongUpdate2"));
     }
 }

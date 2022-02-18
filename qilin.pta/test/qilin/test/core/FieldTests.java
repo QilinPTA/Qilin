@@ -18,32 +18,27 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class FieldTests extends JunitTests {
     @Test
     public void testInstanceLoad() {
-        String[] args = generateArguments("qilin.microben.core.field.InstanceLoad");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.field.InstanceLoad"));
     }
 
     @Test
     public void testInstanceStore() {
-        String[] args = generateArguments("qilin.microben.core.field.InstanceStore");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.field.InstanceStore"));
     }
 
     @Test
     public void testFieldSensitivity1() {
-        String[] args = generateArguments("qilin.microben.core.field.FieldSensitivity1");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.field.FieldSensitivity1"));
     }
 
     @Test
     public void testFieldSensitivity2() {
-        String[] args = generateArguments("qilin.microben.core.field.FieldSensitivity2");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.field.FieldSensitivity2"));
     }
 }

@@ -18,26 +18,22 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class ExceptionTests extends JunitTests {
     @Test
     public void testSimpleException() {
-        String[] args = generateArguments("qilin.microben.core.exception.SimpleException");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.exception.SimpleException"));
     }
 
     @Test
     public void testExceptionChain() {
-        String[] args = generateArguments("qilin.microben.core.exception.ExceptionChain");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.exception.ExceptionChain"));
     }
 
     @Test
     public void testMethodThrow() {
-        String[] args = generateArguments("qilin.microben.core.exception.MethodThrow");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.exception.MethodThrow"));
     }
 }

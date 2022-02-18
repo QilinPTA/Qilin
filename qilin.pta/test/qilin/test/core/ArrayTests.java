@@ -18,38 +18,32 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class ArrayTests extends JunitTests {
     @Test
     public void testArrayIndex() {
-        String[] args = generateArguments("qilin.microben.core.array.ArrayIndex");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.array.ArrayIndex"));
     }
 
     @Test
     public void testMultiArraySimple() {
-        String[] args = generateArguments("qilin.microben.core.array.MultiArraySimple");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.array.MultiArraySimple"));
     }
 
     @Test
     public void testMultiArrayComplex() {
-        String[] args = generateArguments("qilin.microben.core.array.MultiArrayComplex");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.array.MultiArrayComplex"));
     }
 
     @Test
     public void testArrayCopy() {
-        String[] args = generateArguments("qilin.microben.core.array.ArrayCopy");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.array.ArrayCopy"));
     }
 
     @Test
     public void testArrayElemTypeFiltering() {
-        String[] args = generateArguments("qilin.microben.core.array.ArrayElemTypeFiltering");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.array.ArrayElemTypeFiltering"));
     }
 }

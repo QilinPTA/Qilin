@@ -36,9 +36,9 @@ public class StringConstantNode extends ConstantNode {
     }
 
     public String getString() {
-        if (!(newExpr instanceof String)) {
+        if (!(newExpr instanceof StringConstant)) {
             System.out.println(newExpr + ";;" + newExpr.getClass());
         }
-        return (String) newExpr;
+        return ((StringConstant) newExpr).value;
     }
 }

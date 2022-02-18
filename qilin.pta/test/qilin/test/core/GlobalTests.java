@@ -18,26 +18,22 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class GlobalTests extends JunitTests {
     @Test
     public void testStaticLoad() {
-        String[] args = generateArguments("qilin.microben.core.global.StaticLoad");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.global.StaticLoad"));
     }
 
     @Test
     public void testStaticStore() {
-        String[] args = generateArguments("qilin.microben.core.global.StaticStore");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.global.StaticStore"));
     }
 
     @Test
     public void testStringConstant() {
-        String[] args = generateArguments("qilin.microben.core.global.StringConstant");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.global.StringConstant"));
     }
 }

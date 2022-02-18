@@ -18,68 +18,57 @@
 
 package qilin.test.context;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class CollectionsTests extends JunitTests {
     @Test
     public void testArrayList0() {
-        String[] args = generateArguments("qilin.microben.context.collections.ArrayList0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.ArrayList0", "2o"));
     }
 
     @Test
     public void testLinkedList0() {
-        String[] args = generateArguments("qilin.microben.context.collections.LinkedList0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.LinkedList0", "2o"));
     }
 
     @Test
     public void testVector0() {
-        String[] args = generateArguments("qilin.microben.context.collections.Vector0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.Vector0", "2o"));
     }
 
     @Test
     public void testHashMap0() {
-        String[] args = generateArguments("qilin.microben.context.collections.HashMap0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.HashMap0", "2o"));
     }
 
     @Test
     public void testTreeMap0() {
-        String[] args = generateArguments("qilin.microben.context.collections.TreeMap0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.TreeMap0", "2o"));
     }
 
     @Test
     public void testHashSet0() {
-        String[] args = generateArguments("qilin.microben.context.collections.HashSet0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.HashSet0", "3o"));
     }
 
     @Test
     public void testTreeSet0() {
-        String[] args = generateArguments("qilin.microben.context.collections.TreeSet0", "3o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.TreeSet0", "3o"));
     }
 
     @Test
     public void testHashTable0() {
-        String[] args = generateArguments("qilin.microben.context.collections.HashTable0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.HashTable0", "2o"));
     }
 
     @Test
     public void testPriorityQueue0() {
-        String[] args = generateArguments("qilin.microben.context.collections.PriorityQueue0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.PriorityQueue0", "2o"));
     }
 
     @Test
     public void testStack0() {
-        String[] args = generateArguments("qilin.microben.context.collections.Stack0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.collections.Stack0", "2o"));
     }
 }

@@ -18,20 +18,17 @@
 
 package qilin.test.context;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class TypeTests extends JunitTests {
     @Test
     public void testType1k0() {
-        String[] args = generateArguments("qilin.microben.context.type.Type1k0", "1t");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.type.Type1k0", "1t"));
     }
 
     @Test
     public void testType2k0() {
-        String[] args = generateArguments("qilin.microben.context.type.Type2k0", "2t");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.type.Type2k0", "2t"));
     }
 }

@@ -18,7 +18,6 @@
 
 package qilin.test.context;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
@@ -26,25 +25,21 @@ public class CFATests extends JunitTests {
 
     @Test
     public void testCFA1k0() {
-        String[] args = generateArguments("qilin.microben.context.cfa.CFA1k0", "1c");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.cfa.CFA1k0", "1c"));
     }
 
     @Test
     public void testCFA1k1() {
-        String[] args = generateArguments("qilin.microben.context.cfa.CFA1k1", "1c");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.cfa.CFA1k1", "1c"));
     }
 
     @Test
     public void testCFA1k2() {
-        String[] args = generateArguments("qilin.microben.context.cfa.CFA1k2", "1c");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.cfa.CFA1k2", "1c"));
     }
 
     @Test
     public void testCFA2k() {
-        String[] args = generateArguments("qilin.microben.context.cfa.CFA2k", "2c");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.cfa.CFA2k", "2c"));
     }
 }

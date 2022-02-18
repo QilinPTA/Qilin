@@ -18,26 +18,22 @@
 
 package qilin.test.context;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class HybTests extends JunitTests {
     @Test
     public void testHyb0() {
-        String[] args = generateArguments("qilin.microben.context.hyb.Hyb0", "1h");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.hyb.Hyb0", "1h"));
     }
 
     @Test
     public void testHyb1() {
-        String[] args = generateArguments("qilin.microben.context.hyb.Hyb1", "1h");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.hyb.Hyb1", "1h"));
     }
 
     @Test
     public void testHyb2() {
-        String[] args = generateArguments("qilin.microben.context.hyb.Hyb2", "2h");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.hyb.Hyb2", "2h"));
     }
 }

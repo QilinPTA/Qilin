@@ -18,63 +18,53 @@
 
 package qilin.test.context;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
 public class OBJTests extends JunitTests {
     @Test
     public void testOBJ1k0() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ1k0", "1o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ1k0", "1o"));
     }
 
     @Test
     public void testOBJ1k1() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ1k1", "1o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ1k1", "1o"));
     }
 
     @Test
     public void testOBJ1k2() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ1k2", "1o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ1k2", "1o"));
     }
 
     @Test
     public void testOBJ1k3() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ1k3", "1o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ1k3", "1o"));
     }
 
     @Test
     public void testOBJ1k4() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ1k4", "1o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ1k4", "1o"));
     }
 
     @Test
     public void testOBJ1k5() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ1k5", "1o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ1k5", "1o"));
     }
 
     @Test
     public void testOBJ2k0() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ2k0", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ2k0", "2o"));
     }
 
     @Test
     public void testOBJ2k1() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ2k1", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ2k1", "2o"));
     }
 
     @Test
     public void testOBJ2k2() {
-        String[] args = generateArguments("qilin.microben.context.obj.OBJ2k2", "2o");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.context.obj.OBJ2k2", "2o"));
     }
 
 }

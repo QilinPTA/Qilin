@@ -18,7 +18,6 @@
 
 package qilin.test.core;
 
-import driver.Main;
 import org.junit.Test;
 import qilin.pta.PTAConfig;
 import qilin.test.util.JunitTests;
@@ -26,77 +25,65 @@ import qilin.test.util.JunitTests;
 public class AssignTests extends JunitTests {
     @Test
     public void testCastFail() {
-        String[] args = generateArguments("qilin.microben.core.assign.CastFail");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.CastFail"));
     }
 
     @Test
     public void testCastSucc() {
-        String[] args = generateArguments("qilin.microben.core.assign.CastSucc");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.CastSucc"));
     }
 
     @Test
     public void testReceiver2This() {
-        String[] args = generateArguments("qilin.microben.core.assign.Receiver2This");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.Receiver2This"));
     }
 
     @Test
     public void testSimpleAssign() {
-        String[] args = generateArguments("qilin.microben.core.assign.SimpleAssign");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.SimpleAssign"));
         System.out.println(PTAConfig.v().getAppConfig().MAIN_CLASS);
     }
 
     @Test
     public void testReturnValue0() {
-        String[] args = generateArguments("qilin.microben.core.assign.ReturnValue0");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.ReturnValue0"));
         System.out.println(PTAConfig.v().getAppConfig().MAIN_CLASS);
     }
 
     @Test
     public void testReturnValue1() {
-        String[] args = generateArguments("qilin.microben.core.assign.ReturnValue1");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.ReturnValue1"));
         System.out.println(PTAConfig.v().getAppConfig().MAIN_CLASS);
     }
 
     @Test
     public void testReturnValue2() {
-        String[] args = generateArguments("qilin.microben.core.assign.ReturnValue2");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.ReturnValue2"));
     }
 
     @Test
     public void testReturnValue3() {
-        String[] args = generateArguments("qilin.microben.core.assign.ReturnValue3");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.ReturnValue3"));
     }
 
     @Test
     public void testInterAssign() {
-        String[] args = generateArguments("qilin.microben.core.assign.InterAssign");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.InterAssign"));
     }
 
     @Test
     public void testStaticParameter() {
-        String[] args = generateArguments("qilin.microben.core.assign.StaticParameter");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.StaticParameter"));
     }
 
     @Test
     public void testNullPointer() {
-        String[] args = generateArguments("qilin.microben.core.assign.NullPointer");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.NullPointer"));
     }
 
     @Test
     public void testRecursion() {
-        String[] args = generateArguments("qilin.microben.core.assign.Recursion");
-        checkAssertions(Main.run(args));
+        checkAssertions(run("qilin.microben.core.assign.Recursion"));
         System.out.println(PTAConfig.v().getAppConfig().MAIN_CLASS);
     }
 }
