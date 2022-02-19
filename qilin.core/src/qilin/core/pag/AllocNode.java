@@ -46,9 +46,6 @@ public class AllocNode extends Node implements ContextElement, Numberable {
             }
         }
         this.newExpr = newExpr;
-        if (newExpr instanceof ContextVarNode) {
-            throw new RuntimeException();
-        }
         pag.getAllocNodeNumberer().add(this);
     }
 

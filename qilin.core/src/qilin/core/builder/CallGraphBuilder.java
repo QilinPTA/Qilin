@@ -40,7 +40,6 @@ public class CallGraphBuilder {
     protected final RefType clRunnable = RefType.v("java.lang.Runnable");
 
     protected final Map<VarNode, Collection<VirtualCallSite>> receiverToSites;
-    protected final Map<Type, Map<Unit, Set<SootMethod>>> dispatchCache;
     protected final Map<SootMethod, Map<Object, Stmt>> methodToInvokeStmt;
     protected final Set<MethodOrMethodContext> reachMethods;
     protected final Set<Edge> calledges;
@@ -54,7 +53,6 @@ public class CallGraphBuilder {
         this.pag = pta.getPag();
         PTAScene.v().setCallGraph(new CallGraph());
         receiverToSites = new HashMap<>(PTAScene.v().getLocalNumberer().size());
-        dispatchCache = new HashMap<>();
         methodToInvokeStmt = new HashMap<>();
         reachMethods = new HashSet<>();
         calledges = new HashSet<>();
@@ -134,29 +132,22 @@ public class CallGraphBuilder {
         if (site.kind() == Kind.THREAD && !PTAScene.v().getOrMakeFastHierarchy().canStoreType(type, clRunnable)) {
             return;
         }
-        Map<Unit, Set<SootMethod>> site2targets = dispatchCache.computeIfAbsent(type, k -> new HashMap<>());
         final ChunkedQueue<SootMethod> targetsQueue = new ChunkedQueue<>();
         final QueueReader<SootMethod> targets = targetsQueue.reader();
-        if (!site2targets.containsKey(site.getUnit())) {
-            MethodOrMethodContext container = site.container();
-            if (site.iie() instanceof SpecialInvokeExpr && site.kind() != Kind.THREAD) {
-                SootMethod target = VirtualCalls.v().resolveSpecial((SpecialInvokeExpr) site.iie(), site.subSig(), container.method());
-                // if the call target resides in a phantom class then
-                // "target" will be null, simply do not add the target in that case
-                if (target != null) {
-                    targetsQueue.add(target);
-                }
-            } else {
-                Type mType = site.recNode().getType();
-                VirtualCalls.v().resolve(type, mType, site.subSig(), container.method(), targetsQueue);
+        MethodOrMethodContext container = site.container();
+        if (site.iie() instanceof SpecialInvokeExpr && site.kind() != Kind.THREAD) {
+            SootMethod target = VirtualCalls.v().resolveSpecial((SpecialInvokeExpr) site.iie(), site.subSig(), container.method());
+            // if the call target resides in a phantom class then
+            // "target" will be null, simply do not add the target in that case
+            if (target != null) {
+                targetsQueue.add(target);
             }
-            Set<SootMethod> targetCache = site2targets.computeIfAbsent(site.getUnit(), k -> new HashSet<>());
-            while (targets.hasNext()) {
-                SootMethod target = targets.next();
-                targetCache.add(target);
-            }
+        } else {
+            Type mType = site.recNode().getType();
+            VirtualCalls.v().resolve(type, mType, site.subSig(), container.method(), targetsQueue);
         }
-        for (SootMethod target : site2targets.get(site.getUnit())) {
+        while (targets.hasNext()) {
+            SootMethod target = targets.next();
             if (site.iie() instanceof SpecialInvokeExpr) {
                 Type calleeDeclType = target.getDeclaringClass().getType();
                 Type receiverType = receiverNode.getType();

@@ -19,7 +19,7 @@ repositories {
 
 test {
     useJUnit()
-    maxHeapSize = '30G'
+    maxHeapSize = '2048m'
 }
 
 dependencies {
