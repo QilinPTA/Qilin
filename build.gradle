@@ -73,6 +73,7 @@ subprojects {
     }
     publishing.publications {
         qilin(MavenPublication) {
+            artifactId = artifactId.substring(6)
             from components.java
             artifact sourcesJar
             artifact javadocJar
@@ -81,11 +82,11 @@ subprojects {
 
     publishing.repositories {
         maven {
-            url = "http://corg-kungfu.cse.unsw.edu.au:8765/repository/maven-snapshots/"
-            // url = "http://127.0.0.1:8081/repository/maven-snapshots/"
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/QiLinPTA/QiLin"
             credentials {
-                username "admin"
-                password "admin123"
+                username = project.findProperty("gpr.user") ?: "QiLinPTA"
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
         }
     }
