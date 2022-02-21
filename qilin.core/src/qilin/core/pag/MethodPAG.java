@@ -41,7 +41,7 @@ public class MethodPAG {
     private final ChunkedQueue<Node> internalEdges = new ChunkedQueue<>();
     private final QueueReader<Node> internalReader = internalEdges.reader();
     private final Set<SootMethod> clinits = new HashSet<>();
-    public Collection<Unit> invokeStmts = new HashSet<>();
+    private final Collection<Unit> invokeStmts = new HashSet<>();
     public Body body;
     /**
      * Since now the exception analysis is handled on-the-fly, we should record the
@@ -78,6 +78,14 @@ public class MethodPAG {
 
     public MethodNodeFactory nodeFactory() {
         return nodeFactory;
+    }
+
+    public Collection<Unit> getInvokeStmts() {
+        return invokeStmts;
+    }
+
+    public boolean addCallStmt(Unit unit) {
+        return this.invokeStmts.add(unit);
     }
 
     protected void build() {

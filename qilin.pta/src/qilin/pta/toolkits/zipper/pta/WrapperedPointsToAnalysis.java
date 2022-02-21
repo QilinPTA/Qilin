@@ -287,7 +287,7 @@ public class WrapperedPointsToAnalysis implements PointsToAnalysis {
         this.receiver2return = new HashMap<>();
 
         for (SootMethod sig : prePTA.getNakedReachableMethods()) {
-            prePTA.getPag().getMethodPAG(sig).invokeStmts.forEach(s -> {
+            prePTA.getPag().getMethodPAG(sig).getInvokeStmts().forEach(s -> {
                 if (!(s instanceof AssignStmt)) {
                     return;
                 }
@@ -369,7 +369,7 @@ public class WrapperedPointsToAnalysis implements PointsToAnalysis {
 
         for (final MethodOrMethodContext momc : prePTA.getReachableMethods()) {
             SootMethod sig = momc.method();
-            prePTA.getPag().getMethodPAG(sig).invokeStmts.forEach(s -> {
+            prePTA.getPag().getMethodPAG(sig).getInvokeStmts().forEach(s -> {
                 callIn.put(s, sig);
             });
         }

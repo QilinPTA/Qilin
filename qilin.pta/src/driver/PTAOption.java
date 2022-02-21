@@ -138,6 +138,9 @@ public class PTAOption extends Options {
         if (cmd.hasOption("preonly")) {
             PTAConfig.v().getPtaConfig().preAnalysisOnly = true;
         }
+        if (cmd.hasOption("ctxdebloat")) {
+            PTAConfig.v().getPtaConfig().ctxDebloating = true;
+        }
         if (cmd.hasOption("preciseexceptions")) {
             PTAConfig.v().getPtaConfig().preciseExceptions = true;
         }

@@ -54,6 +54,11 @@ public class PTAConfig extends CoreConfig {
          */
         public boolean preAnalysisOnly = false;
 
+        /**
+         * If this option is turned on, we will apply context debloating techniques.
+         */
+        public boolean ctxDebloating = false;
+
     }
 
     /*

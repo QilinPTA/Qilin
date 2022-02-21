@@ -78,7 +78,7 @@ public final class PTAUtils {
                 LocalVarNode thisRef = (LocalVarNode) srcmpag.nodeFactory().caseThis();
                 final PointsToSetInternal other = fetchInsensitivePointsToResult(pta, thisRef);
 
-                for (final Unit u : srcmpag.invokeStmts) {
+                for (final Unit u : srcmpag.getInvokeStmts()) {
                     final Stmt s = (Stmt) u;
                     InvokeExpr ie = s.getInvokeExpr();
                     if (ie instanceof StaticInvokeExpr) {
@@ -111,7 +111,7 @@ public final class PTAUtils {
             LocalVarNode thisRef = (LocalVarNode) srcmpag.nodeFactory().caseThis();
             final Set<AllocNode> other = pts.computeIfAbsent(thisRef, k -> new HashSet<>());
 
-            for (final Unit u : srcmpag.invokeStmts) {
+            for (final Unit u : srcmpag.getInvokeStmts()) {
                 final Stmt s = (Stmt) u;
                 InvokeExpr ie = s.getInvokeExpr();
                 if (ie instanceof StaticInvokeExpr) {

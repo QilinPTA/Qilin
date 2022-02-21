@@ -150,7 +150,7 @@ public abstract class PartialObjSensPTA extends BasePTA {
                     }
                 }
             }
-            for (final Unit u : srcmpag.invokeStmts) {
+            for (final Unit u : srcmpag.getInvokeStmts()) {
                 final Stmt s = (Stmt) u;
 
                 InvokeExpr ie = s.getInvokeExpr();

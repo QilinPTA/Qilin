@@ -179,7 +179,7 @@ public class PTAPattern {
         P3CTX,
         SELECTX;
 
-        static Map<String, Approach> approaches = new HashMap<>();
+        static final Map<String, Approach> approaches = new HashMap<>();
 
         static {
             Util.add(approaches, BEAN, "bean", "B");

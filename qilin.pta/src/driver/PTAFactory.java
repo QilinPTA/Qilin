@@ -18,9 +18,9 @@
 
 package driver;
 
-import qilin.core.CorePTA;
 import qilin.core.PTA;
 import qilin.parm.ctxcons.*;
+import qilin.pta.PTAConfig;
 import qilin.pta.tools.*;
 
 public class PTAFactory {
@@ -48,8 +48,12 @@ public class PTAFactory {
                     case EAGLE -> {
                         // k-obj pointer analysis with Eagle pre-analysis, Jingbo OOPSLA'19
                         assert ptaPattern.getContextDepth() == ptaPattern.getHeapContextDepth() + 1;
-                        CorePTA eagle = new EaglePTA(ptaPattern.getContextDepth());
-                        return eagle;
+                        BasePTA eagle = new EaglePTA(ptaPattern.getContextDepth());
+                        if (PTAConfig.v().getPtaConfig().ctxDebloating) {
+                            return new DebloatedPTA(eagle);
+                        } else {
+                            return eagle;
+                        }
                     }
                     case BEAN -> {
                         CtxConstructor ctxCons = new ObjCtxConstructor();
@@ -60,11 +64,21 @@ public class PTAFactory {
                     }
                     case ZIPPER -> {
                         CtxConstructor ctxCons = new ObjCtxConstructor();
-                        return new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
+                        BasePTA zipperPTA = new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
+                        if (PTAConfig.v().getPtaConfig().ctxDebloating) {
+                            return new DebloatedPTA(zipperPTA);
+                        } else {
+                            return zipperPTA;
+                        }
                     }
                     case MAHJONG -> {
                         CtxConstructor ctxCons = new ObjCtxConstructor();
-                        return new MahjongPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
+                        BasePTA mahjongPTA = new MahjongPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
+                        if (PTAConfig.v().getPtaConfig().ctxDebloating) {
+                            return new DebloatedPTA(mahjongPTA);
+                        } else {
+                            return mahjongPTA;
+                        }
                     }
                     case DATADRIVEN -> {
                         CtxConstructor ctxCons = new ObjCtxConstructor();
@@ -75,8 +89,14 @@ public class PTAFactory {
                         return new TunnelingPTA(ctxCons, ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth());
                     }
                     default -> {
-                        // normal object-sensitive pointer analysis, Milanova TOSEM'05
-                        return new ObjectSensPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth());
+                        BasePTA kobj = new ObjectSensPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth());
+
+                        if (PTAConfig.v().getPtaConfig().ctxDebloating) {
+                            return new DebloatedPTA(kobj);
+                        } else {
+                            // normal object-sensitive pointer analysis, Milanova TOSEM'05
+                            return kobj;
+                        }
                     }
                 }
             }

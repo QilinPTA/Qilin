@@ -28,7 +28,6 @@ import qilin.core.pag.*;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.util.PTAUtils;
-import qilin.util.Pair;
 import soot.*;
 import soot.jimple.*;
 import soot.jimple.toolkits.callgraph.Edge;
@@ -111,7 +110,7 @@ public final class Solver extends Propagator {
                     cgb.injectCallEdge(sm.getDeclaringClass().getType(), pta.parameterize(sm, pta.emptyContext()), Kind.CLINIT);
                 }
             }
-            recordCallStmts(momc, mpag.invokeStmts);
+            recordCallStmts(momc, mpag.getInvokeStmts());
             recordThrowStmts(momc, mpag.stmt2wrapperedTraps.keySet());
         }
     }

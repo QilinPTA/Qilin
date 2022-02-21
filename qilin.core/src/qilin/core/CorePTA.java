@@ -28,8 +28,6 @@ import qilin.parm.heapabst.HeapAbstractor;
 import qilin.parm.select.CtxSelector;
 import soot.*;
 
-import java.util.Collections;
-
 /*
  * This represents a parameterized PTA which could be concreted to many pointer analyses.
  * */
@@ -196,9 +194,9 @@ public abstract class CorePTA extends PTA {
      */
     @Override
     public PointsToSet reachingObjects(PointsToSet s, final SootField f) {
-        if (f.isStatic())
+        if (f.isStatic()) {
             throw new RuntimeException("The parameter f must be an *instance* field.");
-
+        }
         return reachingObjectsInternal(s, new Field(f));
     }
 
@@ -215,10 +213,11 @@ public abstract class CorePTA extends PTA {
     public PointsToSet reachingObjects(SootField f) {
         if (!f.isStatic()) {
             final PointsToSetInternal ret = setFactory.newSet((f).getType(), pag);
-            FieldValNode fvn = pag.makeFieldValNode(new Field(f));
-            for (ContextField contextField : pag.getContextFieldVarNodeMap().getOrDefault(fvn.getField(), Collections.emptyMap()).values()) {
+            SparkField sparkField = new Field(f);
+            pag.getContextFieldVarNodeMap().values().stream().filter(map -> map.containsKey(sparkField)).forEach(map -> {
+                ContextField contextField = map.get(sparkField);
                 ret.addAll(contextField.getP2Set(), null);
-            }
+            });
             return ret;
         }
 
@@ -231,14 +230,14 @@ public abstract class CorePTA extends PTA {
 
     public PointsToSet reachingObjectsInternal(PointsToSet s, final SparkField f) {
         PointsToSetInternal bases = (PointsToSetInternal) s;
-        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null,
-                pag);
-        for (ContextField contextField : pag.getContextFieldVarNodeMap().getOrDefault(f, Collections.emptyMap()).values()) {
+        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null, pag);
+        pag.getContextFieldVarNodeMap().values().stream().filter(map -> map.containsKey(f)).forEach(map -> {
+            ContextField contextField = map.get(f);
             AllocNode base = contextField.getBase();
             if (bases.contains(base)) {
                 ret.addAll(contextField.getP2Set(), null);
             }
-        }
+        });
         return ret;
     }
 }
