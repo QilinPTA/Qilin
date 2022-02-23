@@ -48,7 +48,6 @@ public class PTAOption extends Options {
         addOption(null, "verbose", "print out all verbose information");
         addOption("clinit", "clinitmode", "APP|FULL|ONFLY", "clinit methods loading mode, default: ONFLY");
         addOption("cg", "dumpcallgraph", "Output .dot callgraph file (default value: false)");
-        addOption("html", "dumphtml", "Dump PAG to html. (default value: false)");
         addOption("jimple", "dumpjimple", "Dump appclasses to jimple. (default value: false)");
         addOption("stats", "dumpstats", "Dump statistics into files. (default value: false)");
         addOption("ptsall", "dumplibpts",

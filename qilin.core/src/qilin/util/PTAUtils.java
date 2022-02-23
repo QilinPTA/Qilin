@@ -324,23 +324,21 @@ public final class PTAUtils {
                 if (!(vn instanceof VarNode)) {
                     continue;
                 }
-                SootClass clz;
+                SootClass clz = null;
                 if (vn instanceof LocalVarNode) {
                     SootMethod sm = ((LocalVarNode) vn).getMethod();
                     if (sm != null) {
                         clz = sm.getDeclaringClass();
-                    } else {
-                        clz = null;
                     }
-                } else if (vn instanceof GlobalVarNode) {
-                    clz = ((GlobalVarNode) vn).getDeclaringClass();
-                } else if (vn instanceof FieldValNode) {
-                    continue;
-                } else {
-                    // assert vn instanceof ContextVarNode;
-                    ContextVarNode cv = (ContextVarNode) vn;
-                    LocalVarNode cvbase = (LocalVarNode) cv.base();
-                    clz = cvbase.getMethod().getDeclaringClass();
+                } else if (vn instanceof GlobalVarNode gvn) {
+                    clz = gvn.getDeclaringClass();
+                } else if (vn instanceof ContextVarNode cv) {
+                    VarNode varNode = cv.base();
+                    if (varNode instanceof LocalVarNode cvbase) {
+                        clz = cvbase.getMethod().getDeclaringClass();
+                    } else if (varNode instanceof GlobalVarNode gvn) {
+                        clz = gvn.getDeclaringClass();
+                    }
                 }
                 if (appOnly && clz != null && !clz.isApplicationClass()) {
                     continue;
@@ -357,7 +355,7 @@ public final class PTAUtils {
                     continue;
                 }
                 p2set.forall(new P2SetVisitor() {
-                    public final void visit(Node n) {
+                    public void visit(Node n) {
                         String label = getNodeLabel(n);
                         nodes.put("[" + label + "]", n);
                         file.print(" ");
