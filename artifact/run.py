@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 import os, sys, shutil
-import pta.ptawrapper as pta
+import qilin as pta
 from util.opt import *
 import util.TerminalColor as tc
 from util.benchmark import BENCHMARKS
