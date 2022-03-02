@@ -14,7 +14,7 @@ CLASSPATH = os.pathsep.join([os.path.join(PA_HOME, 'Qilin-1.0-SNAPSHOT.jar'),])
 runJava_cmd = 'java -Xms1g %s -cp ' + CLASSPATH + ' driver.Main %s'
 OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-help|-h', 'print this message.') \
-                + option('-jre=<[jre1.6.0_45|jre1.8.0_312]>', 'specify the version of JDK.') \
+                + option('-jre=<JRE>', 'specify the version of JDK.') \
                 + bioption('-Xmx', '\b<MAX>', '  Specify the maximum size, in bytes, of the memory allocation pool.') \
                 + bioption('-timeout', 'seconds', 'Timeout for PTA (default value: -1 (unlimited)).') \
                 + option('-ptahelp', 'print help info for pointer analysis.')

@@ -19,6 +19,17 @@ QiLin is introduced in our ECOOP'22 paper. You might want to cite our paper by c
 }
 ```
 ## A Quick Start
+### Download
+This repository contains a `submodule` that contains a set of real-world ready-to-use benchmarks for QiLin. 
+If you want to run QiLin on these benchmarks, so please use the following command to fetch QiLin sources:
+```
+$ git clone --recurse-submodules https://github.com/QiLinPTA/QiLin.git
+```
+
+If you have cloned QiLin in a normal way, you can use this command to download these benchmarks:
+```
+$ git submodule update --init
+```
 ### Building QiLin with Gradle
 We use Gradle as the build automation tool. To build Qilin, use
 ```

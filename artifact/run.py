@@ -87,6 +87,7 @@ def runPTA(analysis, bm, OPTIONSTYLE):
             print('old result found. skip this.')
             return
         cmd += ' > ' + outputFile
+    cmd += " -jre=jre1.6.0_45"
     print(cmd)
     pta.runPointsToAnalysis(cmd.split())
 
@@ -99,6 +100,7 @@ OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-dump', 'dump statistics into files.') \
                 + option('<PTA>', 'specify pointer analysis.') \
                 + option('<Benchmark>', 'specify benchmark.') \
+                + option('-jre=<[jre1.6.0_45|jre1.8.0_312]>', 'specify the JRE version.') \
                 + option('-out=<out>', 'specify output path.') \
                 + option('-M', 'run Turner modularly.') \
                 + option('-pre', 'run pre-analysis only.') \
