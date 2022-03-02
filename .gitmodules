@@ -1,0 +1,3 @@
+[submodule "artifact/benchmarks2"]
+	path = artifact/benchmarks2
+	url = https://github.com/QiLinPTA/benchmarks.git
