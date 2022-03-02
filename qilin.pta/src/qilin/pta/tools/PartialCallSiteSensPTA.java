@@ -29,7 +29,7 @@ import qilin.parm.select.PartialVarSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.util.PTAUtils;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 import soot.*;
 import soot.jimple.*;
 import soot.util.queue.QueueReader;
@@ -67,8 +67,7 @@ public abstract class PartialCallSiteSensPTA extends BasePTA {
 
     @Override
     public void run() {
-        TimeWatcher sparkTimer = new TimeWatcher("Spark");
-        sparkTimer.start();
+        Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
         System.out.println(sparkTimer);
@@ -87,8 +86,7 @@ public abstract class PartialCallSiteSensPTA extends BasePTA {
 
     // =========context selector=============
     protected void select() {
-        TimeWatcher preTimer = new TimeWatcher("pre-analysis");
-        preTimer.start();
+        Stopwatch preTimer = Stopwatch.newAndStart("pre-analysis");
         Map<Object, Integer> ret = calculatingNode2Length();
         ret.forEach((sparkNode, l) -> {
             if (l > 0) {

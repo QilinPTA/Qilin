@@ -8,7 +8,7 @@ import qilin.pta.toolkits.zipper.flowgraph.Node;
 import qilin.pta.toolkits.zipper.flowgraph.ObjectFlowGraph;
 import qilin.pta.toolkits.zipper.pta.PointsToAnalysis;
 import qilin.util.ANSIColor;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 import qilin.util.graph.ConcurrentDirectedGraphImpl;
 import soot.SootMethod;
 import soot.Type;
@@ -73,9 +73,8 @@ public class Zipper {
     }
 
     public static ObjectFlowGraph buildObjectFlowGraph(PointsToAnalysis pta) {
-        TimeWatcher ofgTimer = new TimeWatcher("Object Flow Graph Timer");
+        Stopwatch ofgTimer = Stopwatch.newAndStart("Object Flow Graph Timer");
         System.out.println("Building OFG (Object Flow Graph) ... ");
-        ofgTimer.start();
         ObjectFlowGraph ofg = new ObjectFlowGraph(pta);
         ofgTimer.stop();
         System.out.println(ofgTimer);

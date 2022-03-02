@@ -18,19 +18,25 @@
 
 package qilin.util;
 
-public class TimeWatcher {
+public class Stopwatch {
     private final String name;
     private long elapsedTime;
     private long startTime;
     private boolean inCounting;
 
-    public TimeWatcher(final String name) {
+    public static Stopwatch newAndStart(final String name) {
+        Stopwatch stopwatch =  new Stopwatch(name);
+        stopwatch.start();
+        return stopwatch;
+    }
+
+    private Stopwatch(final String name) {
         this.elapsedTime = 0L;
         this.inCounting = false;
         this.name = name;
     }
 
-    public void start() {
+    private void start() {
         if (!this.inCounting) {
             this.inCounting = true;
             this.startTime = System.currentTimeMillis();
@@ -44,17 +50,22 @@ public class TimeWatcher {
         }
     }
 
-    public float inSecond() {
+    public float elapsed() {
         return this.elapsedTime / 1000.0f;
     }
 
-    public void clear() {
+    public void reset() {
         this.elapsedTime = 0L;
         this.inCounting = false;
     }
 
+    public void restart() {
+        reset();
+        start();
+    }
+
     @Override
     public String toString() {
-        return String.format("%s elapsed time: %.2fs", this.name, this.inSecond());
+        return String.format("%s elapsed time: %.2fs", this.name, this.elapsed());
     }
 }

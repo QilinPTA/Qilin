@@ -26,7 +26,7 @@ import qilin.core.PTAScene;
 import qilin.pta.PTAConfig;
 import qilin.util.MemoryWatcher;
 import qilin.util.PTAUtils;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 import soot.options.Options;
 
 import java.io.*;
@@ -51,8 +51,7 @@ public class Main {
     }
 
     public static void mainRun(String[] args) {
-        TimeWatcher ptaTimer = new TimeWatcher("Main PTA (including pre-analysis)");
-        ptaTimer.start();
+        Stopwatch ptaTimer = Stopwatch.newAndStart("Main PTA (including pre-analysis)");
         long pid = ProcessHandle.current().pid();
         MemoryWatcher memoryWatcher = new MemoryWatcher(pid, "Main PTA");
         memoryWatcher.start();

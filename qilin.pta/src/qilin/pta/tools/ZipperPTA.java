@@ -28,7 +28,7 @@ import qilin.parm.select.PartialMethodLvSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.pta.toolkits.zipper.Main;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 import soot.*;
 import soot.jimple.*;
 import soot.util.queue.QueueReader;
@@ -66,13 +66,11 @@ public class ZipperPTA extends BasePTA {
 
     @Override
     public void run() {
-        TimeWatcher sparkTimer = new TimeWatcher("Spark");
-        sparkTimer.start();
+        Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
         System.out.println(sparkTimer);
-        TimeWatcher zipperTimer = new TimeWatcher("Zipper");
-        zipperTimer.start();
+        Stopwatch zipperTimer = Stopwatch.newAndStart("Zipper");
         Main.run(prePTA, PCMs);
         zipperTimer.stop();
         System.out.println(zipperTimer);

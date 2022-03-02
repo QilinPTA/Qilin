@@ -5,7 +5,7 @@ import qilin.core.pag.AllocNode;
 import qilin.pta.toolkits.mahjong.fpg.FieldPointstoGraph;
 import qilin.pta.toolkits.mahjong.pta.PTAProvider;
 import qilin.pta.toolkits.mahjong.pta.PTAProviderImpl;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 
 import java.util.Collection;
 import java.util.Map;
@@ -19,8 +19,7 @@ public class Mahjong {
     public static void run(PTA pta, Map<Object, Object> heapModelMap) {
         FieldPointstoGraph fpg = buildFPG(pta);
         System.out.print("Creating heap abstraction ... ");
-        TimeWatcher mahjongTimer = new TimeWatcher("Mahjong");
-        mahjongTimer.start();
+        Stopwatch mahjongTimer = Stopwatch.newAndStart("Mahjong");
         HeapAbstraction heapAbs = new HeapAbstraction(fpg);
         Map<AllocNode, AllocNode> mom = heapAbs.computeMergedObjectMap();
         mahjongTimer.stop();
@@ -33,8 +32,7 @@ public class Mahjong {
 
     public static FieldPointstoGraph buildFPG(PTA pta) {
         System.out.print("Building FPG (Field Points-to Graph) ... ");
-        TimeWatcher fpgTimer = new TimeWatcher("FPG Construction");
-        fpgTimer.start();
+        Stopwatch fpgTimer = Stopwatch.newAndStart("FPG Construction");
         PTAProvider fptProvider = new PTAProviderImpl(pta);
         FieldPointstoGraph fpg = new FieldPointstoGraph(fptProvider);
         fpgTimer.stop();

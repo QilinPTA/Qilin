@@ -26,6 +26,7 @@ import qilin.pta.toolkits.bean.oag.context.ContextSelector;
 import qilin.pta.toolkits.bean.oag.context.RepresentativeContextSelector;
 import qilin.util.ANSIColor;
 import qilin.util.Pair;
+import qilin.util.Stopwatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,23 +35,23 @@ import java.util.Set;
 public class Bean {
     public static void run(PTA pta, Map<Object, Map<Object, Map<Object, Object>>> beanNexCtxMap) {
         System.out.println("Constructing object allocation graph (OAG) ...");
-        long start = System.currentTimeMillis();
+        Stopwatch timer = Stopwatch.newAndStart("OAG construction");
         OAG oag = new OAG(pta);
         oag.build();
-        long end = System.currentTimeMillis();
+        timer.stop();
         System.out.print(ANSIColor.BOLD + "OAG construction: " + ANSIColor.GREEN +
-                String.format("%.2fs", (end - start) / 1000F) + ANSIColor.RESET + "\n");
+                String.format("%.2fs", timer.elapsed()) + ANSIColor.RESET + "\n");
 
         System.out.println("Computing contexts...");
-        start = System.currentTimeMillis();
+        timer.restart();
         // The depth indicates the depth of heap context.
         // The method context has 1 more level than heap context.
         // Here depth is 1 which corresponds to 2-object-sensitive analysis
         // with 1 heap context.
         ContextSelector cs = new RepresentativeContextSelector(oag, 1);
-        end = System.currentTimeMillis();
+        timer.stop();
         System.out.print(ANSIColor.BOLD + "Context computation: " + ANSIColor.GREEN +
-                String.format("%.2fs", (end - start) / 1000F) + ANSIColor.RESET + "\n");
+                String.format("%.2fs", timer.elapsed()) + ANSIColor.RESET + "\n");
 
         writeContext(cs, oag, beanNexCtxMap);
     }

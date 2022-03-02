@@ -28,7 +28,7 @@ import qilin.parm.select.HeuristicSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.pta.toolkits.bean.main.Bean;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,13 +61,11 @@ public class BeanPTA extends BasePTA {
 
     @Override
     public void run() {
-        TimeWatcher sparkTimer = new TimeWatcher("Spark");
-        sparkTimer.start();
+        Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
         System.out.println(sparkTimer);
-        TimeWatcher beanTimer = new TimeWatcher("Bean");
-        beanTimer.start();
+        Stopwatch beanTimer = Stopwatch.newAndStart("Bean");
         Bean.run(prePTA, beanNexCtxMap);
         beanTimer.stop();
         System.out.println(beanTimer);

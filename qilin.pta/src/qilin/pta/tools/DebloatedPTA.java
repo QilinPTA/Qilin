@@ -29,7 +29,7 @@ import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.pta.toolkits.conch.Conch;
 import qilin.stat.IEvaluator;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 import soot.*;
 
 import java.util.HashSet;
@@ -57,13 +57,11 @@ public class DebloatedPTA extends BasePTA {
     }
 
     public void run() {
-        TimeWatcher sparkTimer = new TimeWatcher("Spark");
-        sparkTimer.start();
+        Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
         System.out.println(sparkTimer);
-        TimeWatcher conchTimer = new TimeWatcher("Conch");
-        conchTimer.start();
+        Stopwatch conchTimer = Stopwatch.newAndStart("Conch");
         Conch hc = new Conch(prePTA);
         hc.runClassifier();
         this.ctxDepHeaps.addAll(hc.ctxDependentHeaps());

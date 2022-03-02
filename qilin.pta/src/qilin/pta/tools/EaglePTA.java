@@ -23,7 +23,7 @@ import qilin.core.pag.LocalVarNode;
 import qilin.core.pag.Parm;
 import qilin.pta.toolkits.eagle.Eagle;
 import qilin.util.Pair;
-import qilin.util.TimeWatcher;
+import qilin.util.Stopwatch;
 import soot.Local;
 import soot.jimple.Expr;
 import soot.jimple.NewArrayExpr;
@@ -46,14 +46,12 @@ public class EaglePTA extends PartialObjSensPTA {
 
     @Override
     protected Map<Object, Integer> calculatingNode2Length() {
-        TimeWatcher timer = new TimeWatcher("TransGraph Construction");
-        timer.start();
+        Stopwatch timer = Stopwatch.newAndStart("TransGraph Construction");
         Eagle eagle = new Eagle();
         eagle.buildGraph(prePTA);
         timer.stop();
         System.out.println(timer);
-        TimeWatcher eagleTimer = new TimeWatcher("Eagle Selection");
-        eagleTimer.start();
+        Stopwatch eagleTimer = Stopwatch.newAndStart("Eagle Selection");
         Map<Object, Integer> ret = eagle.contxtLengthAnalysis();
         eagleTimer.stop();
         System.out.println(eagleTimer);
