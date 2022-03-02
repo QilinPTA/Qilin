@@ -42,7 +42,7 @@ task fatJar(type: Jar, dependsOn: ['build']) {
     doLast {
         copy {
             from "$buildDir/libs/${archiveBaseName.get()}-${getArchiveVersion().get()}.jar"
-            into "$rootDir/artifact/pta/"
+            into "$rootDir/artifact/"
         }
     }
 }
