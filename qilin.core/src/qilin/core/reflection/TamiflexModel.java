@@ -212,8 +212,10 @@ public class TamiflexModel extends ReflectionModel {
                     assert !(base instanceof NullConstant);
                     fieldRef = new JInstanceFieldRef(base, field.makeRef());
                 }
-                Stmt stmt = new JAssignStmt(lvalue, fieldRef);
-                ret.add(stmt);
+                if (fieldRef.getType() instanceof  RefLikeType) {
+                    Stmt stmt = new JAssignStmt(lvalue, fieldRef);
+                    ret.add(stmt);
+                }
             }
         }
         return ret;
@@ -387,12 +389,8 @@ public class TamiflexModel extends ReflectionModel {
             }
         }
         if (ret.size() == 0 && potential.size() > 0) {
-            System.out.println("Warning: the refection log or LineNumberTag is incorrect!");
-            System.out.println(inClzDotMthd + ";" + kind + ";;" + lineNumber + ";" + potential.size());
-            for (Stmt s : potential) {
-                LineNumberTag tag = (LineNumberTag) s.getTag("LineNumberTag");
-                System.out.println(s + ":" + (tag == null ? "null" : tag.getLineNumber()));
-            }
+            System.out.print("Warning: Mismatch between statement and reflection log entry - ");
+            System.out.println(kind + ";" + inClzDotMthd + ";" + lineNumber + ";");
             return potential;
         } else {
             return ret;

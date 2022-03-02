@@ -20,7 +20,7 @@ package qilin.core.reflection;
 
 public enum ReflectionKind {
     ClassForName, ClassNewInstance, ConstructorNewInstance, MethodInvoke, FieldSet, FieldGet, MethodGet, ArrayNewInstance,
-    ArrayGet, ArraySet;
+    ArrayGet, ArraySet, FieldGetName;
 
     public static ReflectionKind parse(String kindStr) {
         return switch (kindStr) {
@@ -30,7 +30,8 @@ public enum ReflectionKind {
             case "Method.invoke" -> MethodInvoke;
             case "Method.getName" -> MethodGet;
             case "Field.set*" -> FieldSet;
-            case "Field.get*", "Field.getName" -> FieldGet;
+            case "Field.get*" -> FieldGet;
+            case "Field.getName" -> FieldGetName;
             case "Array.newInstance" -> ArrayNewInstance;
             default -> null;
         };
