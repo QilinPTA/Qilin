@@ -49,8 +49,8 @@ public abstract class JunitTests {
         System.out.println("APP_PATH:" + appPath);
         File refLogDir = new File(rootDir, "qilin.microben" + File.separator + "src" + File.separator + "qilin" + File.separator + "microben" + File.separator + "core" + File.separator + "reflog");
         refLogPath = refLogDir.getCanonicalPath();
-        File jreFile = new File(".." + File.separator + "artifact" + File.separator + "pta" +
-                File.separator + "lib" + File.separator + "jre" + File.separator + "jre1.6.0_45");
+        File jreFile = new File(".." + File.separator + "artifact" + File.separator + "benchmarks" +
+                File.separator + "JREs" + File.separator + "jre1.6.0_45");
         jrePath = jreFile.getCanonicalPath();
         String[] args = generateArgumentsx();
         PTAOption ptaOption = new PTAOption();
