@@ -53,7 +53,7 @@ public class Turner {
 
     ////////////////////////////////////////////////////////////////////////
     public Map<Object, Integer> contxtLengthAnalysis() {
-        this.ocg = new OCG(prePTA, hk);
+        this.ocg = new OCG(prePTA);
         ocg.run();
         mergeNodeAndEdgeCount(ocg.getTotalNodeCount(), ocg.getTotalEdgeCount());
         // compute level for variables in methods
@@ -120,7 +120,7 @@ public class Turner {
             Map<Object, Integer> ret2 = new HashMap<>();
             ret1.forEach((w, v) -> {
                 if (w instanceof AllocNode) {
-                    ret2.put(w, ocg.getLevel((AllocNode) w) > 0 ? hk : 0);
+                    ret2.put(w, ocg.isAliasable((AllocNode) w) ? hk : 0);
                 } else {
                     ret2.put(w, k);
                 }
@@ -141,7 +141,7 @@ public class Turner {
         int bottoms = 0;
         int topandbottoms = 0;
         for (AllocNode o : prePTA.getPag().getAllocNodes()) {
-            if (this.ocg.getLevel(o) == 0) {
+            if (!this.ocg.isAliasable(o)) {
                 cibyocg++;
             } else if (ret.containsKey(o) && ret.get(o) > 0) {
                 csobj++;

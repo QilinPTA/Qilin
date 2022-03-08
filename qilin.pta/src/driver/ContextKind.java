@@ -26,7 +26,7 @@ import java.util.Map;
 
 public enum ContextKind {
     INSENS, CALLSITE, OBJECT, TYPE, HYBOBJ, HYBTYPE;
-    static Map<String, ContextKind> contextKinds = new HashMap<>();
+    static final Map<String, ContextKind> contextKinds = new HashMap<>();
 
     static {
         Util.add(contextKinds, INSENS, "insensitive", "insens", "ci");

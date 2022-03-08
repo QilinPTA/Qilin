@@ -32,15 +32,13 @@ import java.util.*;
 // Object Containment Graph
 public class OCG {
     public final PTA pta;
-    public final int k;
     protected final Map<LocalVarNode, Set<AllocNode>> pts;
     public Map<AllocNode, OCGNode> nodes;
     private int total_node_count = 0;
     private int total_edge_count = 0;
 
-    public OCG(PTA pta, int k) {
+    public OCG(PTA pta) {
         this.pta = pta;
-        this.k = k;
         this.pts = PTAUtils.calcStaticThisPTS(pta);
         this.nodes = new HashMap<>();
         buildGraph();
@@ -54,9 +52,7 @@ public class OCG {
             if (base instanceof ConstantNode) {
                 return;
             }
-//            if (base.getMethod() == null) {
-//                return;
-//            }
+
             SparkField f = contextField.getField();
             if (f.getType() instanceof ArrayType at) {
                 if (at.baseType instanceof PrimType) {
@@ -86,15 +82,6 @@ public class OCG {
 
     public int getTotalEdgeCount() {
         return total_edge_count;
-    }
-
-    public boolean isAliasable(AllocNode allocNode) {
-        OCGNode node = this.nodes.getOrDefault(allocNode, null);
-        if (node == null) {
-            return false;
-        } else {
-            return node.level != 0;
-        }
     }
 
     /**
@@ -163,24 +150,12 @@ public class OCG {
         }
     }
 
-    private boolean isMidObj(OCGNode node) {
-        return !node.successors.isEmpty() && !node.predecessors.isEmpty();
-    }
-
-    private boolean isOldTop(OCGNode node) {
-        return node.predecessors.isEmpty();
-    }
-
-    private boolean isOldBottom(OCGNode node) {
-        return node.successors.isEmpty();
-    }
-
     private boolean isNewTop(OCGNode node) {
-        return isOldTop(node) && !isFactoryObject(node.ir);
+        return node.predecessors.isEmpty() && !isFactoryObject(node.ir);
     }
 
     private boolean isNewBottom(OCGNode node) {
-        return isOldBottom(node);
+        return node.successors.isEmpty();
     }
 
     public boolean isTop(AllocNode heap) {
@@ -191,180 +166,40 @@ public class OCG {
         return !nodes.containsKey(heap) || isNewBottom(findOrCreate(heap));
     }
 
-    /*
-     * bottom objects:
-     * (a) NEW-BOT = 0 and all others k (compared with 2o), same as ZERO_BOTTOM.
-     * (b) NEW-BOT = k and all the others same as p-2o (compared with p-2o).
-     * */
-    private int bottomExpA(OCGNode node) {
-        return isNewBottom(node) ? 0 : k;
+    private boolean isNotTopAndBottom(OCGNode node) {
+        return !isNewBottom(node) && !isNewTop(node);
     }
 
-    private int bottomExpB(OCGNode node) {
-        if (isNewBottom(node)) {
-            return k;
+    public boolean isAliasable(AllocNode allocNode) {
+        OCGNode node = this.nodes.getOrDefault(allocNode, null);
+        if (node == null) {
+            return false;
         } else {
-            return excludeFactoryDefault(node);
+            return node.aliasable;
         }
-    }
-
-    /*
-     * top objects:
-     * (a) NEW-TOP = 0 and all the others as k (compared with 2o)
-     * (b) NEW-TOP = k and all the others same as p-2o (compared with p-2o).
-     * */
-
-    private int topExpA(OCGNode node) {
-        if (isNewTop(node)) {
-            return 0;
-        } else {
-            return k;
-        }
-    }
-
-    private int topExpB(OCGNode node) {
-        if (isNewTop(node)) {
-            return k;
-        } else {
-            return excludeFactoryDefault(node);
-        }
-    }
-
-    /*
-     * top and bottom:
-     * (a) NEW-BOT \ cap NEW-TOP = 0 and all others k (compared with 2o)
-     * (b) NEW-BOT \cap NEW-TOP = k and all others as in p-2o (compared with p-2o)
-     * */
-    private int bottomTopExpA(OCGNode node) {
-        if (isNewTop(node) && isNewBottom(node)) {
-            return 0;
-        } else {
-            return k;
-        }
-    }
-
-    private int bottomTopExpB(OCGNode node) {
-        if (isNewTop(node) && isNewBottom(node)) {
-            return k;
-        } else {
-            return excludeFactoryDefault(node);
-        }
-    }
-
-    /*
-     * Four kinds of nodes in OCG in total:
-     * (1) N1: |succ(n)| == 0 and |pred(n)| == 0
-     * (2) N2: |succ(n)| != 0 and |pred(n)| == 0
-     * (3) N3: |succ(n)| == 0 and |pred(n)| != 0
-     * (4) N4: |succ(n)| != 0 and |pred(n)| != 0
-     * Several configuration:
-     * (a) X_FACTORY_TOP_ONLY(DEFAULT): Level(N4|N2 \cap FACTORY) = k, Level(N1|N3| N2 \ FACTORY) = 0.
-     * (b) X_FACTORY_NONE: Level(N4) = k, Level(N1|N2|N3) = 0.
-     * (c) X_FACTORY_BOTH: Level(N4 | Factory) = k; Level(N1 \cup \N2 \cup N3 \ FACTORY) = 0;
-     *
-     * (d-I) ZERO_BOTTOM: Level(N4) = k; Level(N1|N3) = 0; Level(N2) = k;
-     * (d-II) ZERO_BOTTOM2: Level(N3) = 0; Level(N1|N2|N4) = k;
-     * (e-I) ZERO_TOP: Level(N1|N2\FACTORY) = 0; Level(N3|N4|N2 \cap FACTORY) = k;
-     * (e-II) ZERO_TOP2: Level(N2\FACTORY) = 0; Level(N1|N3|N4|N2 \cap Factory) = k;
-     * (e-III) ZERO_TOP3: Level(N2|N3|N4) = k; Level(N1) = 0;
-     * (f) ZERO_NONE: Level(N1|N2|N3|N4) = k;
-     * */
-    private int excludeFactoryDefault(OCGNode node) {
-        if (isNewBottom(node) || isNewTop(node)) {
-            return 0;
-        } else {
-            return k;
-        }
-    }
-
-    private int excludeFactoryNone(OCGNode node) {
-        if (isMidObj(node)) {
-            return k;
-        } else {
-            return 0;
-        }
-    }
-
-    private int excludeFactoryBoth(OCGNode node) {
-        if (isMidObj(node) || isFactoryObject(node.ir)) {
-            return k;
-        } else {
-            return 0;
-        }
-    }
-
-    private int zeroTop(OCGNode node) {
-        return isOldTop(node) && (isOldBottom(node) || !isFactoryObject(node.ir)) ? 0 : k;
-    }
-
-    private int zeroTop2(OCGNode node) {
-        return isNewTop(node) && !isOldBottom(node) ? 0 : k;
-    }
-
-    private int zeroTop3(OCGNode node) {
-        return isOldTop(node) && isOldBottom(node) ? 0 : k;
-    }
-
-    private int zeroBottom(OCGNode node) {
-        return isNewBottom(node) ? 0 : k;
-    }
-
-    private int zeroBottom2(OCGNode node) {
-        return isNewBottom(node) && !isOldTop(node) ? 0 : k;
     }
 
     public void run() {
-        int[] a = new int[k + 1];
+        int[] a = new int[2];
         System.out.println(PTAConfig.v().hgConfig);
         for (OCGNode node : nodes.values()) {
             PTAConfig.HGConfig hgConfig = PTAConfig.v().hgConfig;
-            switch (hgConfig) {
-                case TOP_A -> node.level = topExpA(node);
-                case TOP_B -> node.level = topExpB(node);
-                case BOTTOM_A -> node.level = bottomExpA(node);
-                case BOTTOM_B -> node.level = bottomExpB(node);
-                case BOTTOM_TOP_A -> node.level = bottomTopExpA(node);
-                case BOTTOM_TOP_B -> node.level = bottomTopExpB(node);
-                case ZERO_TOP -> node.level = zeroTop(node);
-                case ZERO_TOP2 -> node.level = zeroTop2(node);
-                case ZERO_TOP3 -> node.level = zeroTop3(node);
-                case ZERO_BOTTOM -> node.level = zeroBottom(node);
-                case ZERO_BOTTOM2 -> node.level = zeroBottom2(node);
-                case PHASE_TWO -> node.level = k;
-                case X_FACTORY_NONE ->
-                        /*
-                         * EXCLUDE_FACTORY_NONE: not exclude factory, very fast (faster than both eagle and zipper),
-                         * but less precise (still precise than zipper, lose 1.x% of precision).
-                         */
-                        node.level = excludeFactoryNone(node);
-                case X_FACTORY_BOTH ->
-                        /*
-                         * EXCLUDE_FACTORY_BOTH: exclude factory objects at both top and bottom, very very precise,
-                         * but a bit less faster than zipper (still faster than eagle).
-                         */
-                        node.level = excludeFactoryBoth(node);
-                default ->
-                        /*
-                         * EXCLUDE_FACTORY_TOP_ONLY: exclude factory only at top, very precise
-                         * but less faster (is comparable to zipper). This Option is used in paper.
-                         */
-                        node.level = excludeFactoryDefault(node);
+            if (hgConfig == PTAConfig.HGConfig.PHASE_TWO) {
+                node.aliasable = true;
+            } else {
+                node.aliasable = isNotTopAndBottom(node);
             }
-            a[node.level]++;
+            if (node.aliasable) {
+                a[1]++;
+            } else {
+                a[0]++;
+            }
+
         }
-        for (int i = 0; i <= k; ++i) {
+        for (int i = 0; i < 2; ++i) {
             System.out.println("#level " + i + ": " + a[i]);
         }
         stat();
-    }
-
-    public int getLevel(AllocNode allocNode) {
-        if (nodes.containsKey(allocNode)) {
-            OCGNode hgNode = findOrCreate(allocNode);
-            return hgNode.level;
-        } else {
-            return 0;
-        }
     }
 
     protected void addEdge(OCGNode pre, OCGNode succ) {
@@ -377,11 +212,11 @@ public class OCG {
         public final AllocNode ir;
         public Set<OCGNode> successors;
         public Set<OCGNode> predecessors;
-        public int level;
+        public boolean aliasable;
 
         public OCGNode(AllocNode ir) {
             this.ir = ir;
-            this.level = 0;
+            this.aliasable = false;
             this.successors = new HashSet<>();
             this.predecessors = new HashSet<>();
         }

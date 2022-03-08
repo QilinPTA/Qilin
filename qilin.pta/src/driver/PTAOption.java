@@ -44,8 +44,6 @@ public class PTAOption extends Options {
     public PTAOption() {
         addOption("app", "apppath", "dir or jar",
                 "The directory containing the classes for the application or the application jar file (default: .)");
-        addOption("b", "bunch", "A bunch test mode for multiple singleentries running. (default value: false)");
-        addOption(null, "verbose", "print out all verbose information");
         addOption("clinit", "clinitmode", "APP|FULL|ONFLY", "clinit methods loading mode, default: ONFLY");
         addOption("cg", "dumpcallgraph", "Output .dot callgraph file (default value: false)");
         addOption("jimple", "dumpjimple", "Dump appclasses to jimple. (default value: false)");
@@ -53,8 +51,7 @@ public class PTAOption extends Options {
         addOption("ptsall", "dumplibpts",
                 "Dump points-to of lib vars results to ./output/qilin.pta.txt (default value: false)");
         addOption("pag", "dumppag", "Print PAG to terminal. (default value: false)");
-        addOption("pts", "dumppts", "Dump points-to results to ./output/qilin.pta.txt (default value: false)");
-        addOption(null, "exclude", "package", "Exclude selected packages");
+        addOption("pts", "dumppts", "Dump points-to results to ./output/pta.txt (default value: false)");
         addOption("ac", "extraarraycontext", "add more context for arrays (default value: false)");
         addOption("h", "help", "print this message");
         addOption("mh", "mergeheap",
@@ -76,8 +73,6 @@ public class PTAOption extends Options {
         addOption("se", "singleentry", "A lightweight mode with only one main method entry. (default value: false)");
         addOption("sa", "stringanalysis", "Enable string analysis (default value: false)");
         addOption("sc", "stringconstants", "Propagate all string constants (default value: false)");
-        addOption("bl", "binarylevel", "Analyze variables either sensitive or insensitive (default value: false)");
-        addOption("ml", "methodlevel", "Analyze only methods either sensitive or insensitive (default value: false)");
         addOption("pre", "preonly", "Run only pre-analysis (default value: false)");
         addOption("hgc", "hgconfig", "[X_FACTORY_NONE, X_FACTORY_TOP_ONLY, X_FACTORY_BOTH, ZERO_TOP, ZERO_TOP2, ZERO_TOP3, ZERO_BOTTOM, ZERO_BOTTOM2, BOTTOM_A, BOTTOM_B, TOP_A, TOP_B, BOTTOM_TOP_A, BOTTOM_TOP_B, PHASE_TWO, PHASE_ONE]", "Run HG in given setting (default value: X_FACTORY_TOP_ONLY)");
         addOption("pae", "precisearray", "Enable precise Array Element type (default value: false)");
@@ -127,12 +122,6 @@ public class PTAOption extends Options {
         }
         if (cmd.hasOption("clinitmode")) {
             PTAConfig.v().getPtaConfig().clinitMode = PTAConfig.ClinitMode.valueOf(cmd.getOptionValue("clinitmode"));
-        }
-        if (cmd.hasOption("binarylevel")) {
-            PTAConfig.v().getPtaConfig().useBinaryLevel = true;
-        }
-        if (cmd.hasOption("methodlevel")) {
-            PTAConfig.v().getPtaConfig().methodLevel = true;
         }
         if (cmd.hasOption("preonly")) {
             PTAConfig.v().getPtaConfig().preAnalysisOnly = true;

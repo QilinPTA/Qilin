@@ -41,15 +41,6 @@ public class PTAConfig extends CoreConfig {
         public PTAPattern ptaPattern;
 
         /**
-         * If this option is turned on, variables are either analyzed context-sensitive or insensitive.
-         */
-        public boolean useBinaryLevel = false;
-        /**
-         * If this option is turned on, only methods use selective context level (for eagle and mercurial only).
-         */
-        public boolean methodLevel = false;
-
-        /**
          * If this option is turned on, then main analysis will not run.
          */
         public boolean preAnalysisOnly = false;
@@ -66,8 +57,7 @@ public class PTAConfig extends CoreConfig {
      * X => EXCLUDE
      * */
     public enum HGConfig {
-        DEFAULT, X_FACTORY_NONE, X_FACTORY_BOTH, ZERO_TOP, ZERO_TOP2, ZERO_TOP3, ZERO_BOTTOM, ZERO_BOTTOM2,
-        BOTTOM_A, BOTTOM_B, TOP_A, TOP_B, BOTTOM_TOP_A, BOTTOM_TOP_B, PHASE_TWO, PHASE_ONE
+        DEFAULT, PHASE_TWO, PHASE_ONE
     }
 
     public HGConfig hgConfig = HGConfig.DEFAULT;
