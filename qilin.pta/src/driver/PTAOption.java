@@ -42,9 +42,20 @@ public class PTAOption extends Options {
     }
 
     public PTAOption() {
+        // input configurations
         addOption("app", "apppath", "dir or jar",
                 "The directory containing the classes for the application or the application jar file (default: .)");
-        addOption("clinit", "clinitmode", "APP|FULL|ONFLY", "clinit methods loading mode, default: ONFLY");
+        addOption("lib", "libpath", "dir or jar",
+                "The directory containing the library jar files for the application or the library jar file");
+        addOption(null, "includeall", "Include packages which are not analyzed by default. (default value: false)");
+        addOption(null, "jre", "dir",
+                "The directory containing the version of JRE to be used for whole program analysis");
+        addOption("reflog", "reflectionlog", "file",
+                "The reflection log file for the application for resolving reflective call sites");
+        addOption("main", "mainclass", "class name",
+                "Name of the main class for the application (must be specified when appmode)");
+
+        // output configurations.
         addOption("cg", "dumpcallgraph", "Output .dot callgraph file (default value: false)");
         addOption("jimple", "dumpjimple", "Dump appclasses to jimple. (default value: false)");
         addOption("stats", "dumpstats", "Dump statistics into files. (default value: false)");
@@ -52,33 +63,29 @@ public class PTAOption extends Options {
                 "Dump points-to of lib vars results to ./output/qilin.pta.txt (default value: false)");
         addOption("pag", "dumppag", "Print PAG to terminal. (default value: false)");
         addOption("pts", "dumppts", "Dump points-to results to ./output/pta.txt (default value: false)");
-        addOption("ac", "extraarraycontext", "add more context for arrays (default value: false)");
-        addOption("h", "help", "print this message");
+
+        // general PTA configurations
+        addOption("clinit", "clinitmode", "APP|FULL|ONFLY", "clinit methods loading mode, default: ONFLY");
         addOption("mh", "mergeheap",
                 "merge heaps of StringBuilder/StringBuffer/Throwable (default value: false)");
-        addOption(null, "include", "package", "Include selected packages which are not analyzed by default");
-        addOption(null, "includeall", "Include packages which are not analyzed by default. (default value: false)");
-        addOption(null, "jre", "dir",
-                "The directory containing the version of JRE to be used for whole program analysis");
-        addOption("lib", "libpath", "dir or jar",
-                "The directory containing the library jar files for the application or the library jar file");
         addOption("lcs", "emptycontextforignoretypes", "Limit heap context to 0 for Strings/Exceptions in PTA (default value: false)");
-        addOption("main", "mainclass", "class name",
-                "Name of the main class for the application (must be specified when appmode)");
-        addOption(null, "originalname", "Keep original Java names. (default value: false)");
         addOption("pta", "pointstoanalysis", "<k>(c|o)+?(<h>h)?|insens",
                 "Specify Pointer Analysis e.g. 2o1h or 2o -> 2obj+1heap (default value: insens; default h: k-1.)");
-        addOption("reflog", "reflectionlog", "file",
-                "The reflection log file for the application for resolving reflective call sites");
         addOption("se", "singleentry", "A lightweight mode with only one main method entry. (default value: false)");
-        addOption("sa", "stringanalysis", "Enable string analysis (default value: false)");
         addOption("sc", "stringconstants", "Propagate all string constants (default value: false)");
-        addOption("pre", "preonly", "Run only pre-analysis (default value: false)");
-        addOption("hgc", "hgconfig", "[X_FACTORY_NONE, X_FACTORY_TOP_ONLY, X_FACTORY_BOTH, ZERO_TOP, ZERO_TOP2, ZERO_TOP3, ZERO_BOTTOM, ZERO_BOTTOM2, BOTTOM_A, BOTTOM_B, TOP_A, TOP_B, BOTTOM_TOP_A, BOTTOM_TOP_B, PHASE_TWO, PHASE_ONE]", "Run HG in given setting (default value: X_FACTORY_TOP_ONLY)");
         addOption("pae", "precisearray", "Enable precise Array Element type (default value: false)");
         addOption("pe", "preciseexceptions", "Enable precisely handling exceptions (default value: false)");
-        addOption("cd", "ctxdebloat", "Enable context debloating optimazation (default value: false)");
+
+        // a specific PTA's configuration
+        addOption("hgc", "hgconfig", "[DEFAULT, PHASE_TWO, PHASE_ONE]", "Run HG in given setting (default value: DEFAULT)");
+        addOption("cd", "ctxdebloat", "Enable context debloating optimization (default value: false)");
         addOption("tmd", "modular", "Enable Turner to run modularly (default value: false)");
+
+        // others
+//        addOption("ac", "extraarraycontext", "add more context for arrays (default value: false)");
+        addOption("h", "help", "print this message");
+        addOption("pre", "preonly", "Run only pre-analysis (default value: false)");
+
     }
 
     public void parseCommandLine(String[] args) {
@@ -156,10 +163,6 @@ public class PTAOption extends Options {
         }
         if (cmd.hasOption("hgconfig")) {
             PTAConfig.v().hgConfig = PTAConfig.HGConfig.valueOf(cmd.getOptionValue("hgconfig"));
-        }
-        // soot configuration
-        if (cmd.hasOption("originalname")) {
-            PTAConfig.v().originalName = true;
         }
 
         // output

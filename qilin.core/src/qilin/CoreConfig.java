@@ -160,11 +160,6 @@ public class CoreConfig {
     protected CorePTAConfiguration ptaConfig;
     protected final ApplicationConfiguration appConfig = new ApplicationConfiguration();
     protected final OutputConfiguration outConfig = new OutputConfiguration();
-    // soot configuration.
-    /**
-     * use original Java names in jimples
-     */
-    public boolean originalName = false;
 
     public CorePTAConfiguration getPtaConfig() {
         return ptaConfig;

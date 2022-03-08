@@ -53,8 +53,10 @@ public class PTAConfig extends CoreConfig {
     }
 
     /*
-     * Notice that the DEFAULT option is equivalent to EXCLUDE_FACTORY_TOP_ONLY.
-     * X => EXCLUDE
+     * Notice that the DEFAULT option is equivalent to Full Turner.
+     * PHASE_TWO: all objects are assumed to be aliasable.
+     * PHASE_ONE: only non-aliasable objects are analyzed context-insensitively. All other variables and objects
+     * are analyzed context-sensitively.
      * */
     public enum HGConfig {
         DEFAULT, PHASE_TWO, PHASE_ONE
