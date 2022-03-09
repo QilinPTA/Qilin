@@ -20,6 +20,7 @@ package qilin.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
 import qilin.core.VirtualCalls;
@@ -48,7 +49,7 @@ import java.util.jar.JarFile;
 
 public final class PTAUtils {
     private static final Logger logger = LoggerFactory.getLogger(PTAUtils.class);
-    static final String output_dir = SourceLocator.v().getOutputDir();
+    static final String output_dir = CoreConfig.v().getOutConfig().outDir;
     static Map<String, Node> nodes = new TreeMap<>();
 
     public static PointsToSetInternal fetchInsensitivePointsToResult(PTA pta, VarNode varNode) {
@@ -448,13 +449,32 @@ public final class PTAUtils {
      */
     public static void dumpPAG(PAG pag, String filename) {
         DotGraph canvas = setDotGraph(filename);
-        PAGMapDrawer mapdrawer = new PAGMapDrawer(canvas);
 
-        mapdrawer.drawPAGMap(pag.getAlloc(), "green");
-        mapdrawer.drawPAGMap(pag.getSimple(), "black");
-        mapdrawer.drawInvPAGMap(pag.getStoreInv(), "blue");
-        mapdrawer.drawPAGMap(pag.getLoad(), "red");
-
+        // draw edges
+        drawPAGMap(canvas, pag.getAlloc(), "green");
+        drawPAGMap(canvas, pag.getSimple(), "black");
+        drawInvPAGMap(canvas, pag.getStoreInv(), "blue");
+        drawPAGMap(canvas, pag.getLoad(), "red");
+        // collect nodes.
+        Set<Node> nodes = new HashSet<>();
+        pag.getAlloc().forEach((k, v) -> {
+            nodes.add(k);
+            nodes.addAll(v);
+        });
+        pag.getSimple().forEach((k, v) -> {
+            nodes.add(k);
+            nodes.addAll(v);
+        });
+        pag.getStoreInv().forEach((k, v) -> {
+            nodes.add(k);
+            nodes.addAll(v);
+        });
+        pag.getLoad().forEach((k, v) -> {
+            nodes.add(k);
+            nodes.addAll(v);
+        });
+        // draw nodes.
+        nodes.forEach(node -> drawNode(canvas, node));
         plotDotGraph(canvas, filename);
     }
 
@@ -511,32 +531,20 @@ public final class PTAUtils {
         }
     }
 
-    private static class PAGMapDrawer {
-        DotGraph canvas;
-
-        PAGMapDrawer(DotGraph canvas) {
-            this.canvas = canvas;
-        }
-
-        private void drawPAGMap(Map<? extends Node, ? extends Set<? extends Node>> map, String color) {
-            map.forEach((n, elements) -> {
-                drawNode(canvas, n);
-                elements.forEach(element -> {
-                    drawNode(canvas, element);
-                    drawEdge(canvas, n, element, color);
-                });
+    private static void drawPAGMap(DotGraph canvas, Map<? extends Node, ? extends Set<? extends Node>> map, String color) {
+        map.forEach((n, elements) -> {
+            elements.forEach(element -> {
+                drawEdge(canvas, n, element, color);
             });
-        }
+        });
+    }
 
-        private void drawInvPAGMap(Map<? extends Node, ? extends Set<? extends Node>> map, String color) {
-            map.forEach((n, elements) -> {
-                drawNode(canvas, n);
-                elements.forEach(element -> {
-                    drawNode(canvas, element);
-                    drawEdge(canvas, element, n, color);
-                });
+    private static void drawInvPAGMap(DotGraph canvas, Map<? extends Node, ? extends Set<? extends Node>> map, String color) {
+        map.forEach((n, elements) -> {
+            elements.forEach(element -> {
+                drawEdge(canvas, element, n, color);
             });
-        }
+        });
     }
 
     public static boolean isThrowable(Type type) {

@@ -57,8 +57,8 @@ public class BasePTA extends CorePTA {
 //                    parameterize(PTAScene.v().getMethod("<java.lang.String: java.lang.String valueOf(java.lang.Object)>"), emptyContext()));
         }
         if (CoreConfig.v().getOutConfig().dumppag) {
-            PTAUtils.dumpPAG(pag, "final_pag");
-            PTAUtils.dumpMPAGs(this, "mpags");
+            PTAUtils.dumpPAG(pag, "pag");
+//            PTAUtils.dumpMPAGs(this, "mpags");
             PTAUtils.dumpNodeNames("nodeNames");
         }
     }

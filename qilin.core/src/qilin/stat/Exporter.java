@@ -74,7 +74,7 @@ public class Exporter {
 
     private String getFilePath(String fileName) {
         String finalPath = CoreConfig.v().getOutConfig().outDir;
-        finalPath = finalPath + CoreConfig.v().getAppConfig().MAIN_CLASS + File.separator + CoreConfig.v().getPtaConfig().ptaName + File.separator;
+        finalPath = finalPath + File.separator + CoreConfig.v().getAppConfig().MAIN_CLASS + File.separator + CoreConfig.v().getPtaConfig().ptaName + File.separator;
         File file = new File(finalPath);
         if (!file.exists()) {
             file.mkdirs();
