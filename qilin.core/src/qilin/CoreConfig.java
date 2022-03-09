@@ -135,7 +135,7 @@ public class CoreConfig {
          */
         public boolean dumpJimple = false;
         /**
-         * if true, dump qilin.pta to a file
+         * if true, dump pts in app code to a file
          */
         public boolean dumppts = false;
         /**

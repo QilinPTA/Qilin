@@ -59,10 +59,10 @@ public class PTAOption extends Options {
         addOption("cg", "dumpcallgraph", "Output .dot callgraph file (default value: false)");
         addOption("jimple", "dumpjimple", "Dump appclasses to jimple. (default value: false)");
         addOption("stats", "dumpstats", "Dump statistics into files. (default value: false)");
-        addOption("ptsall", "dumplibpts",
-                "Dump points-to of lib vars results to ./output/qilin.pta.txt (default value: false)");
+        addOption("ptsall", "dumpallpts",
+                "Dump points-to of lib vars results to ./output/pts.txt (default value: false)");
         addOption("pag", "dumppag", "Print PAG to terminal. (default value: false)");
-        addOption("pts", "dumppts", "Dump points-to results to ./output/pta.txt (default value: false)");
+        addOption("pts", "dumppts", "Dump points-to results to ./output/pts.txt (default value: false)");
 
         // general PTA configurations
         addOption("clinit", "clinitmode", "APP|FULL|ONFLY", "clinit methods loading mode, default: ONFLY");
@@ -172,7 +172,7 @@ public class PTAOption extends Options {
         if (cmd.hasOption("dumppts")) {
             PTAConfig.v().getOutConfig().dumppts = true;
         }
-        if (cmd.hasOption("dumplibpts")) {
+        if (cmd.hasOption("dumpallpts")) {
             PTAConfig.v().getOutConfig().dumppts = true;
             PTAConfig.v().getOutConfig().dumplibpts = true;
         }

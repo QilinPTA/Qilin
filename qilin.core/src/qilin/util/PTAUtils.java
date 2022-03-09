@@ -318,7 +318,7 @@ public final class PTAUtils {
      */
     public static void dumpPts(PTA pta, boolean appOnly) {
         try {
-            PrintWriter file = new PrintWriter(new File(output_dir, "pts"));
+            PrintWriter file = new PrintWriter(new File(output_dir, "pts.txt"));
             file.println("Points-to results:");
             for (final ValNode vn : pta.getPag().getValNodeNumberer()) {
                 if (!(vn instanceof VarNode)) {
