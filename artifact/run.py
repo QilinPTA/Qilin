@@ -4,11 +4,12 @@ import os, sys, shutil
 import qilin as pta
 from util.opt import *
 import util.TerminalColor as tc
-from util.benchmark import BENCHMARKS
+from util.benchmark import BENCHMARKS, BENCHMARKS2018
 from util.benchmark import APPPATH
 from util.benchmark import LIBPATH
 from util.benchmark import TAMIFLEXLOG
 from util.benchmark import MAINCLASSES
+from util.benchmark import JREVERSION
 
 # ANALYSES = ['1o', 'Z-2o', 'E-2o', 'T-2o', '2o', 'Z-3o', 'T-3o', 'E-3o', '3o', '1c', '2c', 'M-2o', '2h', '2t', 'Z-2c', 'M-2c']
 ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c']
@@ -50,8 +51,9 @@ def getPTACommand(analysis, bm, OPTIONSTYLE):
         options = BASICOPTIONS + EAGLEOPTIONS
     options.append('-pta=' + analysis)
     options += ['-apppath', APPPATH[bm]]
-    options += ['-libpath', LIBPATH[bm]]
     options += ['-reflectionlog', TAMIFLEXLOG[bm]]
+    if bm in LIBPATH:
+        options += ['-libpath', LIBPATH[bm]]
     options += ['-mainclass', MAINCLASSES[bm]]
     if MODULAR:
         options.append('-tmd')
@@ -87,7 +89,7 @@ def runPTA(analysis, bm, OPTIONSTYLE):
             print('old result found. skip this.')
             return
         cmd += ' > ' + outputFile
-    cmd += " -jre=jre1.6.0_45"
+    cmd += ' -jre=' + JREVERSION[bm]
     print(cmd)
     pta.runPointsToAnalysis(cmd.split())
 
@@ -115,6 +117,7 @@ PREONLY = False
 MODULAR = False
 DEBLOAT = False
 OPTIONSTYLE = 'zipper'
+DACAPO = '2018'
 
 if __name__ == '__main__':
     if '-help' in sys.argv or '-h' in sys.argv:
@@ -134,12 +137,13 @@ if __name__ == '__main__':
     if "-dump" in sys.argv:
         DUMP = True
 
+    ALLBENCHMARKS = BENCHMARKS2018 if DACAPO == '2018'else BENCHMARKS
     analyses = []
     benchmarks = []
     for arg in sys.argv:
         if arg in ANALYSES:
             analyses.append(arg)
-        elif arg in BENCHMARKS:
+        elif arg in ALLBENCHMARKS:
             benchmarks.append(arg)
         elif arg.startswith('-out='):
             OUTPUTPATH = arg[len('-out='):]
@@ -149,7 +153,7 @@ if __name__ == '__main__':
 
     if "-all" in sys.argv:
         if len(benchmarks) == 0:
-            benchmarks = BENCHMARKS
+            benchmarks = ALLBENCHMARKS
         if len(analyses) == 0:
             analyses = ANALYSES
 
