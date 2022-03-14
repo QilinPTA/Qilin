@@ -137,7 +137,13 @@ public class Main {
             return Collections.emptySet();
         }
         Set<String> entries = new HashSet<>();
-        final String jreLibDir = JRE + File.separator + "lib" + File.separator;
+        String jreLib;
+        if (JRE.endsWith(File.separator)) {
+            jreLib = JRE + "lib";
+        } else {
+            jreLib = JRE + File.separator + "lib";
+        }
+        final String jreLibDir = jreLib + File.separator;
         entries.add(jreLibDir + "rt.jar");
         entries.add(jreLibDir + "jce.jar");
         entries.add(jreLibDir + "jsse.jar");

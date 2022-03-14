@@ -836,8 +836,6 @@ public final class PTAUtils {
         }
     }
 
-    static final NumberedString sigClinit = Scene.v().getSubSigNumberer().findOrAdd("void <clinit>()");
-
     /*
      * We use this method to replace EntryPoints.v().clinitsOf() because it is infested with bugs.
      * */
@@ -857,7 +855,7 @@ public final class PTAUtils {
             }
         }
         for (SootClass sc : visit) {
-            final SootMethod initStart = sc.getMethodUnsafe(sigClinit);
+            final SootMethod initStart = sc.getMethodUnsafe(Scene.v().getSubSigNumberer().findOrAdd("void <clinit>()"));
             if (initStart != null) {
                 ret.add(initStart);
             }
