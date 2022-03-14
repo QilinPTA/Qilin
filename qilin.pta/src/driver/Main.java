@@ -136,18 +136,9 @@ public class Main {
         if (JRE == null) {
             return Collections.emptySet();
         }
-        Set<String> entries = new HashSet<>();
-        String jreLib;
-        if (JRE.endsWith(File.separator)) {
-            jreLib = JRE + "lib";
-        } else {
-            jreLib = JRE + File.separator + "lib";
-        }
-        final String jreLibDir = jreLib + File.separator;
-        entries.add(jreLibDir + "rt.jar");
-        entries.add(jreLibDir + "jce.jar");
-        entries.add(jreLibDir + "jsse.jar");
-        return entries;
+        final String jreLibDir = JRE + File.separator + "lib";
+        return FileUtils.listFiles(new File(jreLibDir), new String[]{"jar"}, false).stream().map(File::toString)
+                .collect(Collectors.toList());
     }
 
     /**
