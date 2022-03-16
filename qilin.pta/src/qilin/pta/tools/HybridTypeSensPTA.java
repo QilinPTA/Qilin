@@ -18,7 +18,6 @@
 
 package qilin.pta.tools;
 
-import qilin.core.CorePTA;
 import qilin.parm.ctxcons.HybTypeCtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
 import qilin.parm.heapabst.HeuristicAbstractor;

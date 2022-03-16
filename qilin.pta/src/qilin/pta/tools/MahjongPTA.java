@@ -18,7 +18,6 @@
 
 package qilin.pta.tools;
 
-import qilin.core.CorePTA;
 import qilin.core.PTA;
 import qilin.core.pag.PAG;
 import qilin.parm.ctxcons.CtxConstructor;
