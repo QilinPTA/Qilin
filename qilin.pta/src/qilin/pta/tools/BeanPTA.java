@@ -27,6 +27,7 @@ import qilin.parm.select.CtxSelector;
 import qilin.parm.select.HeuristicSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
+import qilin.pta.StagedPTA;
 import qilin.pta.toolkits.bean.main.Bean;
 import qilin.util.Stopwatch;
 
@@ -36,7 +37,7 @@ import java.util.Map;
 /*
  * refer to "Making k-Object-Sensitive Pointer Analysis More Precise with Still k-Limiting" (SAS'16)
  * */
-public class BeanPTA extends BasePTA {
+public class BeanPTA extends StagedPTA {
     private final CorePTA prePTA;
     // currently, we only support k = 2 and hk = 1;
     // [current heap, [allocator heap, [heap ctx, new ctx]]] only for B-2obj;
@@ -60,7 +61,7 @@ public class BeanPTA extends BasePTA {
     }
 
     @Override
-    public void run() {
+    protected void preAnalysis() {
         Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
@@ -69,12 +70,5 @@ public class BeanPTA extends BasePTA {
         Bean.run(prePTA, beanNexCtxMap);
         beanTimer.stop();
         System.out.println(beanTimer);
-        if (!PTAConfig.v().getPtaConfig().preAnalysisOnly) {
-            System.out.println("selective cs-pta starts!");
-            for (int i = 0; i < 5; i++) {
-                System.gc();
-            }
-            super.run();
-        }
     }
 }

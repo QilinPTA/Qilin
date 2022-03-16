@@ -27,6 +27,7 @@ import qilin.parm.select.HeuristicSelector;
 import qilin.parm.select.PartialMethodLvSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
+import qilin.pta.StagedPTA;
 import qilin.pta.toolkits.zipper.Main;
 import qilin.util.Stopwatch;
 import soot.*;
@@ -40,7 +41,7 @@ import java.util.Set;
  * refer to "Precision-Guided Context Sensitivity for Pointer Analysis" (OOPSLA'18)
  * and "A Principled Approach to Selective Context Sensitivity for Pointer Analysis" (TOPLAS'20)
  * */
-public class ZipperPTA extends BasePTA {
+public class ZipperPTA extends StagedPTA {
     private final BasePTA prePTA;
     private final Set<SootMethod> PCMs = new HashSet<>();
 
@@ -65,7 +66,7 @@ public class ZipperPTA extends BasePTA {
     }
 
     @Override
-    public void run() {
+    protected void preAnalysis() {
         Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
@@ -75,13 +76,6 @@ public class ZipperPTA extends BasePTA {
         zipperTimer.stop();
         System.out.println(zipperTimer);
         extraStats();
-        if (!PTAConfig.v().getPtaConfig().preAnalysisOnly) {
-            System.out.println("selective cs-qilin.pta starts!");
-            for (int i = 0; i < 5; i++) {
-                System.gc();
-            }
-            super.run();
-        }
     }
 
     protected void extraStats() {

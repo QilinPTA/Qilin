@@ -27,6 +27,7 @@ import qilin.parm.select.CtxSelector;
 import qilin.parm.select.DebloatingSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
+import qilin.pta.StagedPTA;
 import qilin.pta.toolkits.conch.Conch;
 import qilin.stat.IEvaluator;
 import qilin.util.Stopwatch;
@@ -38,7 +39,7 @@ import java.util.Set;
 /*
  * refer to "Context Debloating for Object-Sensitive Pointer Analysis" (ASE'21)
  * */
-public class DebloatedPTA extends BasePTA {
+public class DebloatedPTA extends StagedPTA {
     protected PTA prePTA;
     protected BasePTA basePTA;
     // context dependent heaps
@@ -56,7 +57,8 @@ public class DebloatedPTA extends BasePTA {
         System.out.println("debloating ....");
     }
 
-    public void run() {
+    @Override
+    protected void preAnalysis() {
         Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
@@ -68,8 +70,12 @@ public class DebloatedPTA extends BasePTA {
         System.out.println();
         conchTimer.stop();
         System.out.println(conchTimer);
+    }
+
+    @Override
+    protected void mainAnalysis() {
         if (!PTAConfig.v().getPtaConfig().preAnalysisOnly) {
-            System.out.println("selective cs-qilin.pta starts!");
+            System.out.println("selective pta starts!");
             basePTA.run();
         }
     }

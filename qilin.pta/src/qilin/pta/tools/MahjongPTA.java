@@ -27,6 +27,7 @@ import qilin.parm.select.DebloatingSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.parm.select.UniformSelector;
 import qilin.pta.PTAConfig;
+import qilin.pta.StagedPTA;
 import qilin.pta.toolkits.mahjong.Mahjong;
 
 import java.util.HashMap;
@@ -37,7 +38,7 @@ import java.util.Set;
 /*
  * refer to "Efficient and Precise Points-to Analysis: Modeling the Heap by Merging Equivalent Automata" (PLDI'17)
  * */
-public class MahjongPTA extends BasePTA {
+public class MahjongPTA extends StagedPTA {
     protected final Map<Object, Object> heapModelMap = new HashMap<>();
     public Set<Object> mergedHeap = new HashSet<>();
     public Set<Object> csHeap = new HashSet<>();
@@ -52,7 +53,7 @@ public class MahjongPTA extends BasePTA {
     }
 
     @Override
-    public void run() {
+    protected void preAnalysis() {
         PTAConfig.v().getPtaConfig().mergeHeap = false;
         PTA prePTA = new Spark();
         prePTA.pureRun();
@@ -77,7 +78,5 @@ public class MahjongPTA extends BasePTA {
         for (Object mh : mergedHeap) {
             System.out.println(mh);
         }
-        System.out.println("selective cs-qilin.pta starts!");
-        super.run();
     }
 }

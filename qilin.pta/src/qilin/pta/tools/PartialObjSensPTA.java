@@ -27,6 +27,7 @@ import qilin.parm.select.HeuristicSelector;
 import qilin.parm.select.PartialVarSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
+import qilin.pta.StagedPTA;
 import qilin.util.PTAUtils;
 import qilin.util.Stopwatch;
 import soot.*;
@@ -37,7 +38,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public abstract class PartialObjSensPTA extends BasePTA {
+public abstract class PartialObjSensPTA extends StagedPTA {
     protected Set<Object> csnodes = new HashSet<>();
     protected Set<SootMethod> csmethods = new HashSet<>();
     protected BasePTA prePTA;
@@ -65,20 +66,13 @@ public abstract class PartialObjSensPTA extends BasePTA {
     }
 
     @Override
-    public void run() {
+    protected void preAnalysis() {
         Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
         sparkTimer.stop();
         System.out.println(sparkTimer);
         select();
         extraStats();
-        if (!PTAConfig.v().getPtaConfig().preAnalysisOnly) {
-            System.out.println("selective cs-qilin.pta starts!");
-            for (int i = 0; i < 5; i++) {
-                System.gc();
-            }
-            super.run();
-        }
     }
 
     protected abstract Map<Object, Integer> calculatingNode2Length();
