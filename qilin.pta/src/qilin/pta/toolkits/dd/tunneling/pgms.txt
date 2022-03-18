@@ -1,4 +1,0 @@
-luindex, $DOOP_HOME/jars/dacapo/luindex.jar
-lusearch, $DOOP_HOME/jars/dacapo/lusearch.jar
-antlr, $DOOP_HOME/jars/dacapo/antlr.jar
-pmd, $DOOP_HOME/jars/dacapo/pmd.jar
