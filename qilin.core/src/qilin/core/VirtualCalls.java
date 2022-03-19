@@ -35,7 +35,7 @@ import java.util.Set;
 public class VirtualCalls {
     private static volatile VirtualCalls instance = null;
     public final NumberedString sigClinit = Scene.v().getSubSigNumberer().findOrAdd("void <clinit>()");
-    private final LargeNumberedMap<Type, SmallNumberedMap<SootMethod>> typeToVtbl = new LargeNumberedMap<>(Scene.v().getTypeNumberer());
+    private final LargeNumberedMap<Type, SmallNumberedMap<NumberedString, SootMethod>> typeToVtbl = new LargeNumberedMap<>(Scene.v().getTypeNumberer());
     protected MultiMap<Type, Type> baseToSubTypes = new HashMultiMap<>();
 
     private VirtualCalls() {
@@ -79,7 +79,7 @@ public class VirtualCalls {
     }
 
     public SootMethod resolveNonSpecial(RefType t, NumberedString subSig, boolean appOnly) {
-        SmallNumberedMap<SootMethod> vtbl = typeToVtbl.get(t);
+        SmallNumberedMap<NumberedString, SootMethod> vtbl = typeToVtbl.get(t);
         if (vtbl == null) {
             typeToVtbl.put(t, vtbl = new SmallNumberedMap<>());
         }

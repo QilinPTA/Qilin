@@ -4,10 +4,10 @@
 
 > :warning: [Documentation for QiLin](https://qilinpta.github.io/) is under development.
 
-# QiLin: A fully imperative Java Pointer Analysis Framework.
-The repository hosts QiLin, A new Java Pointer Analysis Framework for supporting fine-grained context-sensitivity.
+# Qilin: A fully imperative Java Pointer Analysis Framework.
+The repository hosts Qilin, A new Java Pointer Analysis Framework for supporting fine-grained context-sensitivity.
 
-QiLin is introduced in our ECOOP'22 paper. You might want to cite our paper by copying the following BibTeX text:
+Qilin is introduced in our ECOOP'22 paper. You might want to cite our paper by copying the following BibTeX text:
 ```
 @InProceedings{he2022qilin,
   author = {He, Dongjie and Lu, Jingbo and Xue, Jingling},
@@ -20,17 +20,17 @@ QiLin is introduced in our ECOOP'22 paper. You might want to cite our paper by c
 ```
 ## A Quick Start
 ### Download
-This repository contains a `submodule` that contains a set of real-world ready-to-use benchmarks for QiLin. 
-If you want to run QiLin on these benchmarks, so please use the following command to fetch QiLin sources:
+This repository contains a `submodule` that contains a set of real-world ready-to-use benchmarks for Qilin. 
+If you want to run Qilin on these benchmarks, so please use the following command to fetch Qilin sources:
 ```
-$ git clone --recurse-submodules https://github.com/QiLinPTA/QiLin.git
+$ git clone --recurse-submodules https://github.com/QiLinPTA/Qilin.git
 ```
 
-If you have cloned QiLin in a normal way, you can use this command to download these benchmarks:
+If you have cloned Qilin in a normal way, you can use this command to download these benchmarks:
 ```
 $ git submodule update --init
 ```
-### Building QiLin with Gradle
+### Building Qilin with Gradle
 We use Gradle as the build automation tool. To build Qilin, use
 ```
 $ ./run.sh
@@ -41,7 +41,7 @@ This script contains command to generate `Qilin-VERSION-SNAPSHOT.jar` which will
 You can use Qilin either through its command-line interface (e.g., `driver.Main`) or as a library.
 For researchers who are working on Java pointer analysis, we have provided a whole set of scripts, benchmarks (e.g., `DaCapo2006`) and jdk libraries in `artifact/`.
 
-To test QiLin, you can directly use
+To test Qilin, you can directly use
 ```
 $ cd artifact
 $ python3 run.py antlr ci -print
@@ -51,15 +51,15 @@ We will optimize the `run.py` script to make its help info more user-friendly.
 
 ## Documentation
 
-| About QiLin       | Setup  Guide         | User Guide  | Developer Guide  |
-| ------------- |:-------------:| -----:|-----:|
-| Introducing QiLin -- [what it does](https://github.com/QiLinPTA/qilinpta.github.io/wiki/About#what-is-qilin) and [how we design it](https://github.com/QiLinPTA/qilinpta.github.io/wiki/QiLin-Design#qilin-design)      | A step by step [setup guide](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Setup-Guide#getting-started) to build QiLin | Command-line options to [run QiLin](https://github.com/svf-tools/SVF/wiki/User-Guide#quick-start), get [analysis outputs](https://github.com/QiLinPTA/qilinpta.github.io/wiki/User-Guide#analysis-outputs), and test QiLin with [an example](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Analyze-a-Simple-Java-Program#an-example) | Detailed [technical documentation](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Technical-documentation) and how to [write your own analyses](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Write-your-own-analysis-in-QiLin) in QiLin or [use QiLin as a lib](https://github.com/QiLinPTA/qilinpta.github.io/wiki/QiLin-as-a-lib) for your tool  |
+| About Qilin                                                                                                                                                                                                        |                                                         Setup  Guide                                                         |                                                                                                                                                                                                                                                                                                                                 User Guide |                                                                                                                                                                                                                                                                                                                                               Developer Guide |
+|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| Introducing Qilin -- [what it does](https://github.com/QiLinPTA/qilinpta.github.io/wiki/About#what-is-qilin) and [how we design it](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Qilin-Design#qilin-design) | A step by step [setup guide](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Setup-Guide#getting-started) to build Qilin | Command-line options to [run Qilin](https://github.com/svf-tools/SVF/wiki/User-Guide#quick-start), get [analysis outputs](https://github.com/QiLinPTA/qilinpta.github.io/wiki/User-Guide#analysis-outputs), and test Qilin with [an example](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Analyze-a-Simple-Java-Program#an-example) | Detailed [technical documentation](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Technical-documentation) and how to [write your own analyses](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Write-your-own-analysis-in-Qilin) in Qilin or [use Qilin as a lib](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Qilin-as-a-lib) for your tool |
 
 
-## Contributing to QiLin
-Contributions are always welcome. QiLin is an open source project that we published in the hope that it will be useful to the research community as a whole. 
+## Contributing to Qilin
+Contributions are always welcome. Qilin is an open source project that we published in the hope that it will be useful to the research community as a whole. 
 If you have a new feature or a bug fix that you would like to see in the official code repository, please open a merge request here on Github and leave a short description of what you have done.
 
 ## License
-QiLin is licenced under the GPL v2.1 license, see LICENSE file.
+Qilin is licenced under the GPL v2.1 license, see LICENSE file.
 
