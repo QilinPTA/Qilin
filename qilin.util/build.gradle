@@ -11,8 +11,6 @@ repositories {
 }
 
 dependencies {
-    api 'org.slf4j:slf4j-api:1.7.32'
-    api 'org.slf4j:slf4j-simple:1.7.32'
-    api group: 'com.google.guava', name: 'guava', version: '28.1-jre'
-
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+    implementation 'org.slf4j:slf4j-simple:1.7.32'
 }

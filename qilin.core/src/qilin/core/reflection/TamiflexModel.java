@@ -212,7 +212,7 @@ public class TamiflexModel extends ReflectionModel {
                     assert !(base instanceof NullConstant);
                     fieldRef = new JInstanceFieldRef(base, field.makeRef());
                 }
-                if (fieldRef.getType() instanceof  RefLikeType) {
+                if (fieldRef.getType() instanceof RefLikeType) {
                     Stmt stmt = new JAssignStmt(lvalue, fieldRef);
                     ret.add(stmt);
                 }

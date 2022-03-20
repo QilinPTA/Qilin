@@ -17,10 +17,6 @@ dependencies {
 //    api files("${rootDir}/libs/sootclasses-trunk-jar-with-dependencies.jar")
     api files("${rootDir}/libs/sootclasses-4.2.1-jar-with-dependencies.jar")
 //    implementation 'org.soot-oss:soot:4.3.0'
-    api(project(':qilin.util'))
-    // https://mvnrepository.com/artifact/commons-cli/commons-cli
-    api group: 'commons-cli', name: 'commons-cli', version: '1.2'
-
-    api group: 'junit', name: 'junit', version: '4.12'
+    api (project(':qilin.util'))
 }
 

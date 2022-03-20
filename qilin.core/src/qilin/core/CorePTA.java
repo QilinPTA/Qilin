@@ -228,6 +228,7 @@ public abstract class CorePTA extends PTA {
         return n.getP2Set();
     }
 
+    @Override
     public PointsToSet reachingObjectsInternal(PointsToSet s, final SparkField f) {
         PointsToSetInternal bases = (PointsToSetInternal) s;
         final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null, pag);
@@ -239,5 +240,12 @@ public abstract class CorePTA extends PTA {
             }
         });
         return ret;
+    }
+
+    @Override
+    public boolean mayAlias(Local l1, Local l2) {
+        PointsToSet pts1 = ((PointsToSetInternal) reachingObjects(l1)).mapToCIPointsToSet();
+        PointsToSet pts2 = ((PointsToSetInternal) reachingObjects(l2)).mapToCIPointsToSet();
+        return pts1.hasNonEmptyIntersection(pts2);
     }
 }

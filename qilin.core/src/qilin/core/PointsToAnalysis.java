@@ -75,4 +75,9 @@ public interface PointsToAnalysis {
      * Returns the set of objects pointed to by elements of the arrays in the PointsToSet s.
      */
     PointsToSet reachingObjectsOfArrayElement(PointsToSet s);
+
+    /*
+     * Return true if l1 and l2 are aliases.
+     * */
+    boolean mayAlias(Local l1, Local l2);
 }

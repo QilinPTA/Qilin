@@ -23,11 +23,11 @@ test {
 }
 
 dependencies {
-    api(project(':qilin.microben'))
-    api(project(':qilin.core'))
+    testImplementation(project(':qilin.microben'))
+    implementation(project(':qilin.core'))
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'
-
-    implementation group: 'junit', name: 'junit', version: '4.12'
+    implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
