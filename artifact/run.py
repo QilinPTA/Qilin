@@ -117,7 +117,7 @@ PREONLY = False
 MODULAR = False
 DEBLOAT = False
 OPTIONSTYLE = 'zipper'
-DACAPO = '2018'
+DACAPO = '2006'
 
 if __name__ == '__main__':
     if '-help' in sys.argv or '-h' in sys.argv:
