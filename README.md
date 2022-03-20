@@ -1,8 +1,8 @@
-[![Gradle](https://github.com/QiLinPTA/QiLin/actions/workflows/gradle.yml/badge.svg?event=push)](https://github.com/QiLinPTA/QiLin/actions/workflows/gradle.yml)
-[![Docker](https://github.com/QiLinPTA/QiLin/actions/workflows/docker-image.yml/badge.svg?event=push)](https://github.com/QiLinPTA/QiLin/actions/workflows/docker-image.yml)
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/QiLinPTA/QiLin) 
+[![Gradle](https://github.com/QilinPTA/Qilin/actions/workflows/gradle.yml/badge.svg?event=push)](https://github.com/QilinPTA/Qilin/actions/workflows/gradle.yml)
+[![Docker](https://github.com/QilinPTA/Qilin/actions/workflows/docker-image.yml/badge.svg?event=push)](https://github.com/QilinPTA/Qilin/actions/workflows/docker-image.yml)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/QilinPTA/Qilin) 
 
-> :warning: [Documentation for QiLin](https://qilinpta.github.io/) is under development.
+> :warning: [Documentation for Qilin](https://qilinpta.github.io/) is under development.
 
 # Qilin: A fully imperative Java Pointer Analysis Framework.
 The repository hosts Qilin, A new Java Pointer Analysis Framework for supporting fine-grained context-sensitivity.
@@ -21,12 +21,12 @@ Qilin is introduced in our ECOOP'22 paper. You might want to cite our paper by c
 ## A Quick Start
 ### Download
 This repository contains a `submodule` that contains a set of real-world ready-to-use benchmarks for Qilin. 
-If you want to run Qilin on these benchmarks, so please use the following command to fetch Qilin sources:
+If you want to run Qilin on these benchmarks, please use the following command to fetch Qilin sources:
 ```
-$ git clone --recurse-submodules https://github.com/QiLinPTA/Qilin.git
+$ git clone --recurse-submodules https://github.com/QilinPTA/Qilin.git
 ```
 
-If you have cloned Qilin in a normal way, you can use this command to download these benchmarks:
+If you have cloned Qilin in a normal way, you still can use the command below to download these benchmarks:
 ```
 $ git submodule update --init
 ```
@@ -51,10 +51,9 @@ We will optimize the `run.py` script to make its help info more user-friendly.
 
 ## Documentation
 
-| About Qilin                                                                                                                                                                                                        |                                                         Setup  Guide                                                         |                                                                                                                                                                                                                                                                                                                                 User Guide |                                                                                                                                                                                                                                                                                                                                               Developer Guide |
-|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------:|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| Introducing Qilin -- [what it does](https://github.com/QiLinPTA/qilinpta.github.io/wiki/About#what-is-qilin) and [how we design it](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Qilin-Design#qilin-design) | A step by step [setup guide](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Setup-Guide#getting-started) to build Qilin | Command-line options to [run Qilin](https://github.com/svf-tools/SVF/wiki/User-Guide#quick-start), get [analysis outputs](https://github.com/QiLinPTA/qilinpta.github.io/wiki/User-Guide#analysis-outputs), and test Qilin with [an example](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Analyze-a-Simple-Java-Program#an-example) | Detailed [technical documentation](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Technical-documentation) and how to [write your own analyses](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Write-your-own-analysis-in-Qilin) in Qilin or [use Qilin as a lib](https://github.com/QiLinPTA/qilinpta.github.io/wiki/Qilin-as-a-lib) for your tool |
-
+| About Qilin       | Setup  Guide         | User Guide  | Developer Guide  |
+| ------------- |:-------------:| -----:|-----:|
+| Introducing Qilin -- [what it does](https://qilinpta.github.io/#what-is-qilin) and [how we design it](https://github.com/QilinPTA/qilinpta.github.io/wiki/Qilin-Design#qilin-design)      | A step by step [setup guide](https://github.com/QilinPTA/qilinpta.github.io/wiki/Setup-Guide#getting-started) to build Qilin | [Command-line options](https://github.com/QilinPTA/qilinpta.github.io/wiki/Full-list-of-Qilin-options) of Qilin, and test Qilin with [an example](https://github.com/QilinPTA/qilinpta.github.io/wiki/Analyze-a-Simple-Java-Program#an-example) | Detailed [technical documentation](https://qilinpta.github.io/QilinCodeStructure.html) and how to [write your own analyses](https://github.com/QilinPTA/qilinpta.github.io/wiki/Write-your-own-analysis-in-Qilin) in Qilin or [use Qilin as a lib](https://github.com/QilinPTA/qilinpta.github.io/wiki/Qilin-as-a-lib) for your tool  |
 
 ## Contributing to Qilin
 Contributions are always welcome. Qilin is an open source project that we published in the hope that it will be useful to the research community as a whole. 
