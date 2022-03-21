@@ -38,7 +38,7 @@ import soot.util.queue.QueueReader;
 
 import java.util.*;
 
-public final class Solver extends Propagator {
+public class Solver extends Propagator {
     private final TreeSet<ValNode> valNodeWorkList = new TreeSet<>();
     private final PAG pag;
     private final PTA pta;
@@ -279,14 +279,23 @@ public final class Solver extends Propagator {
         }
     }
 
-    private void propagatePTS(final ValNode pointer, PointsToSetInternal other) {
+    protected void propagatePTS(final ValNode pointer, PointsToSetInternal other) {
         final PointsToSetInternal addTo = pointer.makeP2Set();
-        if (addTo.addAll(other, null)) {
+        P2SetVisitor p2SetVisitor = new P2SetVisitor() {
+            @Override
+            public void visit(Node n) {
+                if(addTo.add(n)) {
+                    returnValue = true;
+                }
+            }
+        };
+        other.forall(p2SetVisitor);
+        if (p2SetVisitor.getReturnValue()) {
             valNodeWorkList.add(pointer);
         }
     }
 
-    private void propagatePTS(final ValNode pointer, AllocNode heap) {
+    protected void propagatePTS(final ValNode pointer, AllocNode heap) {
         if (pointer.makeP2Set().add(heap)) {
             valNodeWorkList.add(pointer);
         }
