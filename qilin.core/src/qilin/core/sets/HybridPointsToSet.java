@@ -22,7 +22,6 @@ import qilin.core.pag.AllocNode;
 import qilin.core.pag.Node;
 import qilin.core.pag.PAG;
 import qilin.util.PTAUtils;
-import soot.RefType;
 import soot.Type;
 import soot.util.BitSetIterator;
 import soot.util.BitVector;
@@ -51,42 +50,6 @@ public final class HybridPointsToSet extends PointsToSetInternal {
                 return new HybridPointsToSet(type, pag);
             }
         };
-    }
-
-    public static HybridPointsToSet intersection(final HybridPointsToSet set1, final HybridPointsToSet set2, PAG pag) {
-        final HybridPointsToSet ret = new HybridPointsToSet(RefType.v("java.lang.Object"), pag);
-        BitVector s1Bits = set1.bits;
-        BitVector s2Bits = set2.bits;
-        if (s1Bits == null || s2Bits == null) {
-            if (s1Bits != null) {
-                // set2 is smaller
-                set2.forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        if (set1.contains(n)) {
-                            ret.add(n);
-                        }
-                    }
-                });
-            } else {
-                // set1 smaller, or both small
-                set1.forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        if (set2.contains(n)) {
-                            ret.add(n);
-                        }
-                    }
-                });
-            }
-        } else {
-            // both big; do bit-vector operation
-            // potential issue: if intersection is small, might
-            // use inefficient bit-vector operations later
-            ret.bits = BitVector.and(s1Bits, s2Bits);
-            ret.empty = false;
-        }
-        return ret;
     }
 
     /**
@@ -218,14 +181,17 @@ public final class HybridPointsToSet extends PointsToSetInternal {
 
     @Override
     public PointsToSetInternal mapToCIPointsToSet() {
-        PointsToSetInternal ret = new HybridPointsToSet(type, pag);
-        this.forall(new P2SetVisitor() {
-            @Override
-            public void visit(Node n) {
-                AllocNode heap = (AllocNode) n;
-                ret.add(heap.base());
-            }
-        });
-        return ret;
+        if (ciPointsToSet == null) {
+            PointsToSetInternal ret = new HybridPointsToSet(type, pag);
+            this.forall(new P2SetVisitor() {
+                @Override
+                public void visit(Node n) {
+                    AllocNode heap = (AllocNode) n;
+                    ret.add(heap.base());
+                }
+            });
+            ciPointsToSet = ret;
+        }
+        return ciPointsToSet;
     }
 }

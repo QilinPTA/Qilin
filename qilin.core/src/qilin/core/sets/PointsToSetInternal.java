@@ -39,6 +39,7 @@ public abstract class PointsToSetInternal implements PointsToSet, EqualsSupporti
     private static final Logger logger = LoggerFactory.getLogger(PointsToSetInternal.class);
     private static boolean PointsToSetInternal_warnedAlready = false;
     protected Type type;
+    protected PointsToSetInternal ciPointsToSet = null;
 
     public PointsToSetInternal(Type type) {
         this.type = type;
@@ -105,13 +106,6 @@ public abstract class PointsToSetInternal implements PointsToSet, EqualsSupporti
      * Sets all newly-added nodes to old nodes.
      */
     public void flushNew() {
-    }
-
-    /**
-     * Merges other into this set.
-     */
-    public void mergeWith(PointsToSetInternal other) {
-        addAll(other, null);
     }
 
     /**
