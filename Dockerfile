@@ -6,7 +6,7 @@ WORKDIR /build/
 RUN ./gradlew clean fatJar
 
 # build image
-FROM hdjay2013/jupx:latest
+FROM hdjay2013/jupx:v16
 ENV workdir /qilin
 WORKDIR $workdir
 ENV user root
