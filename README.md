@@ -19,6 +19,10 @@ Qilin is introduced in our ECOOP'22 paper. You might want to cite our paper by c
 }
 ```
 ## A Quick Start
+### Prerequisites
+* Java 16+ (Qilin uses the pattern matching for `instanceof` provided since Java 16).
+* Python 3.5+ (The api `subprocess.run` used in `artifact/qilin.py` is added in Python 3.5).
+
 ### Download
 This repository contains a `submodule` that contains a set of real-world ready-to-use benchmarks for Qilin. 
 If you want to run Qilin on these benchmarks, please use the following command to fetch Qilin sources:
