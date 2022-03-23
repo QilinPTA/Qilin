@@ -1,8 +1,12 @@
 #!/usr/bin/python3
 
 import os, sys, shutil
+
+assert sys.version_info >= (3, 5), "Python version does not meet the minimum requirements, i.e., >= 3.5"
+
 import qilin as pta
 from util.opt import *
+from util import Util
 import util.TerminalColor as tc
 from util.benchmark import BENCHMARKS, BENCHMARKS2018
 from util.benchmark import APPPATH
@@ -93,7 +97,6 @@ def runPTA(analysis, bm, OPTIONSTYLE):
     print(cmd)
     pta.runPointsToAnalysis(cmd.split())
 
-
 OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-help|-h', 'print this message.') \
                 + option('-print', 'print the analyses results on screen.') \
@@ -173,6 +176,7 @@ if __name__ == '__main__':
         print(
             tc.RED + 'ERROR: ' + tc.RESET + 'CANNOT CREATE OUTPUTDIR: ' + tc.YELLOW + OUTPUTPATH + tc.RESET + ' ALREADY EXISTS AS A FILE!')
 
+    Util.checkJavaVersion()
     for bm in benchmarks:
         for analysis in analyses:
             runPTA(analysis, bm, OPTIONSTYLE)

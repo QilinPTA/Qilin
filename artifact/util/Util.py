@@ -3,8 +3,18 @@
 import math
 
 import os
+import subprocess
 from util.ptaout import PTAOutput
 
+def checkJavaVersion():
+    javaversion = subprocess.check_output(['java', '-version'], stderr=subprocess.STDOUT)
+    jv = javaversion.decode("utf-8")
+    version_info = jv.split()[2].replace('"', '')
+    major_version = int(version_info.split('.')[0])
+    if major_version < 16:
+        print(jv)
+        print('Error: JRE version does not meet the minimum requirement, i.e., >= 16')
+        exit()
 
 def checkConsistency(pta1, pta2):
     if pta1.app != pta2.app or pta1.analysisName != pta2.analysisName or \
