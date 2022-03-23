@@ -54,15 +54,15 @@ public class PTAConfig extends CoreConfig {
 
     /*
      * Notice that the DEFAULT option is equivalent to Full Turner.
-     * PHASE_TWO: all objects are assumed to be aliasable.
-     * PHASE_ONE: only non-aliasable objects are analyzed context-insensitively. All other variables and objects
+     * PHASE_TWO: all objects are assumed to be CS-likely.
+     * PHASE_ONE: only non-CS-likely objects are analyzed context-insensitively. All other variables and objects
      * are analyzed context-sensitively.
      * */
-    public enum HGConfig {
+    public enum TurnerConfig {
         DEFAULT, PHASE_TWO, PHASE_ONE
     }
 
-    public HGConfig hgConfig = HGConfig.DEFAULT;
+    public TurnerConfig turnerConfig = TurnerConfig.DEFAULT;
 
     private PTAConfig() {
         this.ptaConfig = new PointerAnalysisConfiguration();

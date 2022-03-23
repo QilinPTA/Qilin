@@ -170,26 +170,26 @@ public class OCG {
         return !isNewBottom(node) && !isNewTop(node);
     }
 
-    public boolean isAliasable(AllocNode allocNode) {
+    public boolean isCSLikely(AllocNode allocNode) {
         OCGNode node = this.nodes.getOrDefault(allocNode, null);
         if (node == null) {
             return false;
         } else {
-            return node.aliasable;
+            return node.cslikely;
         }
     }
 
     public void run() {
         int[] a = new int[2];
-        System.out.println(PTAConfig.v().hgConfig);
+        System.out.println(PTAConfig.v().turnerConfig);
         for (OCGNode node : nodes.values()) {
-            PTAConfig.HGConfig hgConfig = PTAConfig.v().hgConfig;
-            if (hgConfig == PTAConfig.HGConfig.PHASE_TWO) {
-                node.aliasable = true;
+            PTAConfig.TurnerConfig hgConfig = PTAConfig.v().turnerConfig;
+            if (hgConfig == PTAConfig.TurnerConfig.PHASE_TWO) {
+                node.cslikely = true;
             } else {
-                node.aliasable = isNotTopAndBottom(node);
+                node.cslikely = isNotTopAndBottom(node);
             }
-            if (node.aliasable) {
+            if (node.cslikely) {
                 a[1]++;
             } else {
                 a[0]++;
@@ -212,11 +212,11 @@ public class OCG {
         public final AllocNode ir;
         public Set<OCGNode> successors;
         public Set<OCGNode> predecessors;
-        public boolean aliasable;
+        public boolean cslikely;
 
         public OCGNode(AllocNode ir) {
             this.ir = ir;
-            this.aliasable = false;
+            this.cslikely = false;
             this.successors = new HashSet<>();
             this.predecessors = new HashSet<>();
         }

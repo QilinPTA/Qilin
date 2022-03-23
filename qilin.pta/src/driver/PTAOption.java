@@ -77,12 +77,11 @@ public class PTAOption extends Options {
         addOption("pe", "preciseexceptions", "Enable precisely handling exceptions (default value: false)");
 
         // a specific PTA's configuration
-        addOption("hgc", "hgconfig", "[DEFAULT, PHASE_TWO, PHASE_ONE]", "Run HG in given setting (default value: DEFAULT)");
+        addOption("tc", "turnerconfig", "[DEFAULT, PHASE_ONE, PHASE_TWO]", "Run Turner in the given setting (default value: DEFAULT)");
         addOption("cd", "ctxdebloat", "Enable context debloating optimization (default value: false)");
         addOption("tmd", "modular", "Enable Turner to run modularly (default value: false)");
 
         // others
-//        addOption("ac", "extraarraycontext", "add more context for arrays (default value: false)");
         addOption("h", "help", "print this message");
         addOption("pre", "preonly", "Run only pre-analysis (default value: false)");
 
@@ -161,8 +160,8 @@ public class PTAOption extends Options {
         if (cmd.hasOption("inlcudeall")) {
             PTAConfig.v().getAppConfig().INCLUDE_ALL = true;
         }
-        if (cmd.hasOption("hgconfig")) {
-            PTAConfig.v().hgConfig = PTAConfig.HGConfig.valueOf(cmd.getOptionValue("hgconfig"));
+        if (cmd.hasOption("turnerconfig")) {
+            PTAConfig.v().turnerConfig = PTAConfig.TurnerConfig.valueOf(cmd.getOptionValue("turnerconfig"));
         }
 
         // output

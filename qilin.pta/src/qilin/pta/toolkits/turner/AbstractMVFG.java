@@ -132,7 +132,7 @@ public abstract class AbstractMVFG {
 
             } else if (from instanceof AllocNode) {
                 this.addNewEdge((AllocNode) from, (LocalVarNode) to);
-                if (hg.isAliasable((AllocNode) from)) {
+                if (hg.isCSLikely((AllocNode) from)) {
                     this.addCSLikelyEdge((AllocNode) from);
                 }
             } else if (from instanceof FieldRefNode fr) {

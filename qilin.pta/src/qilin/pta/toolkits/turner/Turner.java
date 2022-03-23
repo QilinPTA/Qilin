@@ -116,11 +116,11 @@ public class Turner {
             ret1.put(f, x);
         }
         Map<Object, Integer> ret = new HashMap<>(ret1);
-        if (PTAConfig.v().hgConfig == PTAConfig.HGConfig.PHASE_ONE) {
+        if (PTAConfig.v().turnerConfig == PTAConfig.TurnerConfig.PHASE_ONE) {
             Map<Object, Integer> ret2 = new HashMap<>();
             ret1.forEach((w, v) -> {
                 if (w instanceof AllocNode) {
-                    ret2.put(w, ocg.isAliasable((AllocNode) w) ? hk : 0);
+                    ret2.put(w, ocg.isCSLikely((AllocNode) w) ? hk : 0);
                 } else {
                     ret2.put(w, k);
                 }
@@ -141,7 +141,7 @@ public class Turner {
         int bottoms = 0;
         int topandbottoms = 0;
         for (AllocNode o : prePTA.getPag().getAllocNodes()) {
-            if (!this.ocg.isAliasable(o)) {
+            if (!this.ocg.isCSLikely(o)) {
                 cibyocg++;
             } else if (ret.containsKey(o) && ret.get(o) > 0) {
                 csobj++;
