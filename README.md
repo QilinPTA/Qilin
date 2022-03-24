@@ -50,8 +50,8 @@ To test Qilin, you can directly do:
 $ cd artifact
 $ python3 run.py antlr ci -print
 ```
-The above command will analyse `antlr` with a context-insensitive pointer analysis with some metrics being displayed on the screen. 
-We will optimise the `run.py` script to make its help info more user-friendly.
+The above command will analyse `antlr` with a context-insensitive pointer analysis with some metrics being displayed on the screen.  
+We plan to optimise the `run.py` script to make its help info more user-friendly.
 
 ## Documentation
 
