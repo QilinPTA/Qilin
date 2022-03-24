@@ -60,9 +60,9 @@ We will optimise the `run.py` script to make its help info more user-friendly.
 | Introducing Qilin -- [what it does](https://qilinpta.github.io/#what-is-qilin) and [how we design it](https://github.com/QilinPTA/qilinpta.github.io/wiki/Qilin-Design#qilin-design)      | A step by step [setup guide](https://github.com/QilinPTA/qilinpta.github.io/wiki/Setup-Guide#getting-started) to build Qilin | [Command-line options](https://github.com/QilinPTA/qilinpta.github.io/wiki/Full-list-of-Qilin-options) of Qilin, and running Qilin with [an example](https://github.com/QilinPTA/qilinpta.github.io/wiki/Analyse-a-Simple-Java-Program#an-example) | Detailed [technical documentation](https://qilinpta.github.io/QilinCodeStructure.html) and how to [use Qilin as a lib](https://github.com/QilinPTA/qilinpta.github.io/wiki/Qilin-as-a-lib) for your tool or [write your own analyses](https://github.com/QilinPTA/qilinpta.github.io/wiki/Write-your-own-analysis-in-Qilin) in Qilin |
 
 ## Contributing to Qilin
-Contributions are always welcome. Qilin is an open source project that we published in the hope that it will be useful to the research community as a whole. 
+Contributions are always welcome. Qilin is an open-source project that we publish in the hope that it will be useful to the research community as a whole. 
 If you have a new feature or a bug fix that you would like to see in the official code repository, please open a merge request here on Github and leave a short description of what you have done.
 
 ## License
-Qilin is licenced under the GPL v2.1 license, see LICENSE file.
+Qilin is licenced under the GPL v2.1 license, see the LICENSE file.
 
