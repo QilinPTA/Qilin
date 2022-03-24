@@ -45,13 +45,13 @@ This script contains command to generate `Qilin-VERSION-SNAPSHOT.jar` which will
 You can use Qilin either through its command-line interface (e.g., `driver.Main`) or as a library.
 For researchers who are working on Java pointer analysis, we have provided a whole set of scripts, benchmarks (e.g., `DaCapo2006`) and jdk libraries under `artifact/`.
 
-To test Qilin, you can directly use
+To test Qilin, you can directly do:
 ```
 $ cd artifact
 $ python3 run.py antlr ci -print
 ```
-The above command will analyze `antlr` with a context-insensitive pointer analysis and some metrics will be displayed on the screen. 
-We will optimize the `run.py` script to make its help info more user-friendly.
+The above command will analyse `antlr` with a context-insensitive pointer analysis with some metrics being displayed on the screen. 
+We will optimise the `run.py` script to make its help info more user-friendly.
 
 ## Documentation
 
