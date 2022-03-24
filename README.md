@@ -25,7 +25,7 @@ Qilin is introduced in our ECOOP'22 paper. You can cite our paper as follows:
 
 ### Download
 This repository contains a `submodule` that contains a set of real-world ready-to-use benchmarks for Qilin. 
-If you want to run Qilin on these benchmarks, please use the following command to fetch Qilin sources:
+If you want to run Qilin on these benchmarks, please use the following command to fetch the Qilin source code:
 ```
 $ git clone --recurse-submodules https://github.com/QilinPTA/Qilin.git
 ```
@@ -39,7 +39,7 @@ We use Gradle as the build automation tool. To build Qilin, use
 ```
 $ ./run.sh
 ```
-This script contains command to generate `Qilin-VERSION-SNAPSHOT.jar` which will be automatically moved into `artifact/pta/`.
+This script contains commands to generate `Qilin-VERSION-SNAPSHOT.jar`, which will be automatically moved into `artifact/pta/`.
 
 ### Using Qilin
 You can use Qilin either through its command-line interface (e.g., `driver.Main`) or as a library.
