@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><!--This file has been created with freeplane2html.xsl--><head><title>Qilin's code structure</title><link rel="stylesheet" href="QilinCodeStructure.html_files/freeplane2html.css" type="text/css" /><meta name="generator" content="Freeplane-XSL Stylesheet (see: http://freeplane-xsl.dev.slash-me.net/ for details)" /><script type="text/javascript" src="QilinCodeStructure.html_files/freeplane2html.js"> 
+	</script><script type="text/javascript"><!--
+          
+               function toggle(id)
+               {
+                   div_el = document.getElementById(id);
+                   img_el = document.getElementById('img'+id);
+                   if (div_el.style.display != 'none')
+                   {
+          
+
+                      div_el.style.display='none';
+                      img_el.src = 'QilinCodeStructure.html_files/show.png';
+          
+                   }
+                   else
+                   {
+          
+                      div_el.style.display='block';
+                      img_el.src = 'QilinCodeStructure.html_files/hide.png';
+          
+                   };
+               };
+          
+          --></script></head><body><h1>Qilin's code structure</h1><div style="width:96%;  padding:2%;  margin-bottom:10px;  border: 0px;  text-align:center;  vertical-align:center;"><img src="QilinCodeStructure.html_files/image.png" style="margin-bottom:10px; &#9;border: 0px; &#9;text-align:center; &#9;vertical-align:center;" alt="Imagemap" usemap="#fm_imagemap" /></div><map name="fm_imagemap" id="fm_imagemap"><area shape="rect" href="#FMID_1090958577FM" alt="Qilin's code structure" title="Qilin's code structure" coords="620,646,893,696" />
+<area shape="rect" href="#FMID_1772126643FM" alt="qilin.core" title="qilin.core" coords="910,634,1037,670" />
+<area shape="rect" href="#FMID_1395244479FM" alt="core" title="core" coords="1054,304,1112,338" />
+<area shape="rect" href="#FMID_501194817FM" alt="PAG" title="PAG" coords="1129,208,1219,238" />
+<area shape="rect" href="#FMID_572844518FM" alt="MethodPAG" title="MethodPAG" coords="1236,65,1359,95" />
+<area shape="rect" href="#FMID_255421313FM" alt="PAG Nodes" title="PAG Nodes" coords="1236,225,1348,255" />
+<area shape="rect" href="#FMID_1478479343FM" alt="Object Node" title="Object Node" coords="1365,146,1460,175" />
+<area shape="rect" href="#FMID_1527804207FM" alt="StringConstantNode.java" title="StringConstantNode.java" coords="1477,98,1675,127" />
+<area shape="rect" href="#FMID_1532855451FM" alt="ClassConstantNode.java" title="ClassConstantNode.java" coords="1477,130,1670,159" />
+<area shape="rect" href="#FMID_1107064112FM" alt="AllocNode.java" title="AllocNode.java" coords="1477,162,1613,191" />
+<area shape="rect" href="#FMID_1814697921FM" alt="ContextAllocNode.java" title="ContextAllocNode.java" coords="1477,194,1660,223" />
+<area shape="rect" href="#FMID_464521819FM" alt="Pointer Node" title="Pointer Node" coords="1365,290,1464,319" />
+<area shape="rect" href="#FMID_1167842612FM" alt="GlobalVarNode.java" title="GlobalVarNode.java" coords="1481,226,1647,255" />
+<area shape="rect" href="#FMID_376326985FM" alt="LocalVarNode.java" title="LocalVarNode.java" coords="1481,258,1640,287" />
+<area shape="rect" href="#FMID_421583550FM" alt="FieldValNode.java" title="FieldValNode.java" coords="1481,290,1636,319" />
+<area shape="rect" href="#FMID_1344198037FM" alt="ContextField.java" title="ContextField.java" coords="1481,322,1632,351" />
+<area shape="rect" href="#FMID_704597293FM" alt="ContextVarNode.java" title="ContextVarNode.java" coords="1481,354,1656,383" />
+<area shape="rect" href="#FMID_424767675FM" alt="CallgraphBuilder" title="CallgraphBuilder" coords="1129,386,1310,416" />
+<area shape="rect" href="#FMID_56400937FM" alt="ExceptionHandler" title="ExceptionHandler" coords="1129,419,1319,449" />
+<area shape="rect" href="#FMID_869430707FM" alt="CorePTA.java" title="CorePTA.java" coords="1129,452,1286,482" />
+<area shape="rect" href="#FMID_1883478738FM" alt="PTA Solver" title="PTA Solver" coords="1129,485,1268,515" />
+<area shape="rect" href="#FMID_971568666FM" alt="incremental sets" title="incremental sets" coords="1285,485,1457,515" />
+<area shape="rect" href="#FMID_753594539FM" alt="Feature Handlers" title="Feature Handlers" coords="1129,534,1275,564" />
+<area shape="rect" href="#FMID_297298171FM" alt="native codes" title="native codes" coords="1292,518,1422,548" />
+<area shape="rect" href="#FMID_1091308165FM" alt="reflections" title="reflections" coords="1292,551,1422,581" />
+<area shape="rect" href="#FMID_1858623953FM" alt="parameters" title="parameters" coords="1054,897,1213,931" />
+<area shape="rect" href="#FMID_588844366FM" alt="Context Constructors" title="Context Constructors" coords="1230,685,1423,715" />
+<area shape="rect" href="#FMID_1516173377FM" alt="CallsiteCtxConstructor.java" title="CallsiteCtxConstructor.java" coords="1440,603,1682,633" />
+<area shape="rect" href="#FMID_337829122FM" alt="ObjCtxConstructor.java" title="ObjCtxConstructor.java" coords="1440,636,1656,666" />
+<area shape="rect" href="#FMID_919649522FM" alt="TypeCtxConstructor.java" title="TypeCtxConstructor.java" coords="1440,669,1666,699" />
+<area shape="rect" href="#FMID_1643786777FM" alt="HybObjCtxConstructor.java" title="HybObjCtxConstructor.java" coords="1440,702,1682,732" />
+<area shape="rect" href="#FMID_571039175FM" alt="HybTypeCtxConstructor.java" title="HybTypeCtxConstructor.java" coords="1440,735,1692,765" />
+<area shape="rect" href="#FMID_322683104FM" alt="InsensCtxConstructor.java" title="InsensCtxConstructor.java" coords="1440,768,1676,798" />
+<area shape="rect" href="#FMID_569028628FM" alt="Context Selector" title="Context Selector" coords="1230,949,1390,979" />
+<area shape="rect" href="#FMID_412459172FM" alt="UniformSelector.java" title="UniformSelector.java" coords="1407,801,1607,831" />
+<area shape="rect" href="#FMID_195900117FM" alt="InsenSelector.java" title="InsenSelector.java" coords="1407,834,1590,864" />
+<area shape="rect" href="#FMID_1360565120FM" alt="HeuristicSelector.java" title="HeuristicSelector.java" coords="1407,867,1614,897" />
+<area shape="rect" href="#FMID_1649067982FM" alt="FullMethodLvSelector.java" title="FullMethodLvSelector.java" coords="1407,900,1643,930" />
+<area shape="rect" href="#FMID_974978017FM" alt="PartialMethodLvSelector.java" title="PartialMethodLvSelector.java" coords="1407,933,1662,963" />
+<area shape="rect" href="#FMID_1997357926FM" alt="VarLvSelector.java" title="VarLvSelector.java" coords="1407,966,1592,996" />
+<area shape="rect" href="#FMID_537538141FM" alt="PartialVarSelector.java" title="PartialVarSelector.java" coords="1407,999,1619,1029" />
+<area shape="rect" href="#FMID_117423742FM" alt="DebloatingSelector.java" title="DebloatingSelector.java" coords="1407,1032,1627,1062" />
+<area shape="rect" href="#FMID_1964196985FM" alt="BeanSelector.java" title="BeanSelector.java" coords="1407,1065,1588,1095" />
+<area shape="rect" href="#FMID_1475286544FM" alt="PipelineSelector.java" title="PipelineSelector.java" coords="1407,1098,1607,1128" />
+<area shape="rect" href="#FMID_1960453114FM" alt="Heap Abstractor" title="Heap Abstractor" coords="1230,1164,1387,1194" />
+<area shape="rect" href="#FMID_1511252923FM" alt="AllocSiteAbstractor.java" title="AllocSiteAbstractor.java" coords="1404,1131,1624,1161" />
+<area shape="rect" href="#FMID_908254535FM" alt="HeuristicAbstractor.java" title="HeuristicAbstractor.java" coords="1404,1164,1625,1194" />
+<area shape="rect" href="#FMID_1837404566FM" alt="MahjongAbstractor.java" title="MahjongAbstractor.java" coords="1404,1197,1623,1227" />
+<area shape="rect" href="#FMID_1337934979FM" alt="PTA evaluator" title="PTA evaluator" coords="1054,1230,1233,1264" />
+<area shape="rect" href="#FMID_1631542550FM" alt="qilin.pta" title="qilin.pta" coords="471,300,603,336" />
+<area shape="rect" href="#FMID_204935873FM" alt="driver" title="driver" coords="358,87,454,121" />
+<area shape="rect" href="#FMID_1127153459FM" alt="Main.java" title="Main.java" coords="232,56,341,86" />
+<area shape="rect" href="#FMID_168413891FM" alt="PTAOption.java" title="PTAOption.java" coords="191,89,341,119" />
+<area shape="rect" href="#FMID_1870669745FM" alt="PTAPattern.java" title="PTAPattern.java" coords="186,122,341,152" />
+<area shape="rect" href="#FMID_1258139841FM" alt="concrete PTAs" title="concrete PTAs" coords="294,351,454,385" />
+<area shape="rect" href="#FMID_796120006FM" alt="Spark.java" title="Spark.java" coords="161,155,277,185" />
+<area shape="rect" href="#FMID_1767122784FM" alt="ObjectSensPTA.java" title="ObjectSensPTA.java" coords="93,188,277,218" />
+<area shape="rect" href="#FMID_1575094612FM" alt="CallSiteSensPTA.java" title="CallSiteSensPTA.java" coords="86,221,277,251" />
+<area shape="rect" href="#FMID_468923102FM" alt="TypeSensPTA.java" title="TypeSensPTA.java" coords="105,254,277,284" />
+<area shape="rect" href="#FMID_147211068FM" alt="HybridObjectSensPTA.java" title="HybridObjectSensPTA.java" coords="46,287,277,317" />
+<area shape="rect" href="#FMID_30904192FM" alt="DebloatedPTA.java" title="DebloatedPTA.java" coords="100,320,277,350" />
+<area shape="rect" href="#FMID_1448083641FM" alt="TurnerPTA.java" title="TurnerPTA.java" coords="127,353,277,383" />
+<area shape="rect" href="#FMID_1735121902FM" alt="MahjongPTA.java" title="MahjongPTA.java" coords="114,386,277,416" />
+<area shape="rect" href="#FMID_462522753FM" alt="EaglePTA.java" title="EaglePTA.java" coords="136,419,277,449" />
+<area shape="rect" href="#FMID_1279361768FM" alt="ZipperPTA.java" title="ZipperPTA.java" coords="147,452,277,482" />
+<area shape="rect" href="#FMID_1561150412FM" alt="BeanPTA.java" title="BeanPTA.java" coords="138,485,277,515" />
+<area shape="rect" href="#FMID_1745123289FM" alt="TunnelingPTA.java" title="TunnelingPTA.java" coords="104,518,277,548" />
+<area shape="rect" href="#FMID_239532551FM" alt="DataDrivenPTA.java" title="DataDrivenPTA.java" coords="93,551,277,581" />
+<area shape="rect" href="#FMID_31840620FM" alt="qilin.microben" title="qilin.microben" coords="417,797,603,833" />
+<area shape="rect" href="#FMID_1413269164FM" alt="context sensitivity" title="context sensitivity" coords="198,631,400,665" />
+<area shape="rect" href="#FMID_1035661080FM" alt="k-CFA" title="k-CFA" coords="119,584,181,614" />
+<area shape="rect" href="#FMID_680749913FM" alt="k-OBJ" title="k-OBJ" coords="121,617,181,647" />
+<area shape="rect" href="#FMID_15877272FM" alt="k-Hybrid" title="k-Hybrid" coords="99,650,181,680" />
+<area shape="rect" href="#FMID_615689229FM" alt="collections" title="collections" coords="83,683,181,713" />
+<area shape="rect" href="#FMID_1587291148FM" alt="flow sensitivity" title="flow sensitivity" coords="235,716,400,750" />
+<area shape="rect" href="#FMID_309811131FM" alt="general test cases" title="general test cases" coords="199,883,400,917" />
+<area shape="rect" href="#FMID_1914348410FM" alt="array" title="array" coords="123,753,182,783" />
+<area shape="rect" href="#FMID_1326871225FM" alt="assign" title="assign" coords="115,786,182,816" />
+<area shape="rect" href="#FMID_149783059FM" alt="call" title="call" coords="137,819,182,849" />
+<area shape="rect" href="#FMID_1718826441FM" alt="clinit" title="clinit" coords="126,852,182,882" />
+<area shape="rect" href="#FMID_691618412FM" alt="exception" title="exception" coords="90,885,182,915" />
+<area shape="rect" href="#FMID_193574137FM" alt="field" title="field" coords="130,918,182,948" />
+<area shape="rect" href="#FMID_1528638747FM" alt="global" title="global" coords="117,951,182,981" />
+<area shape="rect" href="#FMID_586715466FM" alt="natives" title="natives" coords="109,984,182,1014" />
+<area shape="rect" href="#FMID_1885535317FM" alt="reflog" title="reflog" coords="120,1017,182,1047" />
+<area shape="rect" href="#FMID_1273262914FM" alt="artifact" title="artifact" coords="493,1151,603,1187" />
+<area shape="rect" href="#FMID_608583388FM" alt="qilin.py" title="qilin.py" coords="354,1050,476,1084" />
+<area shape="rect" href="#FMID_463876181FM" alt="run.py" title="run.py" coords="361,1087,476,1121" />
+<area shape="rect" href="#FMID_519723870FM" alt="Qilin-version-SNAPSHOT.jar" title="Qilin-version-SNAPSHOT.jar" coords="205,1124,476,1158" />
+<area shape="rect" href="#FMID_1963330790FM" alt="benchmarks" title="benchmarks" coords="326,1208,476,1242" />
+<area shape="rect" href="#FMID_1900225967FM" alt="JREs" title="JREs" coords="258,1177,309,1207" />
+<area shape="rect" href="#FMID_1398133851FM" alt="jre1.6.0_45" title="jre1.6.0_45" coords="146,1161,241,1191" />
+<area shape="rect" href="#FMID_617881107FM" alt="jre1.8.0_312" title="jre1.8.0_312" coords="137,1194,241,1224" />
+<area shape="rect" href="#FMID_78619906FM" alt="dacapo2006" title="dacapo2006" coords="180,1227,309,1257" />
+<area shape="rect" href="#FMID_247066141FM" alt="dacapo2018" title="dacapo2018" coords="180,1260,309,1290" />
+<area shape="rect" href="#FMID_1394854654FM" alt="qilin.util" title="qilin.util" coords="910,1267,1042,1303" />
+</map>
+
+<div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N65543&quot;)" id="imgN65543" /><a id="FMID_1090958577FM" /><div class="nodecontent" style="color:#ffffff;background-color:#484747;font-size:150%;font-weight:bold;"><a href="https://github.com/QilinPTA/Qilin">Qilin's code structure</a> <a href="https://github.com/QilinPTA/Qilin"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="content" id="N65543"><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N66473&quot;)" id="imgN66473" /><a id="FMID_1772126643FM" /><div class="nodecontent" style="color:#eceff4;background-color:#d08770;font-size:133%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core">qilin.core</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="content" id="N66473"><div class="cloud" style="background-color:#ffcccc"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N66515&quot;)" id="imgN66515" /><a id="FMID_1395244479FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;">core</div><div class="content" id="N66515"><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N66559&quot;)" id="imgN66559" /><a id="FMID_501194817FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/pag">PAG</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/pag"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+       The pointer assignment graph.
+    </p>
+  </span></div><div class="content" id="N66559"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_572844518FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/MethodPAG.java">MethodPAG</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/MethodPAG.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N66658&quot;)" id="imgN66658" /><a id="FMID_255421313FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;">PAG Nodes</div><div class="note-and-attributes"><span class="note">
+    <p>
+      We have defined a set of PAG nodes with the same names, if possible, as those in "soot/jimple/spark/pag/".
+    </p>
+  </span></div><div class="content" id="N66658"><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N66714&quot;)" id="imgN66714" /><a id="FMID_1478479343FM" /><div class="nodecontent" style="color:#484747;background-color:#81a1c1;font-size:83%;">Object Node</div><div class="content" id="N66714"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1527804207FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/StringConstantNode.java">StringConstantNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/StringConstantNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1532855451FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ClassConstantNode.java">ClassConstantNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ClassConstantNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1107064112FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/AllocNode.java">AllocNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/AllocNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1814697921FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ContextAllocNode.java">ContextAllocNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ContextAllocNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N66923&quot;)" id="imgN66923" /><a id="FMID_464521819FM" /><div class="nodecontent" style="color:#484747;background-color:#81a1c1;font-size:83%;">Pointer Node</div><div class="content" id="N66923"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1167842612FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/GlobalVarNode.java">GlobalVarNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/GlobalVarNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_376326985FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/LocalVarNode.java">LocalVarNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/LocalVarNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_421583550FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/FieldValNode.java">FieldValNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/FieldValNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1344198037FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ContextField.java">ContextField.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ContextField.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_704597293FM" /><div class="nodecontent" style="color:#484747;background-color:#88c0d0;font-size:83%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ContextVarNode.java">ContextVarNode.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/pag/ContextVarNode.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div></div></div></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_424767675FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/builder/CallGraphBuilder.java">CallgraphBuilder</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/builder/CallGraphBuilder.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      It provides an API for handling virtual call dispatch.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_56400937FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/builder/ExceptionHandler.java">ExceptionHandler</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/builder/ExceptionHandler.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      It provides an API for exception dispatch along the exception-catch-links.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_869430707FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/CorePTA.java">CorePTA.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/CorePTA.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This defines an abstract pointer analysis. You can define a concrete pointer analysis (as a subclass) by defining Qilin's three context-sensitivity-controlling parameters.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N67351&quot;)" id="imgN67351" /><a id="FMID_1883478738FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/solver/Solver.java">PTA Solver</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/core/solver/Solver.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Qilin's incremental worklist-based constraint solver for supporting pointer analyses with fine-grained context-sensitivity. For more details, please refer to Section 3.3 and Algorithm 1 of our ECOOP'2022 paper.
+    </p>
+  </span></div><div class="content" id="N67351"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_971568666FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/sets">incremental sets</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/sets"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      These classes are modified from their corresponding ones in "soot/jimple/spark/sets".
+    </p>
+  </span></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N67467&quot;)" id="imgN67467" /><a id="FMID_753594539FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">Feature Handlers</div><div class="content" id="N67467"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_297298171FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/natives">native codes</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/natives"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1091308165FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/reflection">reflections</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/core/reflection"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      We currently discover the reflective targets in a program by using TAMIFLEX before performing pointer analysis on the program. You can design your own reflection handlers here.
+    </p>
+  </span></div></div></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N67609&quot;)" id="imgN67609" /><a id="FMID_1858623953FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/parm">parameters</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/parm"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This package includes a set of built-in instantiations of Qilin's three context-sensitivity-controlling parameters.
+    </p>
+  </span></div><div class="content" id="N67609"><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N67667&quot;)" id="imgN67667" /><a id="FMID_588844366FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">Context Constructors</div><div class="note-and-attributes"><span class="note">
+    <p>
+      A context constructor describes how to construct a new context for a method.
+    </p>
+  </span></div><div class="content" id="N67667"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1516173377FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/CallsiteCtxConstructor.java">CallsiteCtxConstructor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/CallsiteCtxConstructor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (2) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_337829122FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/ObjCtxConstructor.java">ObjCtxConstructor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/ObjCtxConstructor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (3) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_919649522FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/TypeCtxConstructor.java">TypeCtxConstructor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/TypeCtxConstructor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (4) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1643786777FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/HybObjCtxConstructor.java">HybObjCtxConstructor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/HybObjCtxConstructor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (5) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_571039175FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/HybTypeCtxConstructor.java">HybTypeCtxConstructor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/HybTypeCtxConstructor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Refer to Selective 2-type-sensitive with 1-context-sensitive heap hybrid (s-2type+H) in "Hybrid context-sensitivity for Points-to Analysis" (PLDI'13).
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_322683104FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/InsensCtxConstructor.java">InsensCtxConstructor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/ctxcons/InsensCtxConstructor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (1) in our ECOOP'22 paper.
+    </p>
+  </span></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N68073&quot;)" id="imgN68073" /><a id="FMID_569028628FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">Context Selector</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Context selector selects some context elements from the context of a method to form a new context for a variable declared (or object allocated ) in the method.
+    </p>
+  </span></div><div class="content" id="N68073"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_412459172FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/UniformSelector.java">UniformSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/UniformSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (6) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_195900117FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/InsenSelector.java">InsenSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/InsenSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This context selector is defined for context-insensitive pointer analysis. For all variables and objects, it returns an empty context.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1360565120FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/HeuristicSelector.java">HeuristicSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/HeuristicSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (8) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1649067982FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/FullMethodLvSelector.java">FullMethodLvSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/FullMethodLvSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This context selector is used in Data-driven pointer analysis (OOPSLA'2017). Every method can use contexts of different context lengths.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_974978017FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/PartialMethodLvSelector.java">PartialMethodLvSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/PartialMethodLvSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (9) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1997357926FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/VarLvSelector.java">VarLvSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/VarLvSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This context selector allows all variables and objects to have have their own context abstractions (with, e.g., different context lengths) in the most general case.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_537538141FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/PartialVarSelector.java">PartialVarSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/PartialVarSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (10) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_117423742FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/DebloatingSelector.java">DebloatingSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/DebloatingSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This context selector is designed for <a href="https://dl.acm.org/doi/abs/10.1145/3062341.3062360">Mahjong</a> and <a href="https://doi.org/10.1109/ASE51524.2021.9678880">Context debloating technique</a> introduced in ASE'21 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1964196985FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/BeanSelector.java">BeanSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/BeanSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This context selector is specially designed for <a href="https://link.springer.com/chapter/10.1007/978-3-662-53413-7_24">BEAN</a>.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1475286544FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/PipelineSelector.java">PipelineSelector.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/select/PipelineSelector.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This context selector is defined in terms of two other context selectors. See the formal definition in Section 4.4 of our ECOOP'22 paper.
+    </p>
+  </span></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N68724&quot;)" id="imgN68724" /><a id="FMID_1960453114FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">Heap Abstractor</div><div class="note-and-attributes"><span class="note">
+    <p>
+      A heap abstractor defines the heap abstraction for an object.
+    </p>
+  </span></div><div class="content" id="N68724"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1511252923FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/heapabst/AllocSiteAbstractor.java">AllocSiteAbstractor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/heapabst/AllocSiteAbstractor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (11) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_908254535FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/heapabst/HeuristicAbstractor.java">HeuristicAbstractor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/heapabst/HeuristicAbstractor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (12) in our ECOOP'22 paper.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1837404566FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/heapabst/MahjongAbstractor.java">MahjongAbstractor.java</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/qilin.core/src/qilin/parm/heapabst/MahjongAbstractor.java"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Equation (13) in our ECOOP'22 paper.
+    </p>
+  </span></div></div></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1337934979FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/stat">PTA evaluator</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.core/src/qilin/stat"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      Records many statistics of the pointer analysis for a given benchmark.
+    </p>
+  </span></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N69017&quot;)" id="imgN69017" /><a id="FMID_1631542550FM" /><div class="nodecontent" style="color:#eceff4;background-color:#d08770;font-size:133%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.pta">qilin.pta</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.pta"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      If you want to create your own pointer analysis, please put your code under this sub-project.
+    </p>
+  </span></div><div class="content" id="N69017"><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N69075&quot;)" id="imgN69075" /><a id="FMID_204935873FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.pta/src/driver">driver</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.pta/src/driver"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="content" id="N69075"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1127153459FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">Main.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Qilin's command line entry class.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_168413891FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">PTAOption.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Qilin command line options
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1870669745FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">PTAPattern.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Pointer analysis patterns, which tell Qilin which PTA to invoke.
+    </p>
+  </span></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N69289&quot;)" id="imgN69289" /><a id="FMID_1258139841FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;">concrete PTAs</div><div class="note-and-attributes"><span class="note">
+    <p>
+      PTA implementations are stored under the "tools/" directory while their corresponding pre-analyses (if any) are stored under the "toolkits" directory.
+    </p>
+  </span></div><div class="content" id="N69289"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_796120006FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">Spark.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      This performs the standard context-insensitive pointer analysis. The PTA pattern is "insens".
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1767122784FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">ObjectSensPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      k-OBJ, the PTA pattern is "ko", k = {1, 2, 3, ...}
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1575094612FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">CallSiteSensPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      k-CFA, the PTA pattern is "kc", k = {1,2,3,...}
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_468923102FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">TypeSensPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      k-Type, the PTA pattern is "kt", k = {1, 2, 3, ...}
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_147211068FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">HybridObjectSensPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Hybrid kOBJ. The PTA pattern is "kh", k = {1, 2, 3, ...}
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_30904192FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">DebloatedPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Context debloating for Object-sensitivity. The PTA pattern can be {ko, Z-ko, E-ko} + "-cd" respectively for debloating kOBJ, Zipper-guided kOBJ, and Eagle-guided kOBJ.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1448083641FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">TurnerPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Turner-guided k-OBJ. The PTA pattern is "T-ko", k = {1, 2, 3, ...}
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1735121902FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">MahjongPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Mahjong-guided context-sensitive pointer analysis. The PTA pattern can be one of {M-kc, M-ko}, k = {1, 2, 3, ...}
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_462522753FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">EaglePTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Eagle-guided kOBJ. The PTA pattern is "E-ko", k = {1, 2, 3, ...}
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1279361768FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">ZipperPTA.java</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1561150412FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">BeanPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Bean-guided 2-object-sensitive pointer analysis. The PTA pattern is "B-2o".
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1745123289FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">TunnelingPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Context tunneling guided pointer analysis. The PTA patterns can be one of {'t-1c', t-2t, t-2o, t-2h}.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_239532551FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">DataDrivenPTA.java</div><div class="note-and-attributes"><span class="note">
+    <p>
+      Data-driven point.er analysis. The PTA patterns can be {D-2o, D-2c, D-2h, D-2ht}
+    </p>
+  </span></div></div></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N70077&quot;)" id="imgN70077" /><a id="FMID_31840620FM" /><div class="nodecontent" style="color:#eceff4;background-color:#d08770;font-size:133%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.microben">qilin.microben</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.microben"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      About 100 unit test cases for testing Qilin. If you want to add more unit test cases, please put your code here.
+    </p>
+  </span></div><div class="content" id="N70077"><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N70135&quot;)" id="imgN70135" /><a id="FMID_1413269164FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.microben/src/qilin/microben/context">context sensitivity</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.microben/src/qilin/microben/context"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="content" id="N70135"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1035661080FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">k-CFA</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_680749913FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">k-OBJ</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_15877272FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">k-Hybrid</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_615689229FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">collections</div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1587291148FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;">flow sensitivity</div><div class="note-and-attributes"><span class="note">
+    <p>
+      not supported yet by Qilin.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N70398&quot;)" id="imgN70398" /><a id="FMID_309811131FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.microben/src/qilin/microben/core">general test cases</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.microben/src/qilin/microben/core"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="content" id="N70398"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1914348410FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">array</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1326871225FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">assign</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_149783059FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">call</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1718826441FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">clinit</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_691618412FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">exception</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_193574137FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">field</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1528638747FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">global</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_586715466FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">natives</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1885535317FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">reflog</div></div></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N70810&quot;)" id="imgN70810" /><a id="FMID_1273262914FM" /><div class="nodecontent" style="color:#eceff4;background-color:#d08770;font-size:133%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/artifact">artifact</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/artifact"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="content" id="N70810"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_608583388FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/artifact/qilin.py">qilin.py</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/artifact/qilin.py"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      The driver script of Qilin.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_463876181FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/Qilin/blob/main/artifact/run.py">run.py</a> <a href="https://github.com/QilinPTA/Qilin/blob/main/artifact/run.py"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      The driver script for using Qilin to analyse benchmarks.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_519723870FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;">Qilin-version-SNAPSHOT.jar</div><div class="note-and-attributes"><span class="note">
+    <p>
+      The Qilin package with dependencies. It is compiled by JDK16+ and thus requires a recent JDK to run.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N71026&quot;)" id="imgN71026" /><a id="FMID_1963330790FM" /><div class="nodecontent" style="color:#3b4252;background-color:#ebcb8b;font-size:117%;"><a href="https://github.com/QilinPTA/benchmarks">benchmarks</a> <a href="https://github.com/QilinPTA/benchmarks"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="content" id="N71026"><div class="node"><img src="QilinCodeStructure.html_files/hide.png" class="hideshow" alt="hide" onClick="toggle(&quot;N71067&quot;)" id="imgN71067" /><a id="FMID_1900225967FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">JREs</div><div class="content" id="N71067"><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1398133851FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;">jre1.6.0_45</div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_617881107FM" /><div class="nodecontent" style="color:#2e3440;background-color:#b48ead;font-size:92%;">jre1.8.0_312</div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_78619906FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">dacapo2006</div><div class="note-and-attributes"><span class="note">
+    <p>
+      The old version of DaCaPo benchmarks from the artifact of Mahjong. It should be used together with jre1.6.0_45.
+    </p>
+  </span></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_247066141FM" /><div class="nodecontent" style="color:#2e3440;background-color:#a3be8c;font-size:100%;">dacapo2018</div><div class="note-and-attributes"><span class="note">
+    <p>
+      The latest version of DaCapo (revision 6cf0380) compiled by us. This set of benchmarks should work together with jre1.8.0_312.
+    </p>
+  </span></div></div></div></div></div></div><div class="node"><img src="QilinCodeStructure.html_files/leaf.png" class="hideshow" alt="leaf" /><a id="FMID_1394854654FM" /><div class="nodecontent" style="color:#eceff4;background-color:#d08770;font-size:133%;"><a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.util">qilin.util</a> <a href="https://github.com/QilinPTA/Qilin/tree/main/qilin.util"><img src="QilinCodeStructure.html_files/ilink.png" alt="User Link" style="border-width:0" /></a></div><div class="note-and-attributes"><span class="note">
+    <p>
+      This subproject includes a set of utility classes.
+    </p>
+  </span></div></div></div></div>
+</body></html>
