@@ -43,7 +43,7 @@ This script contains command to generate `Qilin-VERSION-SNAPSHOT.jar` which will
 
 ### Using Qilin
 You can use Qilin either through its command-line interface (e.g., `driver.Main`) or as a library.
-For researchers who are working on Java pointer analysis, we have provided a whole set of scripts, benchmarks (e.g., `DaCapo2006`) and jdk libraries in `artifact/`.
+For researchers who are working on Java pointer analysis, we have provided a whole set of scripts, benchmarks (e.g., `DaCapo2006`) and jdk libraries under `artifact/`.
 
 To test Qilin, you can directly use
 ```
