@@ -1,0 +1,59 @@
+diff --git a/src/main/java/soot/FastHierarchy.java b/src/main/java/soot/FastHierarchy.java
+old mode 100644
+new mode 100755
+index 7e69aca..7d8d6a4
+--- a/src/main/java/soot/FastHierarchy.java
++++ b/src/main/java/soot/FastHierarchy.java
+@@ -907,6 +907,11 @@ public class FastHierarchy {
+   private SootMethod getSignaturePolymorphicMethod(SootClass concreteType, String name, List<Type> parameterTypes,
+       Type returnType) {
+     SootMethod candidate = null;
++    String subsig = SootMethod.getSubSignature(name, parameterTypes, returnType);
++    candidate = concreteType.getMethodUnsafe(subsig);
++    if (candidate != null) {
++      return candidate;
++    }
+     for (SootMethod method : concreteType.getMethods()) {
+       if (method.getName().equals(name) && method.getParameterTypes().equals(parameterTypes)
+           && canStoreType(method.getReturnType(), returnType)) {
+diff --git a/src/main/java/soot/Scene.java b/src/main/java/soot/Scene.java
+index 7b07971..189a881 100755
+--- a/src/main/java/soot/Scene.java
++++ b/src/main/java/soot/Scene.java
+@@ -1647,6 +1647,7 @@ public class Scene {
+     addBasicClass("java.lang.ref.Finalizer");
+ 
+     addBasicClass("java.lang.invoke.LambdaMetafactory");
++    addBasicClass("java.io.UnixFileSystem");
+   }
+ 
+   public void addBasicClass(String name) {
+@@ -1725,6 +1726,28 @@ public class Scene {
+             classNames.add(signatureToClass(target));
+           } else if (kind.equals("Field.set*") || kind.equals("Field.get*")) {
+             classNames.add(signatureToClass(target));
++          } else if (kind.equals("Field.toString") || kind.equals("Method.toString") || kind.equals("Constructor.toString")) {
++            classNames.add(signatureToClass(target));
++          } else if (kind.equals("Field.getName") || kind.equals("Field.getDeclaringClass")) {
++            classNames.add(signatureToClass(target));
++          } else if (kind.equals("Class.getDeclaredField") || kind.equals("Class.getDeclaredMethod")) {
++            classNames.add(signatureToClass(target));
++          } else if (kind.equals("Class.getDeclaredFields") || kind.equals("Class.getDeclaredMethods")) {
++            if (!target.startsWith("[")) {
++              classNames.add(target);
++            }
++          } else if (kind.equals("Class.getFields") || kind.equals("Class.getMethods")) {
++            classNames.add(target);
++          } else if (kind.equals("Class.getMethod") || kind.equals("Class.getField")) {
++            classNames.add(signatureToClass(target));
++          } else if (kind.equals("Constructor.getModifiers") || kind.equals("Field.getModifiers")) {
++            classNames.add(signatureToClass(target));
++          } else if (kind.equals("Array.newInstance")) {
++            // do nothing
++          } else if (kind.equals("Method.getModifiers") || kind.equals("Method.getName") || kind.equals("Method.toGenericString")) {
++            classNames.add(signatureToClass(target));
++          } else if (kind.equals("Method.getDeclaringClass")) {
++            classNames.add(signatureToClass(target));
+           } else {
+             throw new RuntimeException("Unknown entry kind: " + kind);
+           }
