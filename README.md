@@ -5,7 +5,7 @@
 > :warning: [Documentation for Qilin](https://qilinpta.github.io/) is under development.
 
 # Qilin: A fully imperative Java Pointer Analysis Framework.
-The repository hosts Qilin, a new Java pointer Aaalysis framework for supporting fine-grained context-sensitivity.
+The repository hosts Qilin, a new Java pointer analysis framework for supporting fine-grained context-sensitivity.
 
 Qilin is introduced in our ECOOP'22 paper. You can cite our paper as follows:
 ```
