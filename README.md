@@ -41,6 +41,8 @@ $ ./run.sh
 ```
 This script contains commands to generate `Qilin-VERSION-SNAPSHOT.jar`, which will be automatically moved into `artifact/pta/`.
 
+For users who want to build Qilin in IDE, please refer to [this page](https://github.com/QilinPTA/Qilin/wiki/Set-up-the-Debugging-Environment-for-Qilin-in-IntelliJ-IDEA).
+
 ### Using Qilin
 You can use Qilin either through its command-line interface (e.g., `driver.Main`) or as a library.
 For researchers who are working on Java pointer analysis, we have provided a whole set of scripts, benchmarks (e.g., `DaCapo2006`) and jdk libraries under `artifact/`.
