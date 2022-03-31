@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import os, sys, subprocess
+import fnmatch
 from util.opt import *
 
 # HOME
@@ -9,7 +10,26 @@ PA_HOME = os.path.dirname(os.path.realpath(__file__))
 XMX = '-Xmx512g'
 timeout = -1
 
-CLASSPATH = os.pathsep.join([os.path.join(PA_HOME, 'Qilin-1.0-SNAPSHOT.jar'),])
+def qilinJarFile():
+    qilinJars = []
+    for f in os.listdir(PA_HOME):
+        if fnmatch.fnmatch(f, 'Qilin-*-SNAPSHOT.jar'):
+            qilinJars.append(f)
+    print(qilinJars)
+    if len(qilinJars) == 1:
+        return qilinJars[0]
+    elif len(qilinJars) > 1:
+        print("There are {0:d} choices for Qilin executables:".format(len(qilinJars)))
+        for count, value in enumerate(qilinJars):
+            print("{0:d} \t {1}".format(count, value))
+        val = input("please type the selection number:")
+        idx = int(val)
+        return qilinJars[idx]
+
+    else:
+        sys.exit('could not find Qilin executable file.')
+
+CLASSPATH = os.pathsep.join([os.path.join(PA_HOME, qilinJarFile()),])
 
 runJava_cmd = 'java -Xms1g %s -cp ' + CLASSPATH + ' driver.Main %s'
 OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
