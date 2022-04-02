@@ -134,6 +134,9 @@ public class PTAFactory {
                         CtxConstructor ctxCons = new CallsiteCtxConstructor();
                         return new TunnelingPTA(ctxCons, ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth());
                     }
+                    case SELECTX -> {
+                        return new SelectxPTA(ptaPattern.getContextDepth());
+                    }
                     default -> {
                         // CallSite Sensitive
                         return new CallSiteSensPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth());

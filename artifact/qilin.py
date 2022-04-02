@@ -15,7 +15,6 @@ def qilinJarFile():
     for f in os.listdir(PA_HOME):
         if fnmatch.fnmatch(f, 'Qilin-*-SNAPSHOT.jar'):
             qilinJars.append(f)
-    print(qilinJars)
     if len(qilinJars) == 1:
         return qilinJars[0]
     elif len(qilinJars) > 1:

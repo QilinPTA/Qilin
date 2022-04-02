@@ -19,6 +19,7 @@
 package qilin.core.pag;
 
 import qilin.CoreConfig;
+import qilin.core.context.ContextElement;
 import qilin.core.context.ContextElements;
 import soot.ArrayType;
 import soot.Context;
@@ -40,11 +41,16 @@ public class ContextField extends ValNode {
             return RefType.v("java.lang.Object");
         }
         if (field instanceof ArrayElement) {
-            Type baseHeapType = ((AllocNode) ((ContextElements) context).getElements()[0]).getType();
-            if (baseHeapType instanceof ArrayType arrayType) {
-                return arrayType.getArrayElementType();
+            ContextElement[] contextElements = ((ContextElements) context).getElements();
+            if (contextElements.length > 0) {
+                Type baseHeapType = ((AllocNode) ((ContextElements) context).getElements()[0]).getType();
+                if (baseHeapType instanceof ArrayType arrayType) {
+                    return arrayType.getArrayElementType();
+                } else {
+                    throw new RuntimeException(baseHeapType + " is not an array type.");
+                }
             } else {
-                throw new RuntimeException(baseHeapType + " is not an array type.");
+                throw new RuntimeException("Context does not have any elements:" + context + ";" + field);
             }
         }
         return field.getType();
