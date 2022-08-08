@@ -16,13 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package qilin.pta.toolkits.bean.oag.context;
+package qilin.pta.toolkits.bean;
 
 import qilin.core.context.ContextElements;
 import qilin.core.pag.AllocNode;
 import qilin.parm.ctxcons.CtxConstructor;
-import qilin.pta.toolkits.bean.oag.Node;
-import qilin.pta.toolkits.bean.oag.OAG;
+import qilin.pta.toolkits.common.OAG;
 import qilin.util.Triple;
 
 import java.util.*;
@@ -45,27 +44,26 @@ public class RepresentativeContextSelector extends ContextSelector {
             mergeContextMap(selectContext(oag, node));
         });
         oag.allNodes().forEach(node -> {
-            if (!contextMap.containsKey(node.getHeap())) {
+            if (!contextMap.containsKey(node)) {
                 mergeContextMap(selectContext(oag, node));
             }
         });
     }
 
-    private Map<AllocNode, Set<ContextElements>> selectContext(OAG oag, Node dest) {
+    private Map<AllocNode, Set<ContextElements>> selectContext(OAG oag, AllocNode dest) {
         Map<AllocNode, Set<ContextElements>> tempContextMap = new HashMap<>();
-        Queue<Triple<Node, ContextElements, Boolean>> worklist = new LinkedList<>();
+        Queue<Triple<AllocNode, ContextElements, Boolean>> worklist = new LinkedList<>();
         initialWorkList(worklist, oag, dest);
         while (!worklist.isEmpty()) {
-            Triple<Node, ContextElements, Boolean> triple = worklist.poll();
-            Node node = triple.getFirst();
+            Triple<AllocNode, ContextElements, Boolean> triple = worklist.poll();
+            AllocNode heap = triple.getFirst();
             ContextElements ctx = triple.getSecond();
             boolean split = triple.getThird();
-            AllocNode heap = node.getHeap();
             if (!tempContextMap.containsKey(heap)) {
                 tempContextMap.put(heap, new HashSet<>());
             }
             if (tempContextMap.get(heap).add(ctx)) {
-                Set<Node> reachSuccs = selectReachNodes(oag.getSuccsOf(node), dest, oag);
+                Set<AllocNode> reachSuccs = selectReachNodes(oag.getSuccsOf(heap), dest, oag);
                 final boolean isFork = reachSuccs.size() > 1;
                 reachSuccs.forEach(succ -> {
                     final boolean isJoinSucc = oag.getInDegreeOf(succ) > 1;
@@ -82,7 +80,7 @@ public class RepresentativeContextSelector extends ContextSelector {
                     }
                     Set<ContextElements> ctxs = tempContextMap.get(succ);
                     if (ctxs == null || !ctxs.contains(newCtx)) {
-                        addAllocation(ctx, heap, newCtx, succ.getHeap());
+                        addAllocation(ctx, heap, newCtx, succ);
                         worklist.add(new Triple<>(succ, newCtx, succSplit));
                     }
                 });
@@ -109,16 +107,16 @@ public class RepresentativeContextSelector extends ContextSelector {
      * @param oag
      * @return
      */
-    private Set<Node> selectReachNodes(Set<Node> nodes, Node dest, OAG oag) {
+    private Set<AllocNode> selectReachNodes(Collection<AllocNode> nodes, AllocNode dest, OAG oag) {
         return nodes.stream().filter(node -> oag.reaches(node, dest)).collect(Collectors.toSet());
     }
 
-    private void initialWorkList(Queue<Triple<Node, ContextElements, Boolean>> worklist, OAG oag, Node node) {
-        Set<Node> reachRoots = selectReachNodes(oag.rootNodes(), node, oag);
+    private void initialWorkList(Queue<Triple<AllocNode, ContextElements, Boolean>> worklist, OAG oag, AllocNode node) {
+        Set<AllocNode> reachRoots = selectReachNodes(oag.rootNodes(), node, oag);
         boolean split = reachRoots.size() > 1;
         ContextElements emptyCtx = (ContextElements) CtxConstructor.emptyContext;
         reachRoots.forEach(root ->
-                worklist.add(new Triple<>(root, ContextElements.newContext(emptyCtx, root.getHeap(), depth), split)));
+                worklist.add(new Triple<>(root, ContextElements.newContext(emptyCtx, root, depth), split)));
     }
 
 }

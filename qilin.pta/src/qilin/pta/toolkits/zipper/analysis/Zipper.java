@@ -1,15 +1,16 @@
 package qilin.pta.toolkits.zipper.analysis;
 
-import qilin.core.pag.AllocNode;
+import qilin.core.PTA;
+import qilin.core.pag.*;
+import qilin.pta.toolkits.common.OAG;
+import qilin.pta.toolkits.common.ToolUtil;
 import qilin.pta.toolkits.zipper.Global;
 import qilin.pta.toolkits.zipper.flowgraph.FlowAnalysis;
-import qilin.pta.toolkits.zipper.flowgraph.InstanceFieldNode;
-import qilin.pta.toolkits.zipper.flowgraph.Node;
 import qilin.pta.toolkits.zipper.flowgraph.ObjectFlowGraph;
-import qilin.pta.toolkits.zipper.pta.PointsToAnalysis;
 import qilin.util.ANSIColor;
 import qilin.util.Stopwatch;
 import qilin.util.graph.ConcurrentDirectedGraphImpl;
+import soot.RefType;
 import soot.SootMethod;
 import soot.Type;
 
@@ -28,31 +29,28 @@ import static qilin.util.ANSIColor.color;
  * in the program being analyzed.
  */
 public class Zipper {
-    private final PointsToAnalysis pta;
-    private final ObjectAllocationGraph oag;
+    private final PTA pta;
     private final PotentialContextElement pce;
     private final ObjectFlowGraph ofg;
-    private final InnerClassChecker innerClsChecker;
     private final AtomicInteger analyzedClasses = new AtomicInteger(0);
     private final AtomicInteger totalPFGNodes = new AtomicInteger(0);
     private final AtomicInteger totalPFGEdges = new AtomicInteger(0);
-    //    private final DirectedGraphImpl<Node> overallPFG = new DirectedGraphImpl<>();
     private final ConcurrentDirectedGraphImpl<Node> overallPFG = new ConcurrentDirectedGraphImpl<>();
     private final Map<SootMethod, Integer> methodPts;
     private final Map<Type, Collection<SootMethod>> pcmMap = new ConcurrentHashMap<>(1024);
 
-    public Zipper(PointsToAnalysis pta) {
+    public Zipper(PTA pta) {
         this.pta = pta;
-        this.oag = new ObjectAllocationGraph(pta);
+        OAG oag = new OAG(pta);
+        oag.build();
         System.out.println("#OAG:" + oag.allNodes().size());
         this.pce = new PotentialContextElement(pta, oag);
-        this.innerClsChecker = new InnerClassChecker(pta);
-        this.ofg = buildObjectFlowGraph(pta);
+        this.ofg = buildObjectFlowGraph();
         this.methodPts = getMethodPointsToSize(pta);
     }
 
-    public static void outputNumberOfClasses(PointsToAnalysis pta) {
-        int nrClasses = (int) pta.allObjects().stream()
+    public static void outputNumberOfClasses(PAG pag) {
+        int nrClasses = (int) pag.getAllocNodes().stream()
                 .map(AllocNode::getType)
                 .distinct()
                 .count();
@@ -72,7 +70,7 @@ public class Zipper {
         return nrEdges;
     }
 
-    public static ObjectFlowGraph buildObjectFlowGraph(PointsToAnalysis pta) {
+    public ObjectFlowGraph buildObjectFlowGraph() {
         Stopwatch ofgTimer = Stopwatch.newAndStart("Object Flow Graph Timer");
         System.out.println("Building OFG (Object Flow Graph) ... ");
         ObjectFlowGraph ofg = new ObjectFlowGraph(pta);
@@ -100,10 +98,12 @@ public class Zipper {
     public Set<SootMethod> analyze() {
         reset();
         System.out.println("Building PFGs (Pollution Flow Graphs) and computing precision-critical methods ...");
-        List<Type> types = pta.allObjects().stream()
+        List<RefType> types = pta.getPag().getAllocNodes().stream()
                 .map(AllocNode::getType)
                 .distinct()
                 .sorted(Comparator.comparing(Type::toString))
+                .filter(t -> t instanceof RefType)
+                .map(t -> (RefType) t)
                 .collect(Collectors.toList());
         if (Global.getThread() == Global.UNDEFINE) {
             computePCM(types);
@@ -126,16 +126,16 @@ public class Zipper {
         return pcm;
     }
 
-    private void computePCM(List<Type> types) {
-        FlowAnalysis fa = new FlowAnalysis(pta, oag, pce, ofg);
+    private void computePCM(List<RefType> types) {
+        FlowAnalysis fa = new FlowAnalysis(pta, pce, ofg);
         types.forEach(type -> analyze(type, fa));
     }
 
-    private void computePCMConcurrent(List<Type> types, int nThread) {
+    private void computePCMConcurrent(List<RefType> types, int nThread) {
         ExecutorService executorService = Executors.newFixedThreadPool(nThread);
         types.forEach(type ->
                 executorService.execute(() -> {
-                    FlowAnalysis fa = new FlowAnalysis(pta, oag, pce, ofg);
+                    FlowAnalysis fa = new FlowAnalysis(pta, pce, ofg);
                     analyze(type, fa);
                 }));
         executorService.shutdown();
@@ -151,43 +151,44 @@ public class Zipper {
      * @param fa   Compute the set of precision-critical methods for a class/type and add these methods
      *             to the pcm collection.
      */
-    private void analyze(Type type, FlowAnalysis fa) {
+    private void analyze(RefType type, FlowAnalysis fa) {
         if (Global.isDebug()) {
             System.out.println("----------------------------------------");
         }
         // System.out.println(color(YELLOW, "Zipper: analyzing ") + type);
 
         // Obtain all methods of type (including inherited methods)
-        Set<SootMethod> ms = pta.objectsOfType(type).stream()
-                .map(pta::methodsInvokedOn)
+        Set<SootMethod> ms = pta.getPag().getAllocNodes().stream().
+                filter(o -> o.getType().equals(type))
+                .map(pce::methodsInvokedOn)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
         // Obtain IN methods
         Set<SootMethod> inms = ms.stream()
                 .filter(m -> !m.isPrivate())
-                .filter(m -> pta.getParameters(m).stream()
-                        .anyMatch(p -> !pta.pointsToSetOf(p).isEmpty()))
+                .filter(m -> ToolUtil.getParameters(pta.getPag(), m).stream()
+                        .anyMatch(p -> !ToolUtil.pointsToSetOf(pta, p).isEmpty()))
                 .collect(Collectors.toSet());
 
         // Obtain OUT methods
         Set<SootMethod> outms = new HashSet<>();
         ms.stream()
                 .filter(m -> !m.isPrivate())
-                .filter(m -> pta.getRetVars(m).stream()
-                        .anyMatch(r -> !pta.pointsToSetOf(r).isEmpty()))
+                .filter(m -> ToolUtil.getRetVars(pta.getPag(), m).stream()
+                        .anyMatch(r -> !ToolUtil.pointsToSetOf(pta, r).isEmpty()))
                 .forEach(outms::add);
 
         // OUT methods of inner classes and special access$ methods
         // are also considered as the OUT methods of current type
         pce.PCEMethodsOf(type).stream()
                 .filter(m -> !m.isPrivate() && !m.isStatic())
-                .filter(m -> innerClsChecker.isInnerClass(
-                        pta.declaringTypeOf(m), type))
+                .filter(m -> ToolUtil.isInnerType(
+                        m.getDeclaringClass().getType(), type))
                 .forEach(outms::add);
         pce.PCEMethodsOf(type).stream()
                 .filter(m -> !m.isPrivate() && !m.isStatic())
-                .filter(m -> pta.declaringTypeOf(m).equals(type)
+                .filter(m -> m.getDeclaringClass().getType().equals(type)
                         && m.toString().contains("access$"))
                 .forEach(outms::add);
 
@@ -215,15 +216,6 @@ public class Zipper {
         mergeSinglePFG(fa.getPFG());
         fa.clear();
     }
-
-//    private void mergeSinglePFG(DirectedGraphImpl<Node> pfg) {
-//        for (Node node : pfg.allNodes()) {
-//            this.overallPFG.addNode(node);
-//            for (Node succ : pfg.succsOf(node)) {
-//                this.overallPFG.addEdge(node, succ);
-//            }
-//        }
-//    }
 
     private void mergeSinglePFG(ConcurrentDirectedGraphImpl<Node> pfg) {
         for (Node node : pfg.allNodes()) {
@@ -258,23 +250,30 @@ public class Zipper {
 
     private int computePCMThreshold() {
         // Use points-to size of whole program as denominator
-        return (int) (Global.getExpressThreshold() *
-                pta.totalPointsToSetSize());
+        int totalPTSSize = 0;
+        for (ValNode var : pta.getPag().getValNodeNumberer()) {
+            if (var instanceof VarNode varNode) {
+                Collection<AllocNode> pts = ToolUtil.pointsToSetOf(pta, varNode);
+                totalPTSSize += pts.size();
+            }
+        }
+        return (int) (Global.getExpressThreshold() * totalPTSSize);
     }
 
     private Set<SootMethod> getPrecisionCriticalMethods(Type type, Set<Node> nodes) {
         return nodes.stream()
                 .map(this::node2ContainingMethod)
+                .filter(Objects::nonNull)
                 .filter(pce.PCEMethodsOf(type)::contains)
                 .collect(Collectors.toSet());
     }
 
     private SootMethod node2ContainingMethod(Node node) {
-        if (node instanceof qilin.pta.toolkits.zipper.flowgraph.VarNode varNode) {
-            return pta.declaringMethodOf(varNode.getVar());
+        if (node instanceof LocalVarNode lvn) {
+            return lvn.getMethod();
         } else {
-            InstanceFieldNode ifNode = (InstanceFieldNode) node;
-            return pta.containingMethodOf(ifNode.getBase());
+            ContextField ctxField = (ContextField) node;
+            return ctxField.getBase().getMethod();
         }
     }
 
@@ -285,15 +284,21 @@ public class Zipper {
         pcmMap.clear();
     }
 
-    private Map<SootMethod, Integer> getMethodPointsToSize(PointsToAnalysis pta) {
+    private Map<SootMethod, Integer> getMethodPointsToSize(PTA prePTA) {
         Map<SootMethod, Integer> results = new HashMap<>();
-        pta.reachableMethods().forEach(m ->
-                results.put(m,
-                        pta.variablesDeclaredIn(m)
-                                .stream()
-                                .mapToInt(pta::pointsToSetSizeOf)
-                                .sum())
-        );
+        for (ValNode valnode : prePTA.getPag().getValNodeNumberer()) {
+            if (!(valnode instanceof LocalVarNode lvn)) {
+                continue;
+            }
+            SootMethod inMethod = lvn.getMethod();
+            int ptSize = ToolUtil.pointsToSetSizeOf(prePTA, lvn);
+            if (results.containsKey(inMethod)) {
+                int oldValue = results.get(inMethod);
+                results.replace(inMethod, oldValue, oldValue + ptSize);
+            } else {
+                results.put(inMethod, ptSize);
+            }
+        }
         return results;
     }
 

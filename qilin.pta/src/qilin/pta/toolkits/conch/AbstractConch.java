@@ -224,8 +224,8 @@ public class AbstractConch {
 
     protected boolean hasStoreOn(AllocNode heap, SparkField field) {
         Map<SparkField, Set<Pair<VarNode, VarNode>>> f2bs = o2nonThisFStores.getOrDefault(heap, Collections.emptyMap());
-        Set<Pair<VarNode, VarNode>> loadBases = f2bs.getOrDefault(field, Collections.emptySet());
-        if (!loadBases.isEmpty()) {
+        Set<Pair<VarNode, VarNode>> storeBases = f2bs.getOrDefault(field, Collections.emptySet());
+        if (!storeBases.isEmpty()) {
             return true;
         }
         for (SootMethod method : invokedMethods.getOrDefault(heap, Collections.emptySet())) {

@@ -99,8 +99,8 @@ public class L extends I {
     }
 
     /*
-    * inverse operation: inv(l-) = l+ and inv(l+) = l-.
-    * */
+     * inverse operation: inv(l-) = l+ and inv(l+) = l-.
+     * */
     public L inv() {
         return L.v((LocalVarNode) sparkNode, !positive);
     }

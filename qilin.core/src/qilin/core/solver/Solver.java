@@ -284,7 +284,7 @@ public class Solver extends Propagator {
         P2SetVisitor p2SetVisitor = new P2SetVisitor() {
             @Override
             public void visit(Node n) {
-                if(addTo.add(n)) {
+                if (addTo.add(n)) {
                     returnValue = true;
                 }
             }

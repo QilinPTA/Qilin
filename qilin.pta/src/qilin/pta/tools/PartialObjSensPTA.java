@@ -41,7 +41,6 @@ import java.util.Set;
 public abstract class PartialObjSensPTA extends StagedPTA {
     protected Set<Object> csnodes = new HashSet<>();
     protected Set<SootMethod> csmethods = new HashSet<>();
-    protected BasePTA prePTA;
     protected PAG prePAG;
 
     // just for stats
@@ -118,7 +117,7 @@ public abstract class PartialObjSensPTA extends StagedPTA {
             if (method.isPhantom()) {
                 return;
             }
-            MethodPAG srcmpag = prePTA.getPag().getMethodPAG(method);
+            MethodPAG srcmpag = pag.getMethodPAG(method);
             QueueReader<Node> reader = srcmpag.getInternalReader().clone();
             while (reader.hasNext()) {
                 Node from = reader.next(), to = reader.next();

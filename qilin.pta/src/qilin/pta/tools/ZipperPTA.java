@@ -42,7 +42,6 @@ import java.util.Set;
  * and "A Principled Approach to Selective Context Sensitivity for Pointer Analysis" (TOPLAS'20)
  * */
 public class ZipperPTA extends StagedPTA {
-    private final BasePTA prePTA;
     private final Set<SootMethod> PCMs = new HashSet<>();
 
     /*
@@ -88,7 +87,7 @@ public class ZipperPTA extends StagedPTA {
             if (method.isPhantom()) {
                 return;
             }
-            MethodPAG srcmpag = prePTA.getPag().getMethodPAG(method);
+            MethodPAG srcmpag = pag.getMethodPAG(method);
             QueueReader<Node> reader = srcmpag.getInternalReader().clone();
             while (reader.hasNext()) {
                 Node from = reader.next(), to = reader.next();

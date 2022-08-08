@@ -19,7 +19,6 @@
 package qilin.pta.tools;
 
 import qilin.pta.toolkits.selectx.Selectx;
-import qilin.util.Stopwatch;
 
 import java.util.Map;
 
@@ -35,11 +34,13 @@ public class SelectxPTA extends PartialCallSiteSensPTA {
     @Override
     protected Map<Object, Integer> calculatingNode2Length() {
         System.out.print("Construct transPAG...");
-        Stopwatch stopwatch = Stopwatch.newAndStart("transPAG construction");
+        long time = System.currentTimeMillis();
+
         prePAG = prePTA.getPag();
         Selectx selectx = new Selectx(prePTA);
-        stopwatch.stop();
-        System.out.println(stopwatch);
+
+        System.out.println((System.currentTimeMillis() - time) / 1000 + "s");
+
         System.out.println("Propagate..");
         return selectx.process();
     }

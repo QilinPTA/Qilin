@@ -18,11 +18,9 @@
 
 package qilin.pta.tools;
 
-import qilin.core.PTA;
 import qilin.core.pag.*;
 import qilin.core.sets.PointsToSet;
 import qilin.core.solver.Propagator;
-import qilin.parm.heapabst.HeapAbstractor;
 import qilin.parm.select.CtxSelector;
 import qilin.parm.select.DebloatingSelector;
 import qilin.parm.select.PipelineSelector;
@@ -40,9 +38,7 @@ import java.util.Set;
  * refer to "Context Debloating for Object-Sensitive Pointer Analysis" (ASE'21)
  * */
 public class DebloatedPTA extends StagedPTA {
-    protected PTA prePTA;
     protected BasePTA basePTA;
-    // context dependent heaps
     protected Set<Object> ctxDepHeaps = new HashSet<>();
 
     /*
@@ -53,7 +49,11 @@ public class DebloatedPTA extends StagedPTA {
         this.basePTA = basePTA;
         CtxSelector debloatingSelector = new DebloatingSelector(ctxDepHeaps);
         basePTA.setContextSelector(new PipelineSelector(basePTA.ctxSelector(), debloatingSelector));
-        this.prePTA = new Spark();
+        if (basePTA instanceof StagedPTA stagedPTA) {
+            this.prePTA = stagedPTA.getPrePTA();
+        } else {
+            this.prePTA = new Spark();
+        }
         System.out.println("debloating ....");
     }
 
@@ -118,11 +118,6 @@ public class DebloatedPTA extends StagedPTA {
     @Override
     public PointsToSet reachingObjectsInternal(PointsToSet s, SparkField f) {
         return basePTA.reachingObjectsInternal(s, f);
-    }
-
-    @Override
-    public HeapAbstractor heapAbstractor() {
-        return basePTA.heapAbstractor();
     }
 
     @Override

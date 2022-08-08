@@ -1,15 +1,21 @@
 package qilin.pta.toolkits.zipper.flowgraph;
 
-import qilin.core.pag.AllocNode;
+import qilin.core.PTA;
+import qilin.core.pag.*;
+import qilin.pta.toolkits.common.ToolUtil;
 import qilin.pta.toolkits.zipper.Global;
-import qilin.pta.toolkits.zipper.analysis.ObjectAllocationGraph;
 import qilin.pta.toolkits.zipper.analysis.PotentialContextElement;
-import qilin.pta.toolkits.zipper.pta.PointsToAnalysis;
 import qilin.util.ANSIColor;
 import qilin.util.graph.ConcurrentDirectedGraphImpl;
 import qilin.util.graph.Reachability;
+import soot.RefType;
 import soot.SootMethod;
 import soot.Type;
+import soot.Value;
+import soot.jimple.AssignStmt;
+import soot.jimple.InstanceInvokeExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.Stmt;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -17,26 +23,22 @@ import java.util.stream.Collectors;
 import static qilin.util.ANSIColor.color;
 
 public class FlowAnalysis {
-    private final PointsToAnalysis pta;
-    private final ObjectAllocationGraph oag;
+    private final PTA pta;
     private final PotentialContextElement pce;
     private final ObjectFlowGraph objectFlowGraph;
 
     private Type currentType;
-    private Set<qilin.core.pag.VarNode> inVars;
+    private Set<VarNode> inVars;
     private Set<Node> outNodes;
     private Set<Node> visitedNodes;
     private Map<Node, Set<Edge>> wuEdges;
-    //    private DirectedGraphImpl<Node> pollutionFlowGraph;
     private ConcurrentDirectedGraphImpl<Node> pollutionFlowGraph;
     private Reachability<Node> reachability;
 
-    public FlowAnalysis(PointsToAnalysis pta,
-                        ObjectAllocationGraph oag,
+    public FlowAnalysis(PTA pta,
                         PotentialContextElement pce,
                         ObjectFlowGraph ofg) {
         this.pta = pta;
-        this.oag = oag;
         this.pce = pce;
         this.objectFlowGraph = ofg;
     }
@@ -44,27 +46,24 @@ public class FlowAnalysis {
     public void initialize(Type type, Set<SootMethod> inms, Set<SootMethod> outms) {
         currentType = type;
         inVars = inms.stream()
-                .map(pta::getParameters)
+                .map(m -> ToolUtil.getParameters(pta.getPag(), m))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
         outNodes = outms.stream()
-                .map(pta::getRetVars)
+                .map(m -> ToolUtil.getRetVars(pta.getPag(), m))
                 .flatMap(Collection::stream)
-                .map(objectFlowGraph::nodeOf)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
         visitedNodes = new HashSet<>();
         wuEdges = new HashMap<>();
-//        pollutionFlowGraph = new DirectedGraphImpl<>();
         pollutionFlowGraph = new ConcurrentDirectedGraphImpl<>();
         reachability = new Reachability<>(pollutionFlowGraph);
     }
 
     public void analyze(SootMethod startMethod) {
-        for (qilin.core.pag.VarNode param : pta.getParameters(startMethod)) {
-            Node node = objectFlowGraph.nodeOf(param);
-            if (node != null) {
-                dfs(node);
+        for (VarNode param : ToolUtil.getParameters(pta.getPag(), startMethod)) {
+            if (param != null) {
+                dfs(param);
             } else {
                 if (Global.isDebug()) {
                     System.out.println(param + " is absent in the flow graph.");
@@ -74,13 +73,12 @@ public class FlowAnalysis {
 
         if (Global.isDebug()) {
             Set<SootMethod> outMethods = new HashSet<>();
-            for (qilin.core.pag.VarNode param : pta.getParameters(startMethod)) {
-                Node node = objectFlowGraph.nodeOf(param);
-                if (node != null) {
+            for (VarNode param : ToolUtil.getParameters(pta.getPag(), startMethod)) {
+                if (param != null) {
                     for (Node outNode : outNodes) {
-                        if (reachability.reachableNodesFrom(node).contains(outNode)) {
-                            VarNode outVarNode = (VarNode) outNode;
-                            outMethods.add(pta.declaringMethodOf(outVarNode.getVar()));
+                        if (reachability.reachableNodesFrom(param).contains(outNode)) {
+                            LocalVarNode outVarNode = (LocalVarNode) outNode;
+                            outMethods.add(outVarNode.getMethod());
                         }
                     }
                 }
@@ -112,10 +110,6 @@ public class FlowAnalysis {
         return nrEdges;
     }
 
-//    public DirectedGraphImpl<Node> getPFG() {
-//        return pollutionFlowGraph;
-//    }
-
     public ConcurrentDirectedGraphImpl<Node> getPFG() {
         return pollutionFlowGraph;
     }
@@ -144,22 +138,34 @@ public class FlowAnalysis {
             pollutionFlowGraph.addNode(node);
             // add unwrapped flow edges
             if (Global.isEnableUnwrappedFlow()) {
-                if (node instanceof VarNode varNode) {
-                    qilin.core.pag.VarNode var = varNode.getVar();
+                if (node instanceof VarNode var) {
                     // Optimization: approximate unwrapped flows to make
                     // Zipper and pointer analysis run faster
-                    pta.returnToVariablesOf(var).forEach(toVar -> {
-                        Node toNode = objectFlowGraph.nodeOf(toVar);
-                        if (outNodes.contains(toNode)) {
-                            for (qilin.core.pag.VarNode inVar : inVars) {
-                                if (!Collections.disjoint(pta.pointsToSetOf(inVar), pta.pointsToSetOf(var))) {
-                                    Edge unwrappedEdge = new Edge(Kind.UNWRAPPED_FLOW, node, toNode);
-                                    addWUEdge(node, unwrappedEdge);
-                                    break;
+                    pta.getCgb().getReceiverToSitesMap()
+                            .getOrDefault(var, Collections.emptySet())
+                            .forEach(vcs -> {
+                                Stmt callsiteStmt = (Stmt) vcs.getUnit();
+                                InvokeExpr invo = callsiteStmt.getInvokeExpr();
+                                if (!(invo instanceof InstanceInvokeExpr)) {
+                                    return;
                                 }
-                            }
-                        }
-                    });
+                                if (callsiteStmt instanceof AssignStmt assignStmt) {
+                                    Value lv = assignStmt.getLeftOp();
+                                    if (!(lv.getType() instanceof RefType)) {
+                                        return;
+                                    }
+                                    final VarNode to = (VarNode) pta.getPag().findValNode(lv);
+                                    if (outNodes.contains(to)) {
+                                        for (VarNode inVar : inVars) {
+                                            if (!Collections.disjoint(ToolUtil.pointsToSetOf(pta, inVar), ToolUtil.pointsToSetOf(pta, var))) {
+                                                Edge unwrappedEdge = new Edge(Kind.UNWRAPPED_FLOW, node, to);
+                                                addWUEdge(node, unwrappedEdge);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            });
                 }
             }
             List<Edge> nextEdges = new ArrayList<>();
@@ -170,9 +176,8 @@ public class FlowAnalysis {
                     }
                     case INTERPROCEDURAL_ASSIGN, INSTANCE_LOAD, WRAPPED_FLOW -> {
                         // next must be a variable
-                        VarNode next = (VarNode) edge.getTarget();
-                        qilin.core.pag.VarNode var = next.getVar();
-                        SootMethod inMethod = pta.declaringMethodOf(var);
+                        LocalVarNode next = (LocalVarNode) edge.getTarget();
+                        SootMethod inMethod = next.getMethod();
                         // Optimization: filter out some potential spurious flows due to
                         // the imprecision of context-insensitive pre-analysis, which
                         // helps improve the performance of Zipper and pointer analysis.
@@ -181,26 +186,38 @@ public class FlowAnalysis {
                         }
                     }
                     case INSTANCE_STORE -> {
-                        InstanceFieldNode next = (InstanceFieldNode) edge.getTarget();
+                        ContextField next = (ContextField) edge.getTarget();
                         AllocNode base = next.getBase();
                         if (base.getType().equals(currentType)) {
                             // add wrapped flow edges to this variable
                             if (Global.isEnableWrappedFlow()) {
-                                pta.methodsInvokedOn(currentType).stream()
-                                        .map(pta::getThis)
-                                        .map(objectFlowGraph::nodeOf)
-                                        .filter(Objects::nonNull) // filter this variable of native methods
+                                methodsInvokedOn(currentType).stream()
+                                        .map(m -> ToolUtil.getThis(pta.getPag(), m)) // filter this variable of native methods
                                         .map(n -> new Edge(Kind.WRAPPED_FLOW, next, n))
                                         .forEach(e -> addWUEdge(next, e));
                             }
                             nextEdges.add(edge);
-                        } else if (oag.allocateesOf(currentType).contains(base)) {
+                        } else if (pce.allocateesOf(currentType).contains(base)) {
                             // Optimization, similar as above.
                             if (Global.isEnableWrappedFlow()) {
-                                Node assigned = objectFlowGraph.nodeOf(pta.assignedVarOf(base));
-                                if (assigned != null) {
-                                    Edge e = new Edge(Kind.WRAPPED_FLOW, next, assigned);
-                                    addWUEdge(next, e);
+                                Set<VarNode> r = new HashSet<>();
+                                AllocNode mBase = (AllocNode) pta.parameterize(base, pta.emptyContext());
+                                pta.getPag().allocLookup(mBase).forEach(v -> {
+                                    if (v instanceof ContextVarNode cvn) {
+                                        if (cvn.base() instanceof LocalVarNode lvn) {
+                                            if (!lvn.isThis()) {
+                                                r.add(lvn);
+                                            }
+                                        }
+                                    }
+                                });
+                                Iterator<VarNode> it = r.iterator();
+                                if (it.hasNext()) {
+                                    Node assigned = r.iterator().next();
+                                    if (assigned != null) {
+                                        Edge e = new Edge(Kind.WRAPPED_FLOW, next, assigned);
+                                        addWUEdge(next, e);
+                                    }
                                 }
                             }
                             nextEdges.add(edge);
@@ -221,6 +238,13 @@ public class FlowAnalysis {
 
     private void addWUEdge(Node sourceNode, Edge edge) {
         wuEdges.computeIfAbsent(sourceNode, k -> new HashSet<>()).add(edge);
+    }
+
+    private Collection<SootMethod> methodsInvokedOn(Type type) {
+        return pta.getPag().getAllocNodes()
+                .stream().filter(o -> o.getType().equals(type))
+                .map(pce::methodsInvokedOn).flatMap(Collection::stream)
+                .collect(Collectors.toSet());
     }
 
     /**

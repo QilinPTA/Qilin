@@ -7,6 +7,12 @@ import qilin.pta.tools.BasePTA;
  * This class gives a structure for such kinds of analyses.
  * */
 public abstract class StagedPTA extends BasePTA {
+    protected BasePTA prePTA;
+
+    public BasePTA getPrePTA() {
+        return this.prePTA;
+    }
+
     protected abstract void preAnalysis();
 
     protected void mainAnalysis() {

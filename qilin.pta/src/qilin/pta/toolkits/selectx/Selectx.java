@@ -241,7 +241,9 @@ public class Selectx {
                         this.addStaticStoreEdge((LocalVarNode) from, (GlobalVarNode) to);
                     }
                 } else if (from instanceof AllocNode) {
-                    this.addNewEdge((AllocNode) from, (LocalVarNode) to);
+                    if (to instanceof LocalVarNode) {
+                        this.addNewEdge((AllocNode) from, (LocalVarNode) to);
+                    } // GlobalVarNode
                 } else if (from instanceof FieldRefNode fr) {
                     // load edge is treated as assign.
                     this.addAssignEdge((LocalVarNode) fr.getBase(), (LocalVarNode) to);
@@ -303,7 +305,7 @@ public class Selectx {
                         this.addExitEdge(ret, retDest, callSite);
                     }
                     LocalVarNode stmtThrowNode = prePAG.makeInvokeStmtThrowVarNode(s, method);
-                    LocalVarNode throwFinal = prePTA.getPag().findLocalVarNode(new Parm(tgtmtd, PointsToAnalysis.THROW_NODE));
+                    LocalVarNode throwFinal = prePAG.findLocalVarNode(new Parm(tgtmtd, PointsToAnalysis.THROW_NODE));
                     if (throwFinal != null) {
                         this.addExitEdge(throwFinal, stmtThrowNode, callSite);
                     }

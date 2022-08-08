@@ -341,7 +341,7 @@ public class Conch extends AbstractConch {
             boolean existUnknown = false;
             Set<AllocNode> tos = new HashSet<>();
             for (SparkField sf : ifs) {
-                final PointsToSetInternal ret = pta.getSetFactory().newSet(heap.getType(), pta.getPag());
+                final PointsToSetInternal ret = pta.getSetFactory().newSet(heap.getType(), pag);
                 ret.add(heap);
                 PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjectsInternal(ret, sf);
                 Set<AllocNode> tmp = new HashSet<>();

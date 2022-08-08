@@ -2,7 +2,7 @@ package qilin.pta.toolkits.mahjong.automata;
 
 import qilin.core.pag.AllocNode;
 import qilin.core.pag.SparkField;
-import qilin.pta.toolkits.mahjong.fpg.FieldPointstoGraph;
+import qilin.pta.toolkits.common.FieldPointstoGraph;
 import soot.Type;
 
 import java.util.*;

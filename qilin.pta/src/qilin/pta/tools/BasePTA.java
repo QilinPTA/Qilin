@@ -2,20 +2,21 @@ package qilin.pta.tools;
 
 import qilin.CoreConfig;
 import qilin.core.CorePTA;
-import qilin.core.PTAScene;
 import qilin.core.builder.CallGraphBuilder;
 import qilin.core.pag.PAG;
 import qilin.core.solver.Propagator;
 import qilin.core.solver.Solver;
 import qilin.stat.IEvaluator;
 import qilin.stat.PTAEvaluator;
+import qilin.stat.SimplifiedEvaluator;
 import qilin.util.PTAUtils;
 
-public class BasePTA extends CorePTA {
+public abstract class BasePTA extends CorePTA {
     protected IEvaluator evaluator;
 
     public BasePTA() {
-        this.evaluator = new PTAEvaluator(this);
+//        this.evaluator = new PTAEvaluator(this);
+        this.evaluator = new SimplifiedEvaluator(this);
     }
 
     public IEvaluator evaluator() {
@@ -43,7 +44,6 @@ public class BasePTA extends CorePTA {
         pureRun();
         evaluator.end();
         dumpStats();
-        pag.dumpPagStructureSize();
         System.out.println(evaluator());
     }
 

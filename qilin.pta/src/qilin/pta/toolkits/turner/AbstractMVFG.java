@@ -115,9 +115,8 @@ public abstract class AbstractMVFG {
     }
 
     protected void buildVFG() {
-        PAG prePAG = prePTA.getPag();
         CallGraph callGraph = prePTA.getCallGraph();
-        MethodPAG srcmpag = prePAG.getMethodPAG(method);
+        MethodPAG srcmpag = prePTA.getPag().getMethodPAG(method);
         MethodNodeFactory srcnf = srcmpag.nodeFactory();
         LocalVarNode thisRef = (LocalVarNode) srcnf.caseThis();
         QueueReader<Node> reader = srcmpag.getInternalReader().clone();
@@ -131,10 +130,12 @@ public abstract class AbstractMVFG {
                 }  // local-global
 
             } else if (from instanceof AllocNode) {
-                this.addNewEdge((AllocNode) from, (LocalVarNode) to);
-                if (hg.isCSLikely((AllocNode) from)) {
-                    this.addCSLikelyEdge((AllocNode) from);
-                }
+                if (to instanceof LocalVarNode) {
+                    this.addNewEdge((AllocNode) from, (LocalVarNode) to);
+                    if (hg.isCSLikely((AllocNode) from)) {
+                        this.addCSLikelyEdge((AllocNode) from);
+                    }
+                } // GlobalVarNode
             } else if (from instanceof FieldRefNode fr) {
                 this.addLoadEdge((LocalVarNode) fr.getBase(), (LocalVarNode) to);
             }  // global-local
@@ -163,12 +164,12 @@ public abstract class AbstractMVFG {
             if (s instanceof AssignStmt) {
                 Value dest = ((AssignStmt) s).getLeftOp();
                 if (dest.getType() instanceof RefLikeType) {
-                    retDest = prePAG.findLocalVarNode(dest);
+                    retDest = prePTA.getPag().findLocalVarNode(dest);
                 }
             }
             LocalVarNode receiver;
             if (ie instanceof InstanceInvokeExpr iie) {
-                receiver = prePAG.findLocalVarNode(iie.getBase());
+                receiver = prePTA.getPag().findLocalVarNode(iie.getBase());
             } else {
                 // static call
                 receiver = thisRef;
@@ -184,7 +185,7 @@ public abstract class AbstractMVFG {
                 for (int i = 0; i < numArgs; i++) {
                     if (args[i] == null)
                         continue;
-                    ValNode argNode = prePAG.findValNode(args[i]);
+                    ValNode argNode = prePTA.getPag().findValNode(args[i]);
                     if (argNode instanceof LocalVarNode && satisfyAddingStoreCondition(i, targets)) {
                         this.addStoreEdge((LocalVarNode) argNode, receiver);
                     }
@@ -195,7 +196,7 @@ public abstract class AbstractMVFG {
                     }
                 }
                 if (statisfyAddingLoadCondition(targets)) {
-                    LocalVarNode stmtThrowNode = prePAG.makeInvokeStmtThrowVarNode(s, method);
+                    LocalVarNode stmtThrowNode = prePTA.getPag().makeInvokeStmtThrowVarNode(s, method);
                     this.addLoadEdge(receiver, stmtThrowNode);
                 }
                 if (satisfyAddingStoreCondition(PointsToAnalysis.THIS_NODE, targets)) {

@@ -87,7 +87,9 @@ public abstract class AbstractPAG {
                 }  // local-global
 
             } else if (from instanceof AllocNode) {
-                this.addNewEdge((AllocNode) from, (LocalVarNode) to);
+                if (to instanceof LocalVarNode) {
+                    this.addNewEdge((AllocNode) from, (LocalVarNode) to);
+                } // GlobalVarNode
             } else if (from instanceof FieldRefNode fr) {
                 this.addLoadEdge((LocalVarNode) fr.getBase(), (LocalVarNode) to);
             }  // global-local

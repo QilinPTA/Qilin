@@ -18,8 +18,6 @@
 
 package qilin.pta.tools;
 
-import qilin.core.PTA;
-import qilin.core.pag.PAG;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.MahjongAbstractor;
 import qilin.parm.select.CtxSelector;
@@ -55,12 +53,9 @@ public class MahjongPTA extends StagedPTA {
     @Override
     protected void preAnalysis() {
         PTAConfig.v().getPtaConfig().mergeHeap = false;
-        PTA prePTA = new Spark();
         prePTA.pureRun();
 
         Mahjong.run(prePTA, heapModelMap);
-        PAG pag = prePTA.getPag();
-//        Map<Object, AllocNode> valToAllocNode = prePTA.getPag().valToAllocNode;
         heapModelMap.forEach((origin, merged) -> {
             if (pag.findAllocNode(origin) == null || pag.findAllocNode(merged) == null) {
                 return;

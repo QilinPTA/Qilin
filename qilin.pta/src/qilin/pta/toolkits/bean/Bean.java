@@ -16,14 +16,12 @@
  * <https://www.gnu.org/licenses/lgpl-3.0.en.html>.
  */
 
-package qilin.pta.toolkits.bean.main;
+package qilin.pta.toolkits.bean;
 
 import qilin.core.PTA;
 import qilin.core.context.ContextElements;
 import qilin.core.pag.AllocNode;
-import qilin.pta.toolkits.bean.oag.OAG;
-import qilin.pta.toolkits.bean.oag.context.ContextSelector;
-import qilin.pta.toolkits.bean.oag.context.RepresentativeContextSelector;
+import qilin.pta.toolkits.common.OAG;
 import qilin.util.ANSIColor;
 import qilin.util.Pair;
 import qilin.util.Stopwatch;
@@ -60,8 +58,7 @@ public class Bean {
      * Should be generalized for k >= 3.
      * */
     private static void writeContext(ContextSelector cs, OAG oag, Map<Object, Map<Object, Map<Object, Object>>> beanNexCtxMap) {
-        oag.allNodes().forEach(node -> {
-            AllocNode allocator = node.getHeap();
+        oag.allNodes().forEach(allocator -> {
             Set<ContextElements> ctxs = cs.contextsOf(allocator);
             for (ContextElements ctx : ctxs) {
                 AllocNode allocHctx = (AllocNode) ctx.get(0);

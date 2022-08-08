@@ -19,6 +19,10 @@
 package qilin.util.graph;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Stack;
+import java.util.stream.Collectors;
 
 public interface DirectedGraph<N> {
     Collection<N> allNodes();
@@ -26,4 +30,26 @@ public interface DirectedGraph<N> {
     Collection<N> predsOf(final N p);
 
     Collection<N> succsOf(final N p);
+
+    /* no cache, very slow.*/
+    default Collection<N> computeReachableNodes(N source) {
+        Set<N> reachableNodes = new HashSet<>();
+        Stack<N> stack = new Stack<>();
+        stack.push(source);
+        while (!stack.isEmpty()) {
+            N node = stack.pop();
+            if (reachableNodes.add(node)) {
+                stack.addAll(succsOf(node));
+            }
+        }
+        return reachableNodes;
+    }
+
+    default Collection<N> computeRootNodes() {
+        return allNodes().stream().filter(node -> predsOf(node).size() == 0).collect(Collectors.toSet());
+    }
+
+    default Collection<N> computeTailNodes() {
+        return allNodes().stream().filter(node -> succsOf(node).size() == 0).collect(Collectors.toSet());
+    }
 }

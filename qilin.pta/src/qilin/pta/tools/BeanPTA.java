@@ -18,7 +18,6 @@
 
 package qilin.pta.tools;
 
-import qilin.core.CorePTA;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
 import qilin.parm.heapabst.HeuristicAbstractor;
@@ -28,7 +27,7 @@ import qilin.parm.select.HeuristicSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.pta.StagedPTA;
-import qilin.pta.toolkits.bean.main.Bean;
+import qilin.pta.toolkits.bean.Bean;
 import qilin.util.Stopwatch;
 
 import java.util.HashMap;
@@ -38,7 +37,6 @@ import java.util.Map;
  * refer to "Making k-Object-Sensitive Pointer Analysis More Precise with Still k-Limiting" (SAS'16)
  * */
 public class BeanPTA extends StagedPTA {
-    private final CorePTA prePTA;
     // currently, we only support k = 2 and hk = 1;
     // [current heap, [allocator heap, [heap ctx, new ctx]]] only for B-2obj;
     Map<Object, Map<Object, Map<Object, Object>>> beanNexCtxMap = new HashMap<>();

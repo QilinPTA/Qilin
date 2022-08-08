@@ -25,7 +25,7 @@ public class Stopwatch {
     private boolean inCounting;
 
     public static Stopwatch newAndStart(final String name) {
-        Stopwatch stopwatch =  new Stopwatch(name);
+        Stopwatch stopwatch = new Stopwatch(name);
         stopwatch.start();
         return stopwatch;
     }

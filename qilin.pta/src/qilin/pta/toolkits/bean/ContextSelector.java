@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package qilin.pta.toolkits.bean.oag.context;
+package qilin.pta.toolkits.bean;
 
 import qilin.core.context.ContextElements;
 import qilin.core.pag.AllocNode;
-import qilin.pta.toolkits.bean.oag.OAG;
+import qilin.pta.toolkits.common.OAG;
 import qilin.util.Pair;
 
 import java.util.HashMap;

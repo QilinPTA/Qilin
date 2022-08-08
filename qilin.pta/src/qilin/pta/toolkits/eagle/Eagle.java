@@ -265,7 +265,7 @@ public class Eagle {
             if (method.isPhantom()) {
                 continue;
             }
-            MethodPAG srcmpag = prePTA.getPag().getMethodPAG(method);
+            MethodPAG srcmpag = prePAG.getMethodPAG(method);
             MethodNodeFactory srcnf = srcmpag.nodeFactory();
             LocalVarNode thisRef = (LocalVarNode) srcnf.caseThis();
             // add local edges
@@ -284,7 +284,9 @@ public class Eagle {
                     }  // local-global
 
                 } else if (from instanceof AllocNode) {
-                    this.addNewEdge((AllocNode) from, (LocalVarNode) to);
+                    if (to instanceof LocalVarNode) {
+                        this.addNewEdge((AllocNode) from, (LocalVarNode) to);
+                    } // GlobalVarNode
                 } else if (from instanceof FieldRefNode fr) {
                     this.addLoadEdge((LocalVarNode) fr.getBase(), (LocalVarNode) to);
                 }  // global-local
@@ -304,7 +306,7 @@ public class Eagle {
                 }
             }
             LocalVarNode mret = method.getReturnType() instanceof RefLikeType ? (LocalVarNode) srcnf.caseRet() : null;
-            LocalVarNode throwFinal = prePTA.getPag().findLocalVarNode(new Parm(method, PointsToAnalysis.THROW_NODE));
+            LocalVarNode throwFinal = prePAG.findLocalVarNode(new Parm(method, PointsToAnalysis.THROW_NODE));
             if (method.isStatic()) {
                 pts.getOrDefault(thisRef, Collections.emptySet()).forEach(a -> {
                     addParamEdges(a, thisRef, parms, mret, throwFinal);

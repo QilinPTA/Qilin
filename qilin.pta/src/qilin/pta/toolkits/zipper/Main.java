@@ -20,8 +20,6 @@ package qilin.pta.toolkits.zipper;
 
 import qilin.core.PTA;
 import qilin.pta.toolkits.zipper.analysis.Zipper;
-import qilin.pta.toolkits.zipper.pta.PointsToAnalysis;
-import qilin.pta.toolkits.zipper.pta.WrapperedPointsToAnalysis;
 import qilin.util.ANSIColor;
 import qilin.util.Stopwatch;
 import soot.SootMethod;
@@ -31,16 +29,15 @@ import java.util.Set;
 
 public class Main {
 
-    public static void run(PTA prePTA, Set<SootMethod> zipperPCMOutput) {
+    public static void run(PTA pta, Set<SootMethod> zipperPCMOutput) {
         int numThreads = Runtime.getRuntime().availableProcessors();
         Global.setThread(numThreads);
         Global.setExpress(false);
         String zipperStr = Global.isExpress() ? "Zipper-e" : "Zipper";
-        final PointsToAnalysis pta = readPointsToAnalysis(prePTA);
         System.out.println(ANSIColor.BOLD + ANSIColor.YELLOW + zipperStr + " starts ..." + ANSIColor.RESET);
         String flows = Global.getFlow() != null ? Global.getFlow() : "Direct+Wrapped+Unwrapped";
         System.out.println("Precision loss patterns: " + ANSIColor.BOLD + ANSIColor.GREEN + flows + ANSIColor.RESET);
-        Zipper.outputNumberOfClasses(pta);
+        Zipper.outputNumberOfClasses(pta.getPag());
         Stopwatch zipperTimer = Stopwatch.newAndStart("Zipper Timer");
         Zipper zipper = new Zipper(pta);
         Set<SootMethod> pcm = zipper.analyze();
@@ -53,18 +50,6 @@ public class Main {
         System.out.println("Writing Zipper precision-critical methods ...\n");
         System.out.println();
         writeZipperResults(pcm, zipperPCMOutput);
-    }
-
-    public static PointsToAnalysis readPointsToAnalysis(PTA prePTA) {
-        final Stopwatch ptaTimer = Stopwatch.newAndStart("Points-to Analysis Timer");
-        System.out.println("Reading points-to analysis results ... ");
-        final PointsToAnalysis pta = new WrapperedPointsToAnalysis(prePTA);
-        ptaTimer.stop();
-        System.out.print(ANSIColor.BOLD + ANSIColor.YELLOW + "Reading time: " + ANSIColor.RESET);
-        System.out.print(ANSIColor.BOLD + ANSIColor.GREEN);
-        System.out.printf("%.2fs", ptaTimer.elapsed());
-        System.out.println(ANSIColor.RESET);
-        return pta;
     }
 
     private static void writeZipperResults(final Set<SootMethod> results, final Set<SootMethod> outputSet) {
