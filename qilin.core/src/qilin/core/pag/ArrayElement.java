@@ -32,7 +32,11 @@ public class ArrayElement implements SparkField {
 
     public static ArrayElement v() {
         if (instance == null) {
-            instance = new ArrayElement();
+            synchronized (ArrayElement.class) {
+                if (instance == null) {
+                    instance = new ArrayElement();
+                }
+            }
         }
         return instance;
     }

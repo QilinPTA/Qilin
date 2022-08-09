@@ -55,8 +55,8 @@ public abstract class PTA implements PointsToAnalysis {
         this.pag = createPAG();
         this.cgb = createCallGraphBuilder();
         this.eh = new ExceptionHandler(this);
-        AllocNode rootBase = new AllocNode(pag, "ROOT", RefType.v("java.lang.Object"), null);
-        this.rootNode = new ContextAllocNode(pag, rootBase, CtxConstructor.emptyContext);
+        AllocNode rootBase = new AllocNode("ROOT", RefType.v("java.lang.Object"), null);
+        this.rootNode = new ContextAllocNode(rootBase, CtxConstructor.emptyContext);
         this.setFactory = DoublePointsToSet.getFactory();
     }
 

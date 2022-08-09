@@ -19,6 +19,7 @@
 package qilin.core.pag;
 
 import qilin.CoreConfig;
+import qilin.core.PTAScene;
 import qilin.core.context.ContextElement;
 import soot.RefType;
 import soot.SootMethod;
@@ -34,8 +35,8 @@ public class AllocNode extends Node implements ContextElement, Numberable {
     protected Object newExpr;
     private final SootMethod method;
 
-    public AllocNode(PAG pag, Object newExpr, Type t, SootMethod m) {
-        super(pag, t);
+    public AllocNode(Object newExpr, Type t, SootMethod m) {
+        super(t);
         this.method = m;
         if (t instanceof RefType rt) {
             if (rt.getSootClass().isAbstract()) {
@@ -46,10 +47,8 @@ public class AllocNode extends Node implements ContextElement, Numberable {
             }
         }
         this.newExpr = newExpr;
-        pag.getAllocNodeNumberer().add(this);
+        PAG.getAllocNodeNumberer().add(this);
     }
-
-    /* End of public methods. */
 
     /**
      * Returns the new expression of this allocation site.
@@ -58,7 +57,6 @@ public class AllocNode extends Node implements ContextElement, Numberable {
         return newExpr;
     }
 
-    /* End of package methods. */
     public String toString() {
         return "AllocNode " + getNumber() + " " + newExpr + " in method " + method;
     }

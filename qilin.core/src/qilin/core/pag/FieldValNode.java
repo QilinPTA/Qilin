@@ -23,8 +23,8 @@ public class FieldValNode extends ValNode {
     // Parm should be a local variable in some methods.
     private final SparkField field;
 
-    public FieldValNode(PAG pag, SparkField field) {
-        super(pag, field.getType());
+    public FieldValNode(SparkField field) {
+        super(field.getType());
         this.field = field;
     }
 

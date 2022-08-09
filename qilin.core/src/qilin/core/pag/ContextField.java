@@ -30,8 +30,8 @@ public class ContextField extends ValNode {
     protected Context context;
     protected SparkField field;
 
-    public ContextField(PAG pag, Context context, SparkField field) {
-        super(pag, refineFieldType(context, field));
+    public ContextField(Context context, SparkField field) {
+        super(refineFieldType(context, field));
         this.context = context;
         this.field = field;
     }

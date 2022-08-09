@@ -24,8 +24,8 @@ public class ContextAllocNode extends AllocNode {
     private final Context context;
     private final AllocNode base;
 
-    public ContextAllocNode(PAG pag, AllocNode base, Context context) {
-        super(pag, base.getNewExpr(), base.getType(), base.getMethod());
+    public ContextAllocNode(AllocNode base, Context context) {
+        super(base.getNewExpr(), base.getType(), base.getMethod());
         this.context = context;
         this.base = base;
     }

@@ -129,7 +129,7 @@ public abstract class CorePTA extends PTA {
     @Override
     public PointsToSet reachingObjects(Local l) {
         // find all context nodes, and collect their answers
-        final PointsToSetInternal ret = setFactory.newSet(l.getType(), pag);
+        final PointsToSetInternal ret = setFactory.newSet(l.getType());
         pag.getVarNodes(l).forEach(vn -> {
             ret.addAll(vn.getP2Set(), null);
         });
@@ -147,7 +147,7 @@ public abstract class CorePTA extends PTA {
         } else {
             VarNode varNode = (VarNode) n;
             if (pag.getContextVarNodeMap().containsKey(varNode)) {
-                final PointsToSetInternal ret = setFactory.newSet(n.getType(), pag);
+                final PointsToSetInternal ret = setFactory.newSet(n.getType());
                 pag.getContextVarNodeMap().get(varNode).values().forEach(vn -> {
                     ret.addAll(vn.getP2Set(), null);
                 });
@@ -212,7 +212,7 @@ public abstract class CorePTA extends PTA {
     @Override
     public PointsToSet reachingObjects(SootField f) {
         if (!f.isStatic()) {
-            final PointsToSetInternal ret = setFactory.newSet((f).getType(), pag);
+            final PointsToSetInternal ret = setFactory.newSet((f).getType());
             SparkField sparkField = new Field(f);
             pag.getContextFieldVarNodeMap().values().stream().filter(map -> map.containsKey(sparkField)).forEach(map -> {
                 ContextField contextField = map.get(sparkField);
@@ -231,7 +231,7 @@ public abstract class CorePTA extends PTA {
     @Override
     public PointsToSet reachingObjectsInternal(PointsToSet s, final SparkField f) {
         PointsToSetInternal bases = (PointsToSetInternal) s;
-        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null, pag);
+        final PointsToSetInternal ret = setFactory.newSet((f instanceof SootField) ? ((SootField) f).getType() : null);
         pag.getContextFieldVarNodeMap().values().stream().filter(map -> map.containsKey(f)).forEach(map -> {
             ContextField contextField = map.get(f);
             AllocNode base = contextField.getBase();

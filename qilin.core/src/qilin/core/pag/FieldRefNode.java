@@ -29,12 +29,12 @@ public class FieldRefNode extends Node implements Numberable {
     protected VarNode base;
     protected SparkField field;
 
-    FieldRefNode(PAG pag, VarNode base, SparkField field) {
-        super(pag, field.getType());
+    public FieldRefNode(VarNode base, SparkField field) {
+        super(field.getType());
         this.base = base;
         this.field = field;
         base.addField(this, field);
-        pag.getFieldRefNodeNumberer().add(this);
+        PAG.getFieldRefNodeNumberer().add(this);
     }
 
     /**

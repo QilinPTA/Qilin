@@ -18,6 +18,7 @@
 
 package qilin.core.pag;
 
+import qilin.util.DataFactory;
 import soot.AnySubType;
 import soot.Context;
 import soot.RefLikeType;
@@ -25,7 +26,6 @@ import soot.Type;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -40,8 +40,8 @@ public abstract class VarNode extends ValNode {
     protected boolean interProcTarget = false;
     protected boolean interProcSource = false;
 
-    protected VarNode(PAG pag, Object variable, Type t) {
-        super(pag, t);
+    protected VarNode(Object variable, Type t) {
+        super(t);
         if (!(t instanceof RefLikeType) || t instanceof AnySubType) {
             throw new RuntimeException("Attempt to create VarNode of type " + t);
         }
@@ -115,7 +115,11 @@ public abstract class VarNode extends ValNode {
      */
     void addField(FieldRefNode frn, SparkField field) {
         if (fields == null) {
-            fields = new HashMap<>();
+            synchronized (this) {
+                if (fields == null) {
+                    fields = DataFactory.createMap();
+                }
+            }
         }
         fields.put(field, frn);
     }

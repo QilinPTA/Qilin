@@ -27,8 +27,8 @@ import soot.Type;
 public class LocalVarNode extends VarNode {
     protected SootMethod method;
 
-    public LocalVarNode(PAG pag, Object variable, Type t, SootMethod m) {
-        super(pag, variable, t);
+    public LocalVarNode(Object variable, Type t, SootMethod m) {
+        super(variable, t);
         this.method = m;
     }
 

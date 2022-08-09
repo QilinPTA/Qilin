@@ -22,7 +22,7 @@ import soot.SootMethod;
 import soot.Type;
 
 public abstract class ConstantNode extends AllocNode {
-    protected ConstantNode(PAG pag, Object newExpr, Type t, SootMethod m) {
-        super(pag, newExpr, t, m);
+    protected ConstantNode(Object newExpr, Type t, SootMethod m) {
+        super(newExpr, t, m);
     }
 }

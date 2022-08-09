@@ -27,8 +27,8 @@ import soot.jimple.StringConstant;
  * @author Ondrej Lhotak
  */
 public class StringConstantNode extends ConstantNode {
-    StringConstantNode(PAG pag, StringConstant sc) {
-        super(pag, sc, RefType.v("java.lang.String"), null);
+    public StringConstantNode(StringConstant sc) {
+        super(sc, RefType.v("java.lang.String"), null);
     }
 
     public String toString() {
@@ -36,9 +36,6 @@ public class StringConstantNode extends ConstantNode {
     }
 
     public String getString() {
-        if (!(newExpr instanceof StringConstant)) {
-            System.out.println(newExpr + ";;" + newExpr.getClass());
-        }
         return ((StringConstant) newExpr).value;
     }
 }

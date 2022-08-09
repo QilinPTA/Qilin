@@ -36,13 +36,11 @@ import java.util.Arrays;
 public final class HybridPointsToSet extends PointsToSetInternal {
     private final Node[] nodes = new Node[16];
     private BitVector bits = null;
-    private final PAG pag;
 
     private boolean empty = true;
 
-    public HybridPointsToSet(Type type, PAG pag) {
+    public HybridPointsToSet(Type type) {
         super(type);
-        this.pag = pag;
     }
 
     /**
@@ -105,7 +103,7 @@ public final class HybridPointsToSet extends PointsToSetInternal {
             }
         } else {
             for (BitSetIterator it = bits.iterator(); it.hasNext(); ) {
-                v.visit(pag.getAllocNodeNumberer().get(it.next()));
+                v.visit(PAG.getAllocNodeNumberer().get(it.next()));
             }
         }
         return v.getReturnValue();
@@ -164,7 +162,7 @@ public final class HybridPointsToSet extends PointsToSetInternal {
         if (bits != null) {
             return;
         }
-        bits = new BitVector(pag.getAllocNodeNumberer().size());
+        bits = new BitVector(PAG.getAllocNodeNumberer().size());
         for (Node node : nodes) {
             if (node != null) {
                 fastAdd(node);
@@ -175,7 +173,7 @@ public final class HybridPointsToSet extends PointsToSetInternal {
     @Override
     public PointsToSetInternal mapToCIPointsToSet() {
         if (ciPointsToSet == null) {
-            PointsToSetInternal ret = new HybridPointsToSet(type, pag);
+            PointsToSetInternal ret = new HybridPointsToSet(type);
             this.forall(new P2SetVisitor() {
                 @Override
                 public void visit(Node n) {

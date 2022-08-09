@@ -189,7 +189,7 @@ public class AbstractConch {
     }
 
     protected boolean emptyFieldPts(AllocNode heap, SparkField field) {
-        final PointsToSetInternal ret = pta.getSetFactory().newSet(heap.getType(), pag);
+        final PointsToSetInternal ret = pta.getSetFactory().newSet(heap.getType());
         ret.add(heap);
         PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjectsInternal(ret, field);
         Set<AllocNode> tmp = new HashSet<>();

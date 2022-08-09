@@ -218,6 +218,6 @@ public abstract class AbstractPAG {
     }
 
     protected AllocNode getSymbolicHeapOf(SootMethod method, Stmt invokeStmt) {
-        return symbolicHeaps.computeIfAbsent(method, k -> new ConcurrentHashMap<>()).computeIfAbsent(invokeStmt, k -> new AllocNode(prePAG, invokeStmt, null, method));
+        return symbolicHeaps.computeIfAbsent(method, k -> new ConcurrentHashMap<>()).computeIfAbsent(invokeStmt, k -> new AllocNode(invokeStmt, null, method));
     }
 }

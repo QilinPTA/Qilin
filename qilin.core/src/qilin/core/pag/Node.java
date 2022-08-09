@@ -30,19 +30,17 @@ import soot.util.Numberable;
  */
 public class Node implements Numberable {
     protected Type type;
-    protected PAG pag;
-    protected PointsToSetInternal p2set;
+    protected volatile PointsToSetInternal p2set;
     private int number = 0;
 
     /**
      * Creates a new node of pointer assignment graph pag, with type type.
      */
-    Node(PAG pag, Type type) {
+    Node(Type type) {
         if (PTAUtils.isUnresolved(type)) {
             throw new RuntimeException("Unresolved type " + type);
         }
         this.type = type;
-        this.pag = pag;
     }
 
     public final int hashCode() {
@@ -58,13 +56,6 @@ public class Node implements Numberable {
      */
     public Type getType() {
         return type;
-    }
-
-    /**
-     * Returns the pointer assignment graph that this node is a part of.
-     */
-    public PAG getPag() {
-        return pag;
     }
 
     public final int getNumber() {

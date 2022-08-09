@@ -19,19 +19,22 @@
 package qilin.core;
 
 import qilin.core.builder.FakeMainFactory;
+import qilin.core.sets.DoublePointsToSet;
+import qilin.core.sets.P2SetFactory;
+import qilin.util.DataFactory;
 import soot.*;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.util.Chain;
 import soot.util.IterableNumberer;
 import soot.util.StringNumberer;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class PTAScene {
     private static volatile PTAScene instance = null;
     private final Scene sootScene;
     private final FakeMainFactory fakeMainFactory;
+    protected final P2SetFactory setFactory;
 
     public static PTAScene v() {
         if (instance == null) {
@@ -58,11 +61,16 @@ public class PTAScene {
     private PTAScene() {
         this.sootScene = Scene.v();
         this.fakeMainFactory = new FakeMainFactory();
+        this.setFactory = DoublePointsToSet.getFactory();
     }
 
-    public final Set<SootMethod> nativeBuilt = new HashSet<>();
-    public final Set<SootMethod> reflectionBuilt = new HashSet<>();
-    public final Set<SootMethod> arraycopyBuilt = new HashSet<>();
+    public P2SetFactory getSetFactory() {
+        return setFactory;
+    }
+
+    public final Set<SootMethod> nativeBuilt = DataFactory.createSet();
+    public final Set<SootMethod> reflectionBuilt = DataFactory.createSet();
+    public final Set<SootMethod> arraycopyBuilt = DataFactory.createSet();
 
     /*
      * wrapper methods for FakeMain.

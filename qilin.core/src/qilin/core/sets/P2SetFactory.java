@@ -18,7 +18,6 @@
 
 package qilin.core.sets;
 
-import qilin.core.pag.PAG;
 import soot.Type;
 
 /**
@@ -30,5 +29,5 @@ public abstract class P2SetFactory {
     /**
      * Returns a newly-created set.
      */
-    public abstract PointsToSetInternal newSet(Type type, PAG pag);
+    public abstract PointsToSetInternal newSet(Type type);
 }

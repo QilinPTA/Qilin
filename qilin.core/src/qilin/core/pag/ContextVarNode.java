@@ -24,8 +24,8 @@ public class ContextVarNode extends VarNode {
     private final Context context;
     private final VarNode base;
 
-    public ContextVarNode(PAG pag, VarNode base, Context context) {
-        super(pag, base.getVariable(), base.getType());
+    public ContextVarNode(VarNode base, Context context) {
+        super(base.getVariable(), base.getType());
         this.context = context;
         this.base = base;
     }

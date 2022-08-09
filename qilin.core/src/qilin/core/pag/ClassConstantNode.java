@@ -27,8 +27,8 @@ import soot.jimple.ClassConstant;
  * @author Ondrej Lhotak
  */
 public class ClassConstantNode extends ConstantNode {
-    ClassConstantNode(PAG pag, ClassConstant cc) {
-        super(pag, cc, RefType.v("java.lang.Class"), null);
+    public ClassConstantNode(ClassConstant cc) {
+        super(cc, RefType.v("java.lang.Class"), null);
     }
 
     public String toString() {

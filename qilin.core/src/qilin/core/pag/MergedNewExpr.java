@@ -1,19 +1,19 @@
 package qilin.core.pag;
 
-import soot.RefType;
-import soot.jimple.internal.JNewExpr;
+import qilin.util.DataFactory;
+import soot.RefLikeType;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class MergedNewExpr extends JNewExpr {
-    private static final Map<RefType, MergedNewExpr> map = new HashMap<>();
+public class MergedNewExpr {
+    private final RefLikeType type;
+    private static final Map<RefLikeType, MergedNewExpr> map = DataFactory.createMap();
 
-    private MergedNewExpr(RefType type) {
-        super(type);
+    private MergedNewExpr(RefLikeType type) {
+        this.type = type;
     }
 
-    public static MergedNewExpr v(RefType type) {
+    public static MergedNewExpr v(RefLikeType type) {
         return map.computeIfAbsent(type, k -> new MergedNewExpr(type));
     }
 

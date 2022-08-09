@@ -29,8 +29,8 @@ import soot.Type;
  * @author Ondrej Lhotak
  */
 public class GlobalVarNode extends VarNode {
-    public GlobalVarNode(PAG pag, Object variable, Type t) {
-        super(pag, variable, t);
+    public GlobalVarNode(Object variable, Type t) {
+        super(variable, t);
     }
 
     @Override

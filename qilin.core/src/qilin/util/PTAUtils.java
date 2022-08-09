@@ -55,7 +55,7 @@ public final class PTAUtils {
     public static PointsToSetInternal fetchInsensitivePointsToResult(PTA pta, VarNode varNode) {
         PAG pag = pta.getPag();
         Map<Context, ContextVarNode> ctxt2ctxnode = pag.getContextVarNodeMap().get(varNode);
-        PointsToSetInternal ptoSet = pta.getSetFactory().newSet(varNode.getType(), pag);
+        PointsToSetInternal ptoSet = pta.getSetFactory().newSet(varNode.getType());
         for (ContextVarNode ctxNode : ctxt2ctxnode.values()) {
             PointsToSetInternal ciP2Set = ctxNode.getP2Set().mapToCIPointsToSet();
             ciP2Set.forall(new P2SetVisitor() {

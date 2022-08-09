@@ -19,7 +19,6 @@
 package qilin.core.sets;
 
 import qilin.core.pag.Node;
-import qilin.core.pag.PAG;
 import soot.Type;
 
 /**
@@ -29,24 +28,22 @@ import soot.Type;
  * @author Ondrej Lhotak
  */
 public class DoublePointsToSet extends PointsToSetInternal {
-    public static DoublePointsToSet emptySet = new DoublePointsToSet(null, null);
+    public static DoublePointsToSet emptySet = new DoublePointsToSet(null);
 
     protected PointsToSetInternal newSet;
     protected PointsToSetInternal oldSet;
-    private final PAG pag;
 
-    public DoublePointsToSet(Type type, PAG pag) {
+    public DoublePointsToSet(Type type) {
         super(type);
-        this.pag = pag;
-        newSet = new HybridPointsToSet(type, pag);
-        oldSet = new HybridPointsToSet(type, pag);
+        newSet = new HybridPointsToSet(type);
+        oldSet = new HybridPointsToSet(type);
     }
 
     public static P2SetFactory getFactory() {
 
         return new P2SetFactory() {
-            public PointsToSetInternal newSet(Type type, PAG pag) {
-                return new DoublePointsToSet(type, pag);
+            public PointsToSetInternal newSet(Type type) {
+                return new DoublePointsToSet(type);
             }
         };
     }
@@ -113,7 +110,7 @@ public class DoublePointsToSet extends PointsToSetInternal {
     @Override
     public PointsToSetInternal mapToCIPointsToSet() {
         if (ciPointsToSet == null) {
-            DoublePointsToSet ret = new DoublePointsToSet(type, pag);
+            DoublePointsToSet ret = new DoublePointsToSet(type);
             ret.newSet.addAll(newSet.mapToCIPointsToSet(), null);
             ret.oldSet.addAll(oldSet.mapToCIPointsToSet(), null);
             ciPointsToSet = ret;
@@ -127,13 +124,12 @@ public class DoublePointsToSet extends PointsToSetInternal {
     public PointsToSetInternal getNewSet() {
         return newSet;
     }
-
     /**
      * Sets all newly-added nodes to old nodes.
      */
     public void flushNew() {
         oldSet.addAll(newSet, null);
-        newSet = new HybridPointsToSet(type, pag);
+        newSet = new HybridPointsToSet(type);
     }
 
     /**
