@@ -35,7 +35,7 @@ import java.util.Set;
  *
  * @author Ondrej Lhotak
  */
-public abstract class PointsToSetInternal implements PointsToSet, EqualsSupportingPointsToSet {
+public abstract class PointsToSetInternal implements PointsToSet {
     private static final Logger logger = LoggerFactory.getLogger(PointsToSetInternal.class);
     private static boolean PointsToSetInternal_warnedAlready = false;
     protected Type type;
