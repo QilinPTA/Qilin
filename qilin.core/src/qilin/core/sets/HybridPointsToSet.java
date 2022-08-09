@@ -37,19 +37,12 @@ public final class HybridPointsToSet extends PointsToSetInternal {
     private final Node[] nodes = new Node[16];
     private BitVector bits = null;
     private final PAG pag;
+
     private boolean empty = true;
 
     public HybridPointsToSet(Type type, PAG pag) {
         super(type);
         this.pag = pag;
-    }
-
-    public static P2SetFactory getFactory() {
-        return new P2SetFactory() {
-            public final PointsToSetInternal newSet(Type type, PAG pag) {
-                return new HybridPointsToSet(type, pag);
-            }
-        };
     }
 
     /**

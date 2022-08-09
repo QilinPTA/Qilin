@@ -18,7 +18,6 @@
 
 package qilin.core.sets;
 
-import soot.Type;
 import soot.jimple.ClassConstant;
 
 import java.util.Set;
@@ -38,11 +37,6 @@ public interface PointsToSet {
      * Returns true if this set shares some objects with other.
      */
     boolean hasNonEmptyIntersection(PointsToSet other);
-
-    /**
-     * Set of all possible run-time types of objects in the set.
-     */
-    Set<Type> possibleTypes();
 
     /**
      * If this points-to set consists entirely of string constants, returns a set of these constant strings. If this point-to
@@ -69,4 +63,10 @@ public interface PointsToSet {
      * @author Dongjie He
      * */
     void clear();
+
+    /**
+     * Returns <code>true</code> if and only if other holds the same alloc nodes as this. Note that equals() is not overwritten
+     * on purpose. This is because Spark relies on comparison by object identity.
+     */
+    boolean pointsToSetEquals(Object other);
 }

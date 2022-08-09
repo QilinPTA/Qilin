@@ -18,12 +18,9 @@
 
 package qilin.core.sets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import qilin.core.pag.ClassConstantNode;
 import qilin.core.pag.Node;
 import qilin.core.pag.StringConstantNode;
-import soot.RefType;
 import soot.Type;
 import soot.jimple.ClassConstant;
 
@@ -36,8 +33,7 @@ import java.util.Set;
  * @author Ondrej Lhotak
  */
 public abstract class PointsToSetInternal implements PointsToSet {
-    private static final Logger logger = LoggerFactory.getLogger(PointsToSetInternal.class);
-    private static boolean PointsToSetInternal_warnedAlready = false;
+
     protected Type type;
     protected PointsToSetInternal ciPointsToSet = null;
 
@@ -51,24 +47,9 @@ public abstract class PointsToSetInternal implements PointsToSet {
     public boolean addAll(PointsToSetInternal other, final PointsToSetInternal exclude) {
         if (other instanceof DoublePointsToSet) {
             return addAll(other.getNewSet(), exclude) | addAll(other.getOldSet(), exclude);
-        } else if (other instanceof EmptyPointsToSet) {
-            return false;
-        } else if (exclude instanceof EmptyPointsToSet) {
-            return addAll(other, null);
-        }
-        if (!PointsToSetInternal_warnedAlready) {
-            logger.warn("using default implementation of addAll. You should implement a faster specialized implementation.");
-            logger.debug("" + "this is of type " + getClass().getName());
-            logger.debug("" + "other is of type " + other.getClass().getName());
-            if (exclude == null) {
-                logger.debug("" + "exclude is null");
-            } else {
-                logger.debug("" + "exclude is of type " + exclude.getClass().getName());
-            }
-            PointsToSetInternal_warnedAlready = true;
         }
         return other.forall(new P2SetVisitor() {
-            public final void visit(Node n) {
+            public void visit(Node n) {
                 if (exclude == null || !exclude.contains(n)) {
                     returnValue = add(n) | returnValue;
                 }
@@ -90,14 +71,22 @@ public abstract class PointsToSetInternal implements PointsToSet {
      * Returns set of newly-added nodes since last call to flushNew.
      */
     public PointsToSetInternal getNewSet() {
-        return this;
+        throw new UnsupportedOperationException("not supported yet.");
+    }
+
+    public PointsToSetInternal getNewSetCopy() {
+        throw new UnsupportedOperationException("not supported yet.");
+    }
+
+    public PointsToSetInternal getOldSetCopy() {
+        throw new UnsupportedOperationException("not supported yet.");
     }
 
     /**
      * Returns set of nodes already present before last call to flushNew.
      */
     public PointsToSetInternal getOldSet() {
-        return EmptyPointsToSet.v();
+        throw new UnsupportedOperationException("not supported yet.");
     }
 
     public abstract PointsToSetInternal mapToCIPointsToSet();
@@ -122,22 +111,6 @@ public abstract class PointsToSetInternal implements PointsToSet {
                 }
             }
         });
-    }
-
-    public Set<Type> possibleTypes() {
-        final Set<Type> ret = new HashSet<>();
-        forall(new P2SetVisitor() {
-            public void visit(Node n) {
-                Type t = n.getType();
-                if (t instanceof RefType rt) {
-                    if (rt.getSootClass().isAbstract()) {
-                        return;
-                    }
-                }
-                ret.add(t);
-            }
-        });
-        return ret;
     }
 
     public Type getType() {
@@ -194,20 +167,6 @@ public abstract class PointsToSetInternal implements PointsToSet {
         }) ? null : ret;
     }
 
-    public int pointsToSetHashCode() {
-        P2SetVisitorInt visitor = new P2SetVisitorInt(1) {
-
-            final int PRIME = 31;
-
-            public void visit(Node n) {
-                intValue = PRIME * intValue + n.hashCode();
-            }
-
-        };
-        this.forall(visitor);
-        return visitor.intValue;
-    }
-
     public boolean pointsToSetEquals(Object other) {
         if (this == other) {
             return true;
@@ -226,7 +185,7 @@ public abstract class PointsToSetInternal implements PointsToSet {
     private boolean superSetOf(PointsToSetInternal onePts, final PointsToSetInternal otherPts) {
         return onePts.forall(new P2SetVisitorDefaultTrue() {
 
-            public final void visit(Node n) {
+            public void visit(Node n) {
                 returnValue = returnValue && otherPts.contains(n);
             }
 
@@ -246,18 +205,4 @@ public abstract class PointsToSetInternal implements PointsToSet {
 
     }
 
-    /**
-     * A P2SetVisitor with an int value.
-     *
-     * @author Eric Bodden
-     */
-    public static abstract class P2SetVisitorInt extends P2SetVisitor {
-
-        protected int intValue;
-
-        public P2SetVisitorInt(int i) {
-            intValue = 1;
-        }
-
-    }
 }

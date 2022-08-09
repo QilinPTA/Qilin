@@ -18,6 +18,7 @@
 
 package qilin.core;
 
+import qilin.util.DataFactory;
 import soot.*;
 import soot.jimple.SpecialInvokeExpr;
 import soot.util.*;
@@ -25,6 +26,7 @@ import soot.util.queue.ChunkedQueue;
 
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -34,9 +36,8 @@ import java.util.Set;
  */
 public class VirtualCalls {
     private static volatile VirtualCalls instance = null;
-    public final NumberedString sigClinit = Scene.v().getSubSigNumberer().findOrAdd("void <clinit>()");
-    private final LargeNumberedMap<Type, SmallNumberedMap<SootMethod>> typeToVtbl = new LargeNumberedMap<>(Scene.v().getTypeNumberer());
-    protected MultiMap<Type, Type> baseToSubTypes = new HashMultiMap<>();
+    private final Map<Type, Map<NumberedString, SootMethod>> typeToVtbl = DataFactory.createMap(Scene.v().getTypeNumberer().size());
+    protected Map<Type, Set<Type>> baseToSubTypes = DataFactory.createMap();
 
     private VirtualCalls() {
     }
@@ -66,7 +67,8 @@ public class VirtualCalls {
         if (Scene.v().getFastHierarchy().canStoreType(container.getDeclaringClass().getType(),
                 target.getDeclaringClass().getType())
                 && container.getDeclaringClass().getType() != target.getDeclaringClass().getType()
-                && !target.getName().equals("<init>") && subSig != sigClinit) {
+                && !target.getName().equals("<init>")
+                && subSig != Scene.v().getSubSigNumberer().findOrAdd("void <clinit>()")) {
 
             return resolveNonSpecial(container.getDeclaringClass().getSuperclass().getType(), subSig, appOnly);
         } else {
@@ -79,10 +81,7 @@ public class VirtualCalls {
     }
 
     public SootMethod resolveNonSpecial(RefType t, NumberedString subSig, boolean appOnly) {
-        SmallNumberedMap<SootMethod> vtbl = typeToVtbl.get(t);
-        if (vtbl == null) {
-            typeToVtbl.put(t, vtbl = new SmallNumberedMap<>());
-        }
+        Map<NumberedString, SootMethod> vtbl = typeToVtbl.computeIfAbsent(t, k -> DataFactory.createMap(8));
         SootMethod ret = vtbl.get(subSig);
         if (ret != null) {
             return ret;
@@ -102,6 +101,9 @@ public class VirtualCalls {
             if (c != null) {
                 ret = resolveNonSpecial(c.getType(), subSig);
             }
+        }
+        if (ret == null) {
+            return null;
         }
         vtbl.put(subSig, ret);
         return ret;
@@ -163,7 +165,6 @@ public class VirtualCalls {
 
     protected void resolveAnySubType(Type declaredType, Type sigType, NumberedString subSig, SootMethod container,
                                      ChunkedQueue<SootMethod> targets, boolean appOnly, RefType base) {
-
         {
             Set<Type> subTypes = baseToSubTypes.get(base);
             if (subTypes != null && !subTypes.isEmpty()) {
@@ -205,7 +206,7 @@ public class VirtualCalls {
             }
         }
 
-        baseToSubTypes.putAll(base, newSubTypes);
+        baseToSubTypes.computeIfAbsent(base, k -> DataFactory.createSet()).addAll(newSubTypes);
     }
 
 }

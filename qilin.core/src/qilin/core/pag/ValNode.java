@@ -20,7 +20,7 @@ package qilin.core.pag;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qilin.core.sets.EmptyPointsToSet;
+import qilin.core.sets.DoublePointsToSet;
 import qilin.core.sets.PointsToSetInternal;
 import soot.Type;
 import soot.util.Numberable;
@@ -55,7 +55,7 @@ public class ValNode extends Node implements Comparable, Numberable {
         if (p2set != null) {
             return p2set;
         } else {
-            return EmptyPointsToSet.v();
+            return DoublePointsToSet.emptySet;
         }
     }
 

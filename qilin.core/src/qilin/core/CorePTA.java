@@ -19,7 +19,7 @@
 package qilin.core;
 
 import qilin.core.pag.*;
-import qilin.core.sets.EmptyPointsToSet;
+import qilin.core.sets.DoublePointsToSet;
 import qilin.core.sets.PointsToSet;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.core.solver.Propagator;
@@ -153,7 +153,7 @@ public abstract class CorePTA extends PTA {
                 });
                 return ret;
             } else {
-                return EmptyPointsToSet.v();
+                return DoublePointsToSet.emptySet;
             }
         }
     }
@@ -174,7 +174,7 @@ public abstract class CorePTA extends PTA {
     public PointsToSet reachingObjects(Context c, Local l) {
         VarNode n = pag.findContextVarNode(l, c);
         if (n == null) {
-            return EmptyPointsToSet.v();
+            return DoublePointsToSet.emptySet;
         }
         return n.getP2Set();
     }
@@ -223,7 +223,7 @@ public abstract class CorePTA extends PTA {
 
         VarNode n = pag.findGlobalVarNode(f);
         if (n == null) {
-            return EmptyPointsToSet.v();
+            return DoublePointsToSet.emptySet;
         }
         return n.getP2Set();
     }

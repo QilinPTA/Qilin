@@ -22,9 +22,6 @@ import qilin.core.pag.Node;
 import qilin.core.pag.PAG;
 import soot.Type;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * Implementation of points-to set that holds two sets: one for new elements that have not yet been propagated, and the other
  * for elements that have already been propagated.
@@ -32,25 +29,24 @@ import java.util.Set;
  * @author Ondrej Lhotak
  */
 public class DoublePointsToSet extends PointsToSetInternal {
-    public static P2SetFactory newSetFactory;
-    public static P2SetFactory oldSetFactory;
+    public static DoublePointsToSet emptySet = new DoublePointsToSet(null, null);
+
     protected PointsToSetInternal newSet;
     protected PointsToSetInternal oldSet;
     private final PAG pag;
 
     public DoublePointsToSet(Type type, PAG pag) {
         super(type);
-        newSet = newSetFactory.newSet(type, pag);
-        oldSet = oldSetFactory.newSet(type, pag);
         this.pag = pag;
+        newSet = new HybridPointsToSet(type, pag);
+        oldSet = new HybridPointsToSet(type, pag);
     }
 
-    public static P2SetFactory getFactory(P2SetFactory newFactory, P2SetFactory oldFactory) {
-        newSetFactory = newFactory;
-        oldSetFactory = oldFactory;
+    public static P2SetFactory getFactory() {
+
         return new P2SetFactory() {
-            public PointsToSetInternal newSet(Type type1, PAG pag1) {
-                return new DoublePointsToSet(type1, pag1);
+            public PointsToSetInternal newSet(Type type, PAG pag) {
+                return new DoublePointsToSet(type, pag);
             }
         };
     }
@@ -67,16 +63,6 @@ public class DoublePointsToSet extends PointsToSetInternal {
      */
     public boolean hasNonEmptyIntersection(PointsToSet other) {
         return oldSet.hasNonEmptyIntersection(other) || newSet.hasNonEmptyIntersection(other);
-    }
-
-    /**
-     * Set of all possible run-time types of objects in the set.
-     */
-    public Set<Type> possibleTypes() {
-        Set<Type> ret = new HashSet<>();
-        ret.addAll(oldSet.possibleTypes());
-        ret.addAll(newSet.possibleTypes());
-        return ret;
     }
 
     /*
@@ -147,7 +133,7 @@ public class DoublePointsToSet extends PointsToSetInternal {
      */
     public void flushNew() {
         oldSet.addAll(newSet, null);
-        newSet = newSetFactory.newSet(type, pag);
+        newSet = new HybridPointsToSet(type, pag);
     }
 
     /**

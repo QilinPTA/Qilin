@@ -20,20 +20,16 @@ package qilin.core;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qilin.CoreConfig;
 import qilin.core.builder.CallGraphBuilder;
 import qilin.core.builder.ExceptionHandler;
 import qilin.core.pag.*;
 import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.HybridPointsToSet;
 import qilin.core.sets.P2SetFactory;
 import qilin.core.sets.PointsToSet;
 import qilin.core.solver.Propagator;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.HeapAbstractor;
 import qilin.parm.select.CtxSelector;
-import qilin.stat.PTAEvaluator;
-import qilin.util.PTAUtils;
 import soot.Context;
 import soot.MethodOrMethodContext;
 import soot.RefType;
@@ -61,9 +57,7 @@ public abstract class PTA implements PointsToAnalysis {
         this.eh = new ExceptionHandler(this);
         AllocNode rootBase = new AllocNode(pag, "ROOT", RefType.v("java.lang.Object"), null);
         this.rootNode = new ContextAllocNode(pag, rootBase, CtxConstructor.emptyContext);
-        P2SetFactory oldF = HybridPointsToSet.getFactory();
-        P2SetFactory newF = HybridPointsToSet.getFactory();
-        this.setFactory = DoublePointsToSet.getFactory(newF, oldF);
+        this.setFactory = DoublePointsToSet.getFactory();
     }
 
     protected abstract PAG createPAG();

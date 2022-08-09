@@ -98,13 +98,11 @@ public class ContextElements implements Context {
     public String toString() {
         StringBuilder localStringBuilder = new StringBuilder();
         localStringBuilder.append('[');
-        for (int i = 0; i < array.length - 1; i++) {
+        for (int i = 0; i < array.length; i++) {
             localStringBuilder.append(array[i]);
-            localStringBuilder.append(", ");
-        }
-        for (int i = array.length - 1; i >= 0; ) {
-            localStringBuilder.append(array[i]);
-            break;
+            if (i < array.length - 1) {
+                localStringBuilder.append(", ");
+            }
         }
         localStringBuilder.append(']');
         return localStringBuilder.toString();
