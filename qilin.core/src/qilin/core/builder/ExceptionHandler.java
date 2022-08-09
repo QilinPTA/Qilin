@@ -23,13 +23,14 @@ import qilin.core.PTAScene;
 import qilin.core.pag.*;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
+import qilin.util.DataFactory;
 import soot.*;
 import soot.jimple.IdentityStmt;
 
 import java.util.*;
 
 public class ExceptionHandler {
-    protected final Map<Node, Collection<ExceptionThrowSite>> throwNodeToSites = new HashMap<>(PTAScene.v().getLocalNumberer().size());
+    protected final Map<Node, Collection<ExceptionThrowSite>> throwNodeToSites = DataFactory.createMap(PTAScene.v().getLocalNumberer().size());
     protected PTA pta;
     protected PAG pag;
 
@@ -43,13 +44,13 @@ public class ExceptionHandler {
     }
 
     public boolean addThrowSite(Node throwNode, ExceptionThrowSite ets) {
-        Collection<ExceptionThrowSite> throwSites = throwNodeToSites.computeIfAbsent(throwNode, k -> new HashSet<>());
+        Collection<ExceptionThrowSite> throwSites = throwNodeToSites.computeIfAbsent(throwNode, k -> DataFactory.createSet());
         return throwSites.add(ets);
     }
 
     public void exceptionDispatch(PointsToSetInternal p2set, ExceptionThrowSite site) {
         p2set.forall(new P2SetVisitor() {
-            public final void visit(Node n) {
+            public void visit(Node n) {
                 dispatch((AllocNode) n, site);
             }
         });

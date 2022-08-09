@@ -20,12 +20,12 @@ package qilin.core.reflection;
 
 import qilin.CoreConfig;
 import qilin.core.PTAScene;
+import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
 import soot.*;
 import soot.jimple.*;
 import soot.jimple.internal.*;
 import soot.tagkit.LineNumberTag;
-import soot.util.NumberedString;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -37,12 +37,11 @@ import java.util.*;
  * This reflection model handles reflection according to the dynamic traces recorded through Tamiflex.
  */
 public class TamiflexModel extends ReflectionModel {
-    protected final NumberedString sigInit = PTAScene.v().getSubSigNumberer().findOrAdd("void <init>()");
 
     protected Map<ReflectionKind, Map<Stmt, Set<String>>> reflectionMap;
 
     public TamiflexModel() {
-        reflectionMap = new HashMap<>();
+        reflectionMap = DataFactory.createMap();
         parseTamiflexLog(CoreConfig.v().getAppConfig().REFLECTION_LOG, false);
     }
 
@@ -50,7 +49,7 @@ public class TamiflexModel extends ReflectionModel {
     Collection<Unit> transformClassForName(Stmt s) {
         // <java.lang.Class: java.lang.Class forName(java.lang.String)>
         // <java.lang.Class: java.lang.Class forName(java.lang.String,boolean,java.lang.ClassLoader)>
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> classForNames = reflectionMap.getOrDefault(ReflectionKind.ClassForName, Collections.emptyMap());
         if (classForNames.containsKey(s)) {
             Collection<String> fornames = classForNames.get(s);
@@ -73,16 +72,16 @@ public class TamiflexModel extends ReflectionModel {
             return Collections.emptySet();
         }
         Value lvalue = ((AssignStmt) s).getLeftOp();
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> classNewInstances = reflectionMap.getOrDefault(ReflectionKind.ClassNewInstance, Collections.emptyMap());
         if (classNewInstances.containsKey(s)) {
             Collection<String> classNames = classNewInstances.get(s);
             for (String clsName : classNames) {
                 SootClass cls = PTAScene.v().getSootClass(clsName);
-                if (cls.declaresMethod(sigInit)) {
+                if (cls.declaresMethod(PTAScene.v().getSubSigNumberer().findOrAdd("void <init>()"))) {
                     JNewExpr newExpr = new JNewExpr(cls.getType());
                     ret.add(new JAssignStmt(lvalue, newExpr));
-                    SootMethod constructor = cls.getMethod(sigInit);
+                    SootMethod constructor = cls.getMethod(PTAScene.v().getSubSigNumberer().findOrAdd("void <init>()"));
                     ret.add(new JInvokeStmt(new JSpecialInvokeExpr((Local) lvalue, constructor.makeRef(), Collections.emptyList())));
                 }
             }
@@ -97,7 +96,7 @@ public class TamiflexModel extends ReflectionModel {
             return Collections.emptySet();
         }
         Value lvalue = ((AssignStmt) s).getLeftOp();
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> constructorNewInstances = reflectionMap.getOrDefault(ReflectionKind.ConstructorNewInstance, Collections.emptyMap());
         if (constructorNewInstances.containsKey(s)) {
             Collection<String> constructorSignatures = constructorNewInstances.get(s);
@@ -125,7 +124,7 @@ public class TamiflexModel extends ReflectionModel {
     @Override
     protected Collection<Unit> transformMethodInvoke(Stmt s) {
         // <java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> methodInvokes = reflectionMap.getOrDefault(ReflectionKind.MethodInvoke, Collections.emptyMap());
         if (methodInvokes.containsKey(s)) {
             Collection<String> methodSignatures = methodInvokes.get(s);
@@ -168,7 +167,7 @@ public class TamiflexModel extends ReflectionModel {
     @Override
     protected Collection<Unit> transformFieldSet(Stmt s) {
         // <java.lang.reflect.Field: void set(java.lang.Object,java.lang.Object)>
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> fieldSets = reflectionMap.getOrDefault(ReflectionKind.FieldSet, Collections.emptyMap());
         if (fieldSets.containsKey(s)) {
             Collection<String> fieldSignatures = fieldSets.get(s);
@@ -195,7 +194,7 @@ public class TamiflexModel extends ReflectionModel {
     @Override
     protected Collection<Unit> transformFieldGet(Stmt s) {
         // <java.lang.reflect.Field: java.lang.Object get(java.lang.Object)>
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> fieldGets = reflectionMap.getOrDefault(ReflectionKind.FieldGet, Collections.emptyMap());
         if (fieldGets.containsKey(s) && s instanceof AssignStmt) {
             Collection<String> fieldSignatures = fieldGets.get(s);
@@ -224,7 +223,7 @@ public class TamiflexModel extends ReflectionModel {
     @Override
     protected Collection<Unit> transformArrayNewInstance(Stmt s) {
         // <java.lang.reflect.Array: java.lang.Object newInstance(java.lang.Class,int)>
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> mappedToArrayTypes = reflectionMap.getOrDefault(ReflectionKind.ArrayNewInstance, Collections.emptyMap());
         Collection<String> arrayTypes = mappedToArrayTypes.getOrDefault(s, Collections.emptySet());
         for (String arrayType : arrayTypes) {
@@ -240,7 +239,7 @@ public class TamiflexModel extends ReflectionModel {
 
     @Override
     Collection<Unit> transformArrayGet(Stmt s) {
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         InvokeExpr iie = s.getInvokeExpr();
         Value base = iie.getArg(0);
         if (s instanceof AssignStmt) {
@@ -262,7 +261,7 @@ public class TamiflexModel extends ReflectionModel {
 
     @Override
     Collection<Unit> transformArraySet(Stmt s) {
-        Collection<Unit> ret = new HashSet<>();
+        Collection<Unit> ret = DataFactory.createSet();
         InvokeExpr iie = s.getInvokeExpr();
         Value base = iie.getArg(0);
         if (base.getType() instanceof ArrayType) {
@@ -339,8 +338,8 @@ public class TamiflexModel extends ReflectionModel {
                 }
                 Collection<Stmt> possibleSourceStmts = inferSourceStmt(inClzDotMthdStr, kind, lineNumber);
                 for (Stmt stmt : possibleSourceStmts) {
-                    reflectionMap.computeIfAbsent(kind, m -> new HashMap<>()).
-                            computeIfAbsent(stmt, k -> new HashSet<>()).add(mappedTarget);
+                    reflectionMap.computeIfAbsent(kind, m -> DataFactory.createMap()).
+                            computeIfAbsent(stmt, k -> DataFactory.createSet()).add(mappedTarget);
                 }
             }
             reader.close();
@@ -356,7 +355,7 @@ public class TamiflexModel extends ReflectionModel {
             System.out.println("Warning: unknown class \"" + inClassStr + "\" is referenced.");
         }
         SootClass sootClass = PTAScene.v().getSootClass(inClassStr);
-        Set<SootMethod> ret = new HashSet<>();
+        Set<SootMethod> ret = DataFactory.createSet();
         for (SootMethod m : sootClass.getMethods()) {
             if (m.isConcrete() && m.getName().equals(inMethodStr)) {
                 ret.add(m);
@@ -366,8 +365,8 @@ public class TamiflexModel extends ReflectionModel {
     }
 
     private Collection<Stmt> inferSourceStmt(String inClzDotMthd, ReflectionKind kind, int lineNumber) {
-        Set<Stmt> ret = new HashSet<>();
-        Set<Stmt> potential = new HashSet<>();
+        Set<Stmt> ret = DataFactory.createSet();
+        Set<Stmt> potential = DataFactory.createSet();
         Collection<SootMethod> sourceMethods = inferSourceMethod(inClzDotMthd);
         for (SootMethod sm : sourceMethods) {
             Body body = PTAUtils.getMethodBody(sm);

@@ -45,8 +45,6 @@ public class FakeMainFactory extends ArtificialMethod {
         fakeClass.addMethod(this.method);
         fakeClass.addField(currentThread);
         fakeClass.addField(globalThrow);
-//        this.method.setSource((m, phaseName) -> new JimpleBody(this.method));
-//        this.body = PTAUtils.getMethodBody(method);
     }
 
     private List<SootMethod> getEntryPoints() {
@@ -76,9 +74,13 @@ public class FakeMainFactory extends ArtificialMethod {
 
     public SootMethod getFakeMain() {
         if (body == null) {
-            this.method.setSource((m, phaseName) -> new JimpleBody(this.method));
-            this.body = PTAUtils.getMethodBody(method);
-            makeFakeMain();
+            synchronized (this) {
+                if (body == null) {
+                    this.method.setSource((m, phaseName) -> new JimpleBody(this.method));
+                    this.body = PTAUtils.getMethodBody(method);
+                    makeFakeMain();
+                }
+            }
         }
         return this.method;
     }

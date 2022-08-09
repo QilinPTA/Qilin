@@ -19,6 +19,7 @@
 package qilin.core.reflection;
 
 import qilin.core.PTAScene;
+import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
 import soot.SootMethod;
 import soot.Unit;
@@ -28,7 +29,6 @@ import soot.jimple.Stmt;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class ReflectionModel {
@@ -74,7 +74,7 @@ public abstract class ReflectionModel {
         if (!PTAScene.v().reflectionBuilt.add(m)) {
             return;
         }
-        Map<Unit, Collection<Unit>> newUnits = new HashMap<>();
+        Map<Unit, Collection<Unit>> newUnits = DataFactory.createMap();
         UnitPatchingChain units = PTAUtils.getMethodBody(m).getUnits();
         for (final Unit u : units) {
             final Stmt s = (Stmt) u;
