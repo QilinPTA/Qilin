@@ -20,8 +20,6 @@ package qilin.core;
 
 import qilin.core.builder.FakeMainFactory;
 import qilin.core.pag.PAG;
-import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.P2SetFactory;
 import qilin.util.DataFactory;
 import soot.*;
 import soot.jimple.toolkits.callgraph.CallGraph;
@@ -35,7 +33,6 @@ public class PTAScene {
     private static volatile PTAScene instance = null;
     private final Scene sootScene;
     private final FakeMainFactory fakeMainFactory;
-    protected final P2SetFactory setFactory;
 
     public static PTAScene v() {
         if (instance == null) {
@@ -64,11 +61,6 @@ public class PTAScene {
     private PTAScene() {
         this.sootScene = Scene.v();
         this.fakeMainFactory = new FakeMainFactory();
-        this.setFactory = DoublePointsToSet.getFactory();
-    }
-
-    public P2SetFactory getSetFactory() {
-        return setFactory;
     }
 
     public final Set<SootMethod> nativeBuilt = DataFactory.createSet();

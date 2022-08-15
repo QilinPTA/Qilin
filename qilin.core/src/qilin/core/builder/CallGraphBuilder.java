@@ -58,7 +58,10 @@ public class CallGraphBuilder {
         methodToInvokeStmt = DataFactory.createMap();
         reachMethods = DataFactory.createSet();
         calledges = DataFactory.createSet();
-        rmQueue = new ChunkedQueue<>();
+    }
+
+    public void setRMQueue(ChunkedQueue<MethodOrMethodContext> rmQueue) {
+        this.rmQueue = rmQueue;
     }
 
     public Collection<MethodOrMethodContext> getReachableMethods() {
@@ -75,9 +78,6 @@ public class CallGraphBuilder {
         return receiverToSites.getOrDefault(receiver, Collections.emptySet());
     }
 
-    public QueueReader<MethodOrMethodContext> reachMethodsReader() {
-        return rmQueue.reader();
-    }
     public CallGraph getCallGraph() {
         if (cicg == null) {
             constructCallGraph();

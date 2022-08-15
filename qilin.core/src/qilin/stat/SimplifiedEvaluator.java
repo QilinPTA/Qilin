@@ -106,10 +106,11 @@ public class SimplifiedEvaluator implements IEvaluator {
     private void ptsStat() {
         int ptsCntNoNative = 0;
         int varCntNoNative = 0;
+        PAG pag = pta.getPag();
         // locals exclude Exceptions
-        for (Local local : pta.getPag().getLocalPointers()) {
+        for (Local local : pag.getLocalPointers()) {
             try {
-                LocalVarNode lvn = pta.getPag().findLocalVarNode(local);
+                LocalVarNode lvn = pag.findLocalVarNode(local);
                 if (local.toString().contains("intermediate/")) {
                     continue;
                 }
@@ -121,7 +122,7 @@ public class SimplifiedEvaluator implements IEvaluator {
 
         // stat avg pts.
         for (SootMethod sm : pta.getNakedReachableMethods()) {
-            MethodPAG mpag = pta.getPag().getMethodPAG(sm);
+            MethodPAG mpag = pag.getMethodPAG(sm);
             MethodNodeFactory mnf = mpag.nodeFactory();
             if (!sm.isStatic()) {
                 mLocalVarNodes.add((LocalVarNode) mnf.caseThis());

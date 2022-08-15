@@ -286,7 +286,7 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
     final public void caseStringConstant(StringConstant sc) {
         AllocNode stringConstantNode = pag.makeStringConstantNode(sc);
         VarNode stringConstantVar = pag.makeGlobalVarNode(sc, RefType.v("java.lang.String"));
-        pag.addGlobalPAGEdge(stringConstantNode, stringConstantVar);
+        mpag.addInternalEdge(stringConstantNode, stringConstantVar);
         VarNode vn = pag.makeLocalVarNode(new Pair<>(method, sc), RefType.v("java.lang.String"), method);
         mpag.addInternalEdge(stringConstantVar, vn);
         setResult(vn);
@@ -296,7 +296,7 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
     final public void caseClassConstant(ClassConstant cc) {
         AllocNode classConstant = pag.makeClassConstantNode(cc);
         VarNode classConstantVar = pag.makeGlobalVarNode(cc, RefType.v("java.lang.Class"));
-        pag.addGlobalPAGEdge(classConstant, classConstantVar);
+        mpag.addInternalEdge(classConstant, classConstantVar);
         VarNode vn = pag.makeLocalVarNode(new Pair<>(method, cc), RefType.v("java.lang.Class"), method);
         mpag.addInternalEdge(classConstantVar, vn);
         setResult(vn);

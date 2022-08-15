@@ -19,7 +19,6 @@
 package qilin.core.pag;
 
 import qilin.CoreConfig;
-import qilin.core.PTAScene;
 import qilin.core.context.ContextElement;
 import soot.RefType;
 import soot.SootMethod;

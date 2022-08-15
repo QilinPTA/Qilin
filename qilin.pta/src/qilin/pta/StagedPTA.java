@@ -25,6 +25,7 @@ public abstract class StagedPTA extends BasePTA {
     @Override
     public void run() {
         preAnalysis();
+        prePTA.getPag().resetPointsToSet();
         mainAnalysis();
     }
 }

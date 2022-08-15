@@ -25,6 +25,7 @@ import qilin.core.builder.CallGraphBuilder;
 import qilin.core.builder.ExceptionHandler;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
+import qilin.core.sets.DoublePointsToSet;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.util.PTAUtils;
@@ -46,18 +47,23 @@ public class Solver extends Propagator {
     private final ExceptionHandler eh;
     private final ChunkedQueue<ExceptionThrowSite> throwSiteQueue = new ChunkedQueue<>();
     private final ChunkedQueue<VirtualCallSite> virtualCallSiteQueue = new ChunkedQueue<>();
+    private final ChunkedQueue<Node> edgeQueue = new ChunkedQueue<>();
+
+    private final ChunkedQueue<MethodOrMethodContext> rmQueue = new ChunkedQueue<>();
 
     public Solver(PTA pta) {
         this.cgb = pta.getCgb();
+        this.cgb.setRMQueue(rmQueue);
         this.pag = pta.getPag();
+        this.pag.setEdgeQueue(edgeQueue);
         this.eh = pta.getExceptionHandler();
         this.pta = pta;
     }
 
     @Override
     public void propagate() {
-        final QueueReader<MethodOrMethodContext> newRMs = cgb.reachMethodsReader();
-        final QueueReader<Node> newPAGEdges = pag.edgeReader();
+        final QueueReader<MethodOrMethodContext> newRMs = rmQueue.reader();
+        final QueueReader<Node> newPAGEdges = edgeQueue.reader();
         final QueueReader<ExceptionThrowSite> newThrows = throwSiteQueue.reader();
         final QueueReader<VirtualCallSite> newCalls = virtualCallSiteQueue.reader();
         cgb.initReachableMethods();
@@ -67,7 +73,7 @@ public class Solver extends Propagator {
             ValNode curr = valNodeWorkList.pollFirst();
             // Step 1: Resolving Direct Constraints
             assert curr != null;
-            final PointsToSetInternal pts = curr.getP2Set();
+            final DoublePointsToSet pts = curr.getP2Set();
             final PointsToSetInternal newset = pts.getNewSet();
             pag.simpleLookup(curr).forEach(to -> propagatePTS(to, newset));
 
@@ -86,7 +92,7 @@ public class Solver extends Propagator {
                 }
                 processStmts(newRMs);
             }
-            curr.getP2Set().flushNew();
+            pts.flushNew();
             // Step 4: Activating New Constraints.
             activateConstraints(newCalls, newRMs, newThrows, newPAGEdges);
         }
@@ -177,12 +183,16 @@ public class Solver extends Propagator {
         for (QueueReader<Node> reader = mpag.getInternalReader().clone(); reader.hasNext(); ) {
             Node from = reader.next();
             Node to = reader.next();
-            from = pta.parameterize(from, cxt);
-            to = pta.parameterize(to, cxt);
-            if (from instanceof AllocNode) {
-                handleImplicitCallToFinalizerRegister((AllocNode) from);
+            if (from instanceof AllocNode && to instanceof GlobalVarNode) {
+                pag.addGlobalPAGEdge(from, to);
+            } else {
+                from = pta.parameterize(from, cxt);
+                to = pta.parameterize(to, cxt);
+                if (from instanceof AllocNode) {
+                    handleImplicitCallToFinalizerRegister((AllocNode) from);
+                }
+                pag.addEdge(from, to);
             }
-            pag.addEdge(from, to);
         }
     }
 

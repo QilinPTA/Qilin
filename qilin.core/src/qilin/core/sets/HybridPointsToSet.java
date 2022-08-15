@@ -93,6 +93,7 @@ public final class HybridPointsToSet extends PointsToSetInternal {
     /**
      * Calls v's visit method on all nodes in this set.
      */
+    @Override
     public boolean forall(P2SetVisitor v) {
         if (bits == null) {
             for (Node node : nodes) {

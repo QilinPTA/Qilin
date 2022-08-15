@@ -19,6 +19,7 @@
 package qilin.core.pag;
 
 import qilin.CoreConfig;
+import qilin.util.DataFactory;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.util.PTAUtils;
 import soot.*;
@@ -40,16 +41,16 @@ import java.util.*;
 public class MethodPAG {
     private final ChunkedQueue<Node> internalEdges = new ChunkedQueue<>();
     private final QueueReader<Node> internalReader = internalEdges.reader();
-    private final Set<SootMethod> clinits = new HashSet<>();
-    private final Collection<Unit> invokeStmts = new HashSet<>();
+    private final Set<SootMethod> clinits = DataFactory.createSet();
+    private final Collection<Unit> invokeStmts = DataFactory.createSet();
     public Body body;
     /**
      * Since now the exception analysis is handled on-the-fly, we should record the
      * exception edges explicitly for Eagle and Turner.
      */
-    private final Map<Node, Set<Node>> exceptionEdges = new HashMap<>();
-    protected PAG pag;
+    private final Map<Node, Set<Node>> exceptionEdges = DataFactory.createMap();
     protected MethodNodeFactory nodeFactory;
+    protected PAG pag;
     SootMethod method;
     /*
      * List[i-1] is wrappered in List[i].
@@ -57,8 +58,8 @@ public class MethodPAG {
      * Map<Node, Map<Stmt, List<Trap>>> because there exists cases where the same
      * node are thrown more than once and lies in different catch blocks.
      * */
-    public final Map<Stmt, List<Trap>> stmt2wrapperedTraps = new HashMap<>();
-    public final Map<Node, Map<Stmt, List<Trap>>> node2wrapperedTraps = new HashMap<>();
+    public final Map<Stmt, List<Trap>> stmt2wrapperedTraps = DataFactory.createMap();
+    public final Map<Node, Map<Stmt, List<Trap>>> node2wrapperedTraps = DataFactory.createMap();
 
     public MethodPAG(PAG pag, SootMethod m, Body body) {
         this.pag = pag;
@@ -66,10 +67,6 @@ public class MethodPAG {
         this.nodeFactory = new MethodNodeFactory(pag, this);
         this.body = body;
         build();
-    }
-
-    public PAG pag() {
-        return pag;
     }
 
     public SootMethod getMethod() {
@@ -118,7 +115,7 @@ public class MethodPAG {
         }
         Chain<Trap> traps = body.getTraps();
         PatchingChain<Unit> units = body.getUnits();
-        Set<Unit> inTraps = new HashSet<>();
+        Set<Unit> inTraps = DataFactory.createSet();
         /*
          * The traps is already visited in order. <a>, <b>; implies <a> is a previous Trap of <b>.
          * */
@@ -154,31 +151,17 @@ public class MethodPAG {
                 src = nodeFactory.getNode(ts.getOp());
             }
             if (src != null) {
-                node2wrapperedTraps.computeIfAbsent(src, k -> new HashMap<>());
-                stmt2wrapperedTraps.computeIfAbsent(stmt, k -> new ArrayList<>());
-            }
-        }
-        boolean DEBUG = false;
-        if (DEBUG) {
-            if (method.toString().equals("<sun.security.util.SignatureFileVerifier: void <init>(java.util.ArrayList,sun.security.util.ManifestDigester,java.lang.String,byte[])>")) {
-                node2wrapperedTraps.forEach((k, map) -> {
-                    System.out.println(k);
-                    for (Stmt stmt : map.keySet()) {
-                        System.out.println("\t" + stmt + ":");
-                        for (Trap trap : map.get(stmt)) {
-                            System.out.println("\t\t" + trap);
-                        }
-                    }
-                });
+                node2wrapperedTraps.computeIfAbsent(src, k -> DataFactory.createMap());
+                stmt2wrapperedTraps.computeIfAbsent(stmt, k -> DataFactory.createList());
             }
         }
     }
 
     private void addStmtTrap(Node src, Stmt stmt, Trap trap) {
-        Map<Stmt, List<Trap>> stmt2Traps = node2wrapperedTraps.computeIfAbsent(src, k -> new HashMap<>());
-        List<Trap> trapList = stmt2Traps.computeIfAbsent(stmt, k -> new ArrayList<>());
+        Map<Stmt, List<Trap>> stmt2Traps = node2wrapperedTraps.computeIfAbsent(src, k -> DataFactory.createMap());
+        List<Trap> trapList = stmt2Traps.computeIfAbsent(stmt, k -> DataFactory.createList());
         trapList.add(trap);
-        stmt2wrapperedTraps.computeIfAbsent(stmt, k -> new ArrayList<>()).add(trap);
+        stmt2wrapperedTraps.computeIfAbsent(stmt, k -> DataFactory.createList()).add(trap);
     }
 
     protected void addMiscEdges() {
@@ -210,7 +193,7 @@ public class MethodPAG {
     }
 
     public void addExceptionEdge(Node from, Node to) {
-        this.exceptionEdges.computeIfAbsent(from, k -> new HashSet<>()).add(to);
+        this.exceptionEdges.computeIfAbsent(from, k -> DataFactory.createSet()).add(to);
     }
 
     public Map<Node, Set<Node>> getExceptionEdges() {

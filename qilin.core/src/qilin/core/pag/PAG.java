@@ -106,10 +106,14 @@ public class PAG {
         this.methodToPag = DataFactory.createMap();
         this.globals = DataFactory.createSet(100000);
         this.locals = DataFactory.createSet(100000);
-        this.edgeQueue = new ChunkedQueue<>();
+//        this.edgeQueue = new ChunkedQueue<>();
 //        this.allocNodeNumberer = new ArrayNumberer<>(); // support concurrency.
 //        this.valNodeNumberer = new ArrayNumberer<>();
 //        this.fieldRefNodeNumberer = new ArrayNumberer<>();
+    }
+
+    public void setEdgeQueue(ChunkedQueue<Node> edgeQueue) {
+        this.edgeQueue = edgeQueue;
     }
 
     public Map<AllocNode, Set<VarNode>> getAlloc() {

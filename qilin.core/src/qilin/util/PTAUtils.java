@@ -28,6 +28,7 @@ import qilin.core.builder.MethodNodeFactory;
 import qilin.core.context.ContextElement;
 import qilin.core.context.ContextElements;
 import qilin.core.pag.*;
+import qilin.core.sets.DoublePointsToSet;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.util.queue.UniqueQueue;
@@ -53,9 +54,8 @@ public final class PTAUtils {
     static Map<String, Node> nodes = new TreeMap<>();
 
     public static PointsToSetInternal fetchInsensitivePointsToResult(PTA pta, VarNode varNode) {
-        PAG pag = pta.getPag();
-        Map<Context, ContextVarNode> ctxt2ctxnode = pag.getContextVarNodeMap().get(varNode);
-        PointsToSetInternal ptoSet = pta.getSetFactory().newSet(varNode.getType());
+        Map<Context, ContextVarNode> ctxt2ctxnode = pta.getPag().getContextVarNodeMap().get(varNode);
+        PointsToSetInternal ptoSet = new DoublePointsToSet(varNode.getType());
         for (ContextVarNode ctxNode : ctxt2ctxnode.values()) {
             PointsToSetInternal ciP2Set = ctxNode.getP2Set().mapToCIPointsToSet();
             ciP2Set.forall(new P2SetVisitor() {
@@ -69,13 +69,12 @@ public final class PTAUtils {
     }
 
     public static Map<LocalVarNode, Set<AllocNode>> calcStaticThisPTS(PTA pta) {
-        PAG pag = pta.getPag();
         Map<LocalVarNode, Set<AllocNode>> pts = new HashMap<>();
         Set<SootMethod> workList = new HashSet<>();
         // add all instance methods which potentially contain static call
         for (SootMethod method : pta.getNakedReachableMethods()) {
             if (PTAUtils.isFakeMainMethod(method) || !method.isPhantom() && !method.isStatic()) {
-                MethodPAG srcmpag = pag.getMethodPAG(method);
+                MethodPAG srcmpag = pta.getPag().getMethodPAG(method);
                 LocalVarNode thisRef = (LocalVarNode) srcmpag.nodeFactory().caseThis();
                 final PointsToSetInternal other = fetchInsensitivePointsToResult(pta, thisRef);
 
@@ -86,7 +85,7 @@ public final class PTAUtils {
                         for (Iterator<Edge> it = pta.getCallGraph().edgesOutOf(u); it.hasNext(); ) {
                             Edge e = it.next();
                             SootMethod tgtmtd = e.tgt();
-                            MethodPAG tgtmpag = pag.getMethodPAG(tgtmtd);
+                            MethodPAG tgtmpag = pta.getPag().getMethodPAG(tgtmtd);
                             MethodNodeFactory tgtnf = tgtmpag.nodeFactory();
                             LocalVarNode tgtThisRef = (LocalVarNode) tgtnf.caseThis();
                             // create "THIS" ptr for static method
@@ -108,7 +107,7 @@ public final class PTAUtils {
         while (!workList.isEmpty()) {
             SootMethod method = workList.iterator().next();
             workList.remove(method);
-            MethodPAG srcmpag = pag.getMethodPAG(method);
+            MethodPAG srcmpag = pta.getPag().getMethodPAG(method);
             LocalVarNode thisRef = (LocalVarNode) srcmpag.nodeFactory().caseThis();
             final Set<AllocNode> other = pts.computeIfAbsent(thisRef, k -> new HashSet<>());
 
@@ -119,7 +118,7 @@ public final class PTAUtils {
                     for (Iterator<Edge> it = pta.getCallGraph().edgesOutOf(u); it.hasNext(); ) {
                         Edge e = it.next();
                         SootMethod tgtmtd = e.tgt();
-                        MethodPAG tgtmpag = pag.getMethodPAG(tgtmtd);
+                        MethodPAG tgtmpag = pta.getPag().getMethodPAG(tgtmtd);
                         MethodNodeFactory tgtnf = tgtmpag.nodeFactory();
                         LocalVarNode tgtThisRef = (LocalVarNode) tgtnf.caseThis();
                         // create "THIS" ptr for static method
@@ -148,35 +147,6 @@ public final class PTAUtils {
         PointsToSetInternal v1pts = (PointsToSetInternal) pta.reachingObjects(v1);
         PointsToSetInternal v2pts = (PointsToSetInternal) pta.reachingObjects(v2);
         return v1pts.mapToCIPointsToSet().pointsToSetEquals(v2pts.mapToCIPointsToSet());
-    }
-
-    // print pts
-    public static void printAppPts(PTA pta) {
-        PAG pag = pta.getPag();
-        System.out.println("Globals: ");
-        for (SootField global : pag.getGlobalPointers()) {
-            if (!pag.findGlobalVarNode(global).getDeclaringClass().isApplicationClass())
-                continue;
-            System.out.println(global + ":");
-            printPts((PointsToSetInternal) pta.reachingObjects(global));
-        }
-        System.out.println("\nLocals: ");
-        for (Local local : pag.getLocalPointers()) {
-            if (isThrowable(local.getType())) {
-                continue;
-            }
-            LocalVarNode varNode = pag.findLocalVarNode(local);
-            if (!varNode.getMethod().getDeclaringClass().isApplicationClass()) {
-                continue;
-            }
-            Map<Context, ContextVarNode> cvns = pag.getContextVarNodeMap().get(varNode);
-            if (cvns == null)
-                continue;
-            cvns.values().forEach(cvn -> {
-                System.out.println(cvn + ":");
-                printPts(cvn.getP2Set());
-            });
-        }
     }
 
     public static void printPts(PointsToSetInternal pts) {
@@ -404,10 +374,10 @@ public final class PTAUtils {
         }
     }
 
-    public static void dumpMPAG(PTA pta, SootMethod method) {
+    public static void dumpMPAG(PAG pag, SootMethod method) {
         String filename = method.getSignature() + ".dot";
         DotGraph canvas = setDotGraph(filename);
-        QueueReader<Node> reader = pta.getPag().getMethodPAG(method).getInternalReader().clone();
+        QueueReader<Node> reader = pag.getMethodPAG(method).getInternalReader().clone();
         while (reader.hasNext()) {
             Node src = reader.next();
             Node dst = reader.next();
@@ -777,17 +747,21 @@ public final class PTAUtils {
         return allocated;
     }
 
-    private static final Map<SootMethod, Body> methodToBody = new HashMap<>();
+    private static final Map<SootMethod, Body> methodToBody = DataFactory.createMap();
 
     public static Body getMethodBody(SootMethod m) {
         Body body = methodToBody.get(m);
         if (body == null) {
-            if (m.isConcrete()) {
-                body = m.retrieveActiveBody();
-            } else {
-                body = new JimpleBody(m);
+            synchronized (PTAUtils.class) {
+                if (body == null) {
+                    if (m.isConcrete()) {
+                        body = m.retrieveActiveBody();
+                    } else {
+                        body = new JimpleBody(m);
+                    }
+                    methodToBody.putIfAbsent(m, body);
+                }
             }
-            methodToBody.put(m, body);
         }
         return body;
     }
@@ -803,14 +777,14 @@ public final class PTAUtils {
         return false;
     }
 
-    public static LocalVarNode paramToArg(PAG prePAG, Stmt invokeStmt, MethodPAG srcmpag, VarNode pi) {
+    public static LocalVarNode paramToArg(PAG pag, Stmt invokeStmt, MethodPAG srcmpag, VarNode pi) {
         MethodNodeFactory srcnf = srcmpag.nodeFactory();
         InvokeExpr ie = invokeStmt.getInvokeExpr();
         Parm mPi = (Parm) pi.getVariable();
         LocalVarNode thisRef = (LocalVarNode) srcnf.caseThis();
         LocalVarNode receiver;
         if (ie instanceof InstanceInvokeExpr iie) {
-            receiver = prePAG.findLocalVarNode(iie.getBase());
+            receiver = pag.findLocalVarNode(iie.getBase());
         } else {
             // static call
             receiver = thisRef;
@@ -820,19 +794,19 @@ public final class PTAUtils {
         } else if (mPi.isReturn()) {
             if (invokeStmt instanceof AssignStmt assignStmt) {
                 Value mR = assignStmt.getLeftOp();
-                return (LocalVarNode) prePAG.findValNode(mR);
+                return (LocalVarNode) pag.findValNode(mR);
             } else {
                 return null;
             }
         } else if (mPi.isThrowRet()) {
-            return prePAG.makeInvokeStmtThrowVarNode(invokeStmt, srcmpag.getMethod());
+            return pag.makeInvokeStmtThrowVarNode(invokeStmt, srcmpag.getMethod());
         }
         // Normal formal parameters.
         Value arg = ie.getArg(mPi.getIndex());
         if (arg == null) {
             return null;
         } else {
-            return prePAG.findLocalVarNode(arg);
+            return pag.findLocalVarNode(arg);
         }
     }
 

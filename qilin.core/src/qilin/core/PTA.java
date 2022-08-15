@@ -18,13 +18,9 @@
 
 package qilin.core;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import qilin.core.builder.CallGraphBuilder;
 import qilin.core.builder.ExceptionHandler;
 import qilin.core.pag.*;
-import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.P2SetFactory;
 import qilin.core.sets.PointsToSet;
 import qilin.core.solver.Propagator;
 import qilin.parm.ctxcons.CtxConstructor;
@@ -37,19 +33,16 @@ import soot.SootMethod;
 import soot.jimple.toolkits.callgraph.CallGraph;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class PTA implements PointsToAnalysis {
-    private static final Logger logger = LoggerFactory.getLogger(PTA.class);
 
     protected AllocNode rootNode;
     protected PAG pag;
     protected CallGraph callGraph;
     protected CallGraphBuilder cgb;
     protected ExceptionHandler eh;
-    protected P2SetFactory setFactory;
 
     public PTA() {
         this.pag = createPAG();
@@ -57,7 +50,6 @@ public abstract class PTA implements PointsToAnalysis {
         this.eh = new ExceptionHandler(this);
         AllocNode rootBase = new AllocNode("ROOT", RefType.v("java.lang.Object"), null);
         this.rootNode = new ContextAllocNode(rootBase, CtxConstructor.emptyContext);
-        this.setFactory = DoublePointsToSet.getFactory();
     }
 
     protected abstract PAG createPAG();
@@ -69,15 +61,7 @@ public abstract class PTA implements PointsToAnalysis {
     }
 
     public void pureRun() {
-        Date startProp = new Date();
         getPropagator().propagate();
-        Date endProp = new Date();
-        reportTime("Points-to resolution:", startProp, endProp);
-    }
-
-    private static void reportTime(String desc, Date start, Date end) {
-        long time = end.getTime() - start.getTime();
-        logger.info("[PTA] " + desc + " in " + time / 1000 + "." + (time / 100) % 10 + " seconds.");
     }
 
     public PAG getPag() {
@@ -90,10 +74,6 @@ public abstract class PTA implements PointsToAnalysis {
 
     public ExceptionHandler getExceptionHandler() {
         return eh;
-    }
-
-    public P2SetFactory getSetFactory() {
-        return setFactory;
     }
 
     public CallGraph getCallGraph() {

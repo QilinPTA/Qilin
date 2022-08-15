@@ -45,8 +45,8 @@ public abstract class PointsToSetInternal implements PointsToSet {
      * Adds contents of other minus the contents of exclude into this set; returns true if this set changed.
      */
     public boolean addAll(PointsToSetInternal other, final PointsToSetInternal exclude) {
-        if (other instanceof DoublePointsToSet) {
-            return addAll(other.getNewSet(), exclude) | addAll(other.getOldSet(), exclude);
+        if (other instanceof DoublePointsToSet dpts) {
+            return addAll(dpts.getNewSet(), exclude) | addAll(dpts.getOldSet(), exclude);
         }
         return other.forall(new P2SetVisitor() {
             public void visit(Node n) {
@@ -66,28 +66,6 @@ public abstract class PointsToSetInternal implements PointsToSet {
      * Adds n to this set, returns true if n was not already in this set.
      */
     public abstract boolean add(Node n);
-
-    /**
-     * Returns set of newly-added nodes since last call to flushNew.
-     */
-    public PointsToSetInternal getNewSet() {
-        throw new UnsupportedOperationException("not supported yet.");
-    }
-
-    public PointsToSetInternal getNewSetCopy() {
-        throw new UnsupportedOperationException("not supported yet.");
-    }
-
-    public PointsToSetInternal getOldSetCopy() {
-        throw new UnsupportedOperationException("not supported yet.");
-    }
-
-    /**
-     * Returns set of nodes already present before last call to flushNew.
-     */
-    public PointsToSetInternal getOldSet() {
-        throw new UnsupportedOperationException("not supported yet.");
-    }
 
     public abstract PointsToSetInternal mapToCIPointsToSet();
 

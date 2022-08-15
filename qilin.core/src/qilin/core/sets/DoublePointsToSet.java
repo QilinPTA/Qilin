@@ -39,15 +39,6 @@ public class DoublePointsToSet extends PointsToSetInternal {
         oldSet = new HybridPointsToSet(type);
     }
 
-    public static P2SetFactory getFactory() {
-
-        return new P2SetFactory() {
-            public PointsToSetInternal newSet(Type type) {
-                return new DoublePointsToSet(type);
-            }
-        };
-    }
-
     /**
      * Returns true if this set contains no run-time objects.
      */
@@ -107,6 +98,13 @@ public class DoublePointsToSet extends PointsToSetInternal {
         return oldSet;
     }
 
+    /**
+     * Returns set of newly-added nodes since last call to flushNew.
+     */
+    public PointsToSetInternal getNewSet() {
+        return newSet;
+    }
+
     @Override
     public PointsToSetInternal mapToCIPointsToSet() {
         if (ciPointsToSet == null) {
@@ -118,12 +116,6 @@ public class DoublePointsToSet extends PointsToSetInternal {
         return ciPointsToSet;
     }
 
-    /**
-     * Returns set of newly-added nodes since last call to flushNew.
-     */
-    public PointsToSetInternal getNewSet() {
-        return newSet;
-    }
     /**
      * Sets all newly-added nodes to old nodes.
      */

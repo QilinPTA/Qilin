@@ -20,9 +20,7 @@ package qilin.core.pag;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import qilin.core.PTAScene;
 import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.PointsToSetInternal;
 import soot.Type;
 import soot.util.Numberable;
 
@@ -52,7 +50,7 @@ public class ValNode extends Node implements Comparable, Numberable {
     /**
      * Returns the points-to set for this node.
      */
-    public PointsToSetInternal getP2Set() {
+    public DoublePointsToSet getP2Set() {
         if (p2set != null) {
             return p2set;
         } else {
@@ -70,11 +68,11 @@ public class ValNode extends Node implements Comparable, Numberable {
     /**
      * Returns the points-to set for this node, makes it if necessary.
      */
-    public PointsToSetInternal makeP2Set() {
+    public DoublePointsToSet makeP2Set() {
         if (p2set == null) {
             synchronized (this) {
                 if (p2set == null) {
-                    p2set = PTAScene.v().getSetFactory().newSet(type);
+                    p2set = new DoublePointsToSet(type);
                 }
             }
         }

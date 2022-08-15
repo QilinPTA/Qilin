@@ -21,6 +21,7 @@ package qilin.pta.toolkits.conch;
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
+import qilin.core.sets.DoublePointsToSet;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.util.PTAUtils;
@@ -189,7 +190,7 @@ public class AbstractConch {
     }
 
     protected boolean emptyFieldPts(AllocNode heap, SparkField field) {
-        final PointsToSetInternal ret = pta.getSetFactory().newSet(heap.getType());
+        final PointsToSetInternal ret = new DoublePointsToSet(heap.getType());
         ret.add(heap);
         PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjectsInternal(ret, field);
         Set<AllocNode> tmp = new HashSet<>();
