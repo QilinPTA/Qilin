@@ -59,9 +59,10 @@ public class PAG {
     protected final Map<Context, Map<SparkField, ContextField>> contextFieldMap;
 
     // ==========================data=========================
-    protected static final ArrayNumberer<AllocNode> allocNodeNumberer = new ArrayNumberer<>();
-    protected static final ArrayNumberer<ValNode> valNodeNumberer = new ArrayNumberer<>();
-    protected static final ArrayNumberer<FieldRefNode> fieldRefNodeNumberer = new ArrayNumberer<>();
+    protected static ArrayNumberer<AllocNode> allocNodeNumberer = new ArrayNumberer<>();
+    protected static ArrayNumberer<ValNode> valNodeNumberer = new ArrayNumberer<>();
+    protected static ArrayNumberer<FieldRefNode> fieldRefNodeNumberer = new ArrayNumberer<>();
+    private static AtomicInteger maxFinishNumber = new AtomicInteger(0);
 
     // ========================= ir to Node ==============================================
     protected final Map<Object, AllocNode> valToAllocNode;
@@ -69,9 +70,6 @@ public class PAG {
     protected final Map<SootMethod, MethodPAG> methodToPag;
     protected final Set<SootField> globals;
     protected final Set<Local> locals;
-    // ==========================parms==============================
-    private static final AtomicInteger maxFinishNumber = new AtomicInteger(0);
-    //    private int maxFinishNumber = 0;
     // ==========================outer objects==============================
     protected ChunkedQueue<Node> edgeQueue;
 
@@ -573,5 +571,12 @@ public class PAG {
         contextFieldMap.values().stream().flatMap(m -> m.values().stream()).forEach(ValNode::discardP2Set);
         valToValNode.values().forEach(ValNode::discardP2Set);
         addedContexts.clear();
+    }
+
+    public static void reset() {
+        allocNodeNumberer = new ArrayNumberer<>();
+        valNodeNumberer = new ArrayNumberer<>();
+        fieldRefNodeNumberer = new ArrayNumberer<>();
+        maxFinishNumber = new AtomicInteger(0);
     }
 }

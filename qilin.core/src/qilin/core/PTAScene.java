@@ -19,6 +19,7 @@
 package qilin.core;
 
 import qilin.core.builder.FakeMainFactory;
+import qilin.core.pag.PAG;
 import qilin.core.sets.DoublePointsToSet;
 import qilin.core.sets.P2SetFactory;
 import qilin.util.DataFactory;
@@ -49,12 +50,14 @@ public class PTAScene {
 
     public static void junitReset() {
         VirtualCalls.reset();
+        PAG.reset();
         instance = null;
     }
 
     public static void reset() {
         G.reset();
         VirtualCalls.reset();
+        PAG.reset();
         instance = null;
     }
 
