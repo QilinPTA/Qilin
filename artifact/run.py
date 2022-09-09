@@ -8,7 +8,7 @@ import qilin as pta
 from util.opt import *
 from util import Util
 import util.TerminalColor as tc
-from util.benchmark import BENCHMARKS, BENCHMARKS2018
+from util.benchmark import BENCHMARKS
 from util.benchmark import APPPATH
 from util.benchmark import LIBPATH
 from util.benchmark import TAMIFLEXLOG
