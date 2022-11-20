@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import qilin.pta.PTAConfig;
 import qilin.pta.toolkits.turner.Turner;
 
+import java.util.*;
+
 public class PTAOption extends Options {
     private static final Logger logger = LoggerFactory.getLogger(PTAOption.class);
 
@@ -48,6 +50,7 @@ public class PTAOption extends Options {
         addOption("lib", "libpath", "dir or jar",
                 "The directory containing the library jar files for the application or the library jar file");
         addOption(null, "includeall", "Include packages which are not analyzed by default. (default value: false)");
+        addOption(null, "exclude", "packages", "Exclude selected packages. (delimiting symbol: semicolon ';')");
         addOption(null, "jre", "dir",
                 "The directory containing the version of JRE to be used for whole program analysis");
         addOption("reflog", "reflectionlog", "file",
@@ -60,9 +63,9 @@ public class PTAOption extends Options {
         addOption("jimple", "dumpjimple", "Dump appclasses to jimple. (default value: false)");
         addOption("stats", "dumpstats", "Dump statistics into files. (default value: false)");
         addOption("ptsall", "dumpallpts",
-                "Dump points-to of lib vars results to ./output/pts.txt (default value: false)");
+                "Dump points-to of lib vars results to output/pts.txt (default value: false)");
         addOption("pag", "dumppag", "Print PAG to terminal. (default value: false)");
-        addOption("pts", "dumppts", "Dump points-to results to ./output/pts.txt (default value: false)");
+        addOption("pts", "dumppts", "Dump points-to results to output/pts.txt (default value: false)");
 
         // general PTA configurations
         addOption("clinit", "clinitmode", "APP|FULL|ONFLY", "clinit methods loading mode, default: ONFLY");
@@ -154,6 +157,9 @@ public class PTAOption extends Options {
         if (cmd.hasOption("libpath")) {
             PTAConfig.v().getAppConfig().LIB_PATH = cmd.getOptionValue("libpath");
         }
+        if (cmd.hasOption("exclude")) {
+            PTAConfig.v().getAppConfig().EXCLUDE = parsePackages(cmd.getOptionValue("exclude"));
+        }
         if (cmd.hasOption("reflectionlog")) {
             PTAConfig.v().getAppConfig().REFLECTION_LOG = cmd.getOptionValue("reflectionlog");
         }
@@ -186,4 +192,10 @@ public class PTAOption extends Options {
         }
     }
 
+    static List<String> parsePackages(String packagesString) {
+        ArrayList<String> pkgList = new ArrayList<>();
+        String[] pkgs = packagesString.split(";");
+        Collections.addAll(pkgList, pkgs);
+        return pkgList;
+    }
 }

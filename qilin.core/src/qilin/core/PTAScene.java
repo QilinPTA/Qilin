@@ -198,6 +198,7 @@ public class PTAScene {
          */
         sootScene.addBasicClass("sun.net.www.protocol.ftp.FtpURLConnection", SootClass.HIERARCHY);
         sootScene.addBasicClass("javax.crypto.extObjectInputStream");
+        sootScene.addBasicClass("sun.misc.Launcher$AppClassLoader");
         /*
          * For simulating the FileSystem class, we need the implementation
          * of the FileSystem, but the classes are not loaded automatically

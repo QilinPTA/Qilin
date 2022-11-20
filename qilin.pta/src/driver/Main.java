@@ -95,6 +95,7 @@ public class Main {
         }
 
         if (appConfig.EXCLUDE != null) {
+            Options.v().set_no_bodies_for_excluded(true);
             Options.v().set_exclude(appConfig.EXCLUDE);
         }
 
