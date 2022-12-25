@@ -30,6 +30,7 @@ import qilin.pta.toolkits.conch.Conch;
 import qilin.stat.IEvaluator;
 import qilin.util.Stopwatch;
 import soot.*;
+import soot.jimple.spark.pag.SparkField;
 
 import java.util.HashSet;
 import java.util.Set;

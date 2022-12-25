@@ -4,8 +4,8 @@ import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.AllocNode;
 import qilin.core.pag.VarNode;
+import qilin.core.sets.PointsToSet;
 import qilin.pta.toolkits.common.OAG;
-import qilin.pta.toolkits.common.ToolUtil;
 import qilin.pta.toolkits.zipper.Global;
 import qilin.util.collect.SetFactory;
 import qilin.util.graph.MergedNode;
@@ -145,9 +145,11 @@ public class PotentialContextElement {
         pta.getNakedReachableMethods().stream().filter(m -> !m.isStatic()).forEach(instMtd -> {
             MethodNodeFactory mthdNF = pta.getPag().getMethodPAG(instMtd).nodeFactory();
             VarNode thisVar = mthdNF.caseThis();
-            ToolUtil.pointsToSetOf(pta, thisVar).forEach(obj -> {
+            PointsToSet pts = pta.reachingObjects(thisVar).toCIPointsToSet();
+            for (Iterator<AllocNode> it = pts.iterator(); it.hasNext(); ) {
+                AllocNode obj = it.next();
                 obj2invokedMethods.computeIfAbsent(obj, k -> new HashSet<>()).add(instMtd);
-            });
+            }
         });
     }
 

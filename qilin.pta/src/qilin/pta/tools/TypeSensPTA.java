@@ -43,7 +43,7 @@ public class TypeSensPTA extends BasePTA {
         if (PTAConfig.v().getPtaConfig().mergeHeap) {
             this.heapAbst = new HeuristicAbstractor(pag);
         } else {
-            this.heapAbst = new AllocSiteAbstractor(pag);
+            this.heapAbst = new AllocSiteAbstractor();
         }
         System.out.println("k-type ...");
     }

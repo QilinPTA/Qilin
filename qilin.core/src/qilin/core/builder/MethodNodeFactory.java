@@ -31,8 +31,7 @@ import soot.jimple.internal.JNewArrayExpr;
 /**
  * @author Ondrej Lhotak
  */
-public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
-
+public class MethodNodeFactory {
     protected PAG pag;
     protected MethodPAG mpag;
     protected SootMethod method;
@@ -44,8 +43,37 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
     }
 
     public Node getNode(Value v) {
-        v.apply(this);
-        return getNode();
+        if (v instanceof Local l) {
+            return caseLocal(l);
+        } else if (v instanceof CastExpr castExpr) {
+            return caseCastExpr(castExpr);
+        } else if (v instanceof NewExpr ne) {
+            return caseNewExpr(ne);
+        } else if (v instanceof StaticFieldRef sfr) {
+            return caseStaticFieldRef(sfr);
+        } else if (v instanceof NewArrayExpr nae) {
+            return caseNewArrayExpr(nae);
+        } else if (v instanceof ArrayRef ar) {
+            return caseArrayRef(ar);
+        } else if (v instanceof ClassConstant cc) {
+            return caseClassConstant(cc);
+        } else if (v instanceof StringConstant sc) {
+            return caseStringConstant(sc);
+        } else if (v instanceof CaughtExceptionRef cef) {
+            return caseCaughtExceptionRef(cef);
+        } else if (v instanceof ParameterRef pr) {
+            return caseParameterRef(pr);
+        } else if (v instanceof NullConstant nc) {
+            return caseNullConstant(nc);
+        } else if (v instanceof InstanceFieldRef ifr) {
+            return caseInstanceFieldRef(ifr);
+        } else if (v instanceof ThisRef) {
+            return caseThis();
+        } else if (v instanceof NewMultiArrayExpr nmae) {
+            return caseNewMultiArrayExpr(nmae);
+        }
+        System.out.println(v + ";;" + v.getClass());
+        return null;
     }
 
     /**
@@ -72,16 +100,16 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
             if (!(arg.getType() instanceof RefLikeType) || arg instanceof NullConstant) {
                 continue;
             }
-            arg.apply(this);
+            getNode(arg);
         }
         if (s instanceof AssignStmt) {
             Value l = ((AssignStmt) s).getLeftOp();
             if ((l.getType() instanceof RefLikeType)) {
-                l.apply(this);
+                getNode(l);
             }
         }
         if (ie instanceof InstanceInvokeExpr) {
-            ((InstanceInvokeExpr) ie).getBase().apply(this);
+            getNode(((InstanceInvokeExpr) ie).getBase());
         }
     }
 
@@ -143,69 +171,21 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
         });
     }
 
-    final public Node getNode() {
-        return getResult();
+    private VarNode caseLocal(Local l) {
+        return pag.makeLocalVarNode(l, l.getType(), method);
     }
 
-    final public VarNode caseThis() {
-        Type type = method.isStatic() ? RefType.v("java.lang.Object") : method.getDeclaringClass().getType();
-        VarNode ret = pag.makeLocalVarNode(new Parm(method, PointsToAnalysis.THIS_NODE), type, method);
-        ret.setInterProcTarget();
-        return ret;
+    private AllocNode caseNewArrayExpr(NewArrayExpr nae) {
+        return pag.makeAllocNode(nae, nae.getType(), method);
     }
 
-    public VarNode caseParm(int index) {
-        VarNode ret = pag.makeLocalVarNode(new Parm(method, index), method.getParameterType(index), method);
-        ret.setInterProcTarget();
-        return ret;
+    private AllocNode caseNewExpr(NewExpr ne) {
+        SootClass cl = PTAScene.v().loadClassAndSupport(ne.getType().toString());
+        PTAUtils.clinitsOf(cl).forEach(mpag::addTriggeredClinit);
+        return pag.makeAllocNode(ne, ne.getType(), method);
     }
 
-    public VarNode caseRet() {
-        VarNode ret = pag.makeLocalVarNode(new Parm(method, PointsToAnalysis.RETURN_NODE), method.getReturnType(),
-                method);
-        ret.setInterProcSource();
-        return ret;
-    }
-
-    public VarNode caseMethodThrow() {
-        VarNode ret = pag.makeLocalVarNode(new Parm(method, PointsToAnalysis.THROW_NODE), RefType.v("java.lang.Throwable"),
-                method);
-        ret.setInterProcSource();
-        return ret;
-    }
-
-    final public FieldRefNode caseArray(VarNode base) {
-        return pag.makeFieldRefNode(base, ArrayElement.v());
-    }
-
-    // OK, these ones are public, but they really shouldn't be; it's just
-    // that Java requires them to be, because they override those other
-    // public methods.
-    @Override
-    final public void caseArrayRef(ArrayRef ar) {
-        caseLocal((Local) ar.getBase());
-        setResult(caseArray((VarNode) getNode()));
-    }
-
-    final public void caseCastExpr(CastExpr ce) {
-        Node opNode = getNode(ce.getOp());
-        Node castNode = pag.makeLocalVarNode(ce, ce.getCastType(), method);
-        mpag.addInternalEdge(opNode, castNode);
-        setResult(castNode);
-    }
-
-    @Override
-    final public void caseCaughtExceptionRef(CaughtExceptionRef cer) {
-        if (CoreConfig.v().getPtaConfig().preciseExceptions) {
-            // we model caughtException expression as an local assignment.
-            setResult(pag.makeLocalVarNode(cer, cer.getType(), method));
-        } else {
-            setResult(getNode(PTAScene.v().getFieldGlobalThrow()));
-        }
-    }
-
-    @Override
-    final public void caseInstanceFieldRef(InstanceFieldRef ifr) {
+    private FieldRefNode caseInstanceFieldRef(InstanceFieldRef ifr) {
         SootField sf = ifr.getField();
         if (sf == null) {
             sf = new SootField(ifr.getFieldRef().name(), ifr.getType(), Modifier.PUBLIC);
@@ -213,34 +193,16 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
             Scene.v().getFieldNumberer().add(sf);
             System.out.println("Warnning:" + ifr + " is resolved to be a null field in Scene.");
         }
-        setResult(pag.makeFieldRefNode(pag.makeLocalVarNode(ifr.getBase(), ifr.getBase().getType(), method), new Field(sf)));
+        return pag.makeFieldRefNode(pag.makeLocalVarNode(ifr.getBase(), ifr.getBase().getType(), method), new Field(sf));
     }
 
-    @Override
-    final public void caseLocal(Local l) {
-        setResult(pag.makeLocalVarNode(l, l.getType(), method));
-    }
-
-    @Override
-    final public void caseNewArrayExpr(NewArrayExpr nae) {
-        setResult(pag.makeAllocNode(nae, nae.getType(), method));
-    }
-
-    @Override
-    final public void caseNewExpr(NewExpr ne) {
-        SootClass cl = PTAScene.v().loadClassAndSupport(ne.getType().toString());
-        PTAUtils.clinitsOf(cl).forEach(mpag::addTriggeredClinit);
-        setResult(pag.heapAbstractor().abstractHeap(ne, ne.getType(), method));
-    }
-
-    @Override
-    final public void caseNewMultiArrayExpr(NewMultiArrayExpr nmae) {
+    private VarNode caseNewMultiArrayExpr(NewMultiArrayExpr nmae) {
         ArrayType type = (ArrayType) nmae.getType();
         int pos = 0;
-        AllocNode prevAn = pag.heapAbstractor().abstractHeap(new JNewArrayExpr(type, nmae.getSize(pos)), type, method);
+        AllocNode prevAn = pag.makeAllocNode(new JNewArrayExpr(type, nmae.getSize(pos)), type, method);
         VarNode prevVn = pag.makeLocalVarNode(prevAn.getNewExpr(), prevAn.getType(), method);
         mpag.addInternalEdge(prevAn, prevVn); // new
-        setResult(prevAn);
+        VarNode ret = prevVn;
         while (true) {
             Type t = type.getElementType();
             if (!(t instanceof ArrayType)) {
@@ -254,56 +216,97 @@ public class MethodNodeFactory extends AbstractJimpleValueSwitch<Node> {
             } else {
                 sizeVal = IntConstant.v(1);
             }
-            AllocNode an = pag.heapAbstractor().abstractHeap(new JNewArrayExpr(type, sizeVal), type, method);
+            AllocNode an = pag.makeAllocNode(new JNewArrayExpr(type, sizeVal), type, method);
             VarNode vn = pag.makeLocalVarNode(an.getNewExpr(), an.getType(), method);
             mpag.addInternalEdge(an, vn); // new
             mpag.addInternalEdge(vn, pag.makeFieldRefNode(prevVn, ArrayElement.v())); // store
             prevVn = vn;
         }
+        return ret;
     }
 
-    @Override
-    final public void caseParameterRef(ParameterRef pr) {
-        setResult(caseParm(pr.getIndex()));
+    private VarNode caseCastExpr(CastExpr ce) {
+        Node opNode = getNode(ce.getOp());
+        VarNode castNode = pag.makeLocalVarNode(ce, ce.getCastType(), method);
+        mpag.addInternalEdge(opNode, castNode);
+        return castNode;
     }
 
-    @Override
-    final public void caseStaticFieldRef(StaticFieldRef sfr) {
-        setResult(pag.makeGlobalVarNode(sfr.getField(), sfr.getField().getType()));
+    public VarNode caseThis() {
+        Type type = method.isStatic() ? RefType.v("java.lang.Object") : method.getDeclaringClass().getType();
+        VarNode ret = pag.makeLocalVarNode(new Parm(method, PointsToAnalysis.THIS_NODE), type, method);
+        ret.setInterProcTarget();
+        return ret;
     }
 
-    @Override
-    final public void caseThisRef(ThisRef tr) {
-        setResult(caseThis());
+    public VarNode caseParm(int index) {
+        VarNode ret = pag.makeLocalVarNode(new Parm(method, index), method.getParameterType(index), method);
+        ret.setInterProcTarget();
+        return ret;
     }
 
-    @Override
-    final public void caseNullConstant(NullConstant nr) {
-        setResult(null);
+    public VarNode caseRet() {
+        VarNode ret = pag.makeLocalVarNode(new Parm(method, PointsToAnalysis.RETURN_NODE), method.getReturnType(), method);
+        ret.setInterProcSource();
+        return ret;
     }
 
-    @Override
-    final public void caseStringConstant(StringConstant sc) {
+    public VarNode caseMethodThrow() {
+        VarNode ret = pag.makeLocalVarNode(new Parm(method, PointsToAnalysis.THROW_NODE), RefType.v("java.lang.Throwable"), method);
+        ret.setInterProcSource();
+        return ret;
+    }
+
+    final public FieldRefNode caseArray(VarNode base) {
+        return pag.makeFieldRefNode(base, ArrayElement.v());
+    }
+
+    private Node caseCaughtExceptionRef(CaughtExceptionRef cer) {
+        if (CoreConfig.v().getPtaConfig().preciseExceptions) {
+            // we model caughtException expression as an local assignment.
+            return pag.makeLocalVarNode(cer, cer.getType(), method);
+        } else {
+            return getNode(PTAScene.v().getFieldGlobalThrow());
+        }
+    }
+
+    private FieldRefNode caseArrayRef(ArrayRef ar) {
+        return caseArray(caseLocal((Local) ar.getBase()));
+    }
+
+    private VarNode caseParameterRef(ParameterRef pr) {
+        return caseParm(pr.getIndex());
+    }
+
+    private VarNode caseStaticFieldRef(StaticFieldRef sfr) {
+        return pag.makeGlobalVarNode(sfr.getField(), sfr.getField().getType());
+    }
+
+    private Node caseNullConstant(NullConstant nr) {
+        return null;
+    }
+
+    private VarNode caseStringConstant(StringConstant sc) {
         AllocNode stringConstantNode = pag.makeStringConstantNode(sc);
         VarNode stringConstantVar = pag.makeGlobalVarNode(sc, RefType.v("java.lang.String"));
         mpag.addInternalEdge(stringConstantNode, stringConstantVar);
         VarNode vn = pag.makeLocalVarNode(new Pair<>(method, sc), RefType.v("java.lang.String"), method);
         mpag.addInternalEdge(stringConstantVar, vn);
-        setResult(vn);
+        return vn;
     }
 
-    @Override
-    final public void caseClassConstant(ClassConstant cc) {
+    public LocalVarNode makeInvokeStmtThrowVarNode(Stmt invoke, SootMethod method) {
+        return pag.makeLocalVarNode(invoke, RefType.v("java.lang.Throwable"), method);
+    }
+
+    final public VarNode caseClassConstant(ClassConstant cc) {
         AllocNode classConstant = pag.makeClassConstantNode(cc);
         VarNode classConstantVar = pag.makeGlobalVarNode(cc, RefType.v("java.lang.Class"));
         mpag.addInternalEdge(classConstant, classConstantVar);
         VarNode vn = pag.makeLocalVarNode(new Pair<>(method, cc), RefType.v("java.lang.Class"), method);
         mpag.addInternalEdge(classConstantVar, vn);
-        setResult(vn);
+        return vn;
     }
 
-    @Override
-    final public void defaultCase(Object v) {
-        throw new RuntimeException("failed to handle " + v);
-    }
+
 }

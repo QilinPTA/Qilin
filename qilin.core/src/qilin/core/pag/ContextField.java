@@ -25,6 +25,7 @@ import soot.ArrayType;
 import soot.Context;
 import soot.RefType;
 import soot.Type;
+import soot.jimple.spark.pag.SparkField;
 
 public class ContextField extends ValNode {
     protected Context context;

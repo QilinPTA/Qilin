@@ -18,15 +18,11 @@
 
 package qilin.core.sets;
 
-import qilin.core.pag.AllocNode;
-import qilin.core.pag.Node;
-import qilin.core.pag.PAG;
-import qilin.util.PTAUtils;
-import soot.Type;
 import soot.util.BitSetIterator;
 import soot.util.BitVector;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
 /**
  * Hybrid implementation of points-to set, which uses an explicit array for small sets, and a bit vector for large sets.
@@ -34,156 +30,169 @@ import java.util.Arrays;
  * @author Ondrej Lhotak
  */
 public final class HybridPointsToSet extends PointsToSetInternal {
-    private final Node[] nodes = new Node[16];
+    private static HybridPointsToSet emptySet = null;
+
+    public static HybridPointsToSet getEmptySet() {
+        if (emptySet == null) {
+            emptySet = new HybridPointsToSet();
+        }
+        return emptySet;
+    }
+
+    private final int[] nodeIdxs = new int[16];
     private BitVector bits = null;
+    private int size = 0;
 
     private boolean empty = true;
-
-    public HybridPointsToSet(Type type) {
-        super(type);
-    }
 
     /**
      * Returns true if this set contains no run-time objects.
      */
+    @Override
     public boolean isEmpty() {
         return empty;
     }
 
     @Override
     public void clear() {
-        Arrays.fill(nodes, null);
+        Arrays.fill(nodeIdxs, 0);
         bits = null;
         empty = true;
+        size = 0;
     }
 
-    private boolean superAddAll(PointsToSetInternal other, PointsToSetInternal exclude) {
-        boolean ret = super.addAll(other, exclude);
-        if (ret) {
-            empty = false;
+    private boolean nativeAddAll(HybridPointsToSet other, PointsToSetInternal exclude) {
+        boolean ret = false;
+        for (Iterator<Integer> it = other.iterator(); it.hasNext(); ) {
+            int idx = it.next();
+            if (exclude == null || !exclude.contains(idx)) {
+                ret |= add(idx);
+            }
         }
         return ret;
-    }
-
-    private boolean nativeAddAll(HybridPointsToSet other, HybridPointsToSet exclude) {
-        return other.forall(new P2SetVisitor() {
-            @Override
-            public void visit(Node n) {
-                if (exclude == null || !exclude.contains(n)) {
-                    this.returnValue |= add(n);
-                }
-            }
-        });
     }
 
     /**
      * Adds contents of other into this set, returns true if this set changed.
      */
     public boolean addAll(final PointsToSetInternal other, final PointsToSetInternal exclude) {
-        if (other != null && !(other instanceof HybridPointsToSet)) {
-            return superAddAll(other, exclude);
+        if (other == null) {
+            return false;
         }
-        if (exclude != null && !(exclude instanceof HybridPointsToSet)) {
-            return superAddAll(other, exclude);
+        if (other instanceof DoublePointsToSet dpts) {
+            return nativeAddAll(dpts.getNewSet(), exclude) | nativeAddAll(dpts.getOldSet(), exclude);
         }
-        assert other != null;
-        return nativeAddAll((HybridPointsToSet) other, (HybridPointsToSet) exclude);
+        return nativeAddAll((HybridPointsToSet) other, exclude);
+    }
+
+    private class HybridPTSIterator implements Iterator<Integer> {
+        private BitSetIterator it;
+        private int idx;
+
+        public HybridPTSIterator() {
+            if (bits == null) {
+                idx = 0;
+            } else {
+                it = bits.iterator();
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (bits == null) {
+                return idx < nodeIdxs.length && nodeIdxs[idx] != 0;
+            } else {
+                return it.hasNext();
+            }
+        }
+
+        @Override
+        public Integer next() {
+            if (bits == null) {
+                return nodeIdxs[idx++];
+            } else {
+                return it.next();
+            }
+        }
+    }
+
+    @Override
+    public Iterator<Integer> iterator() {
+        return new HybridPTSIterator();
+    }
+
+    @Override
+    public int size() {
+        return size;
     }
 
     /**
      * Calls v's visit method on all nodes in this set.
      */
-    @Override
     public boolean forall(P2SetVisitor v) {
         if (bits == null) {
-            for (Node node : nodes) {
-                if (node == null) {
+            for (int nodeIdx : nodeIdxs) {
+                if (nodeIdx == 0) {
                     return v.getReturnValue();
                 }
-                v.visit(node);
+                v.visit(nodeIdx);
             }
         } else {
             for (BitSetIterator it = bits.iterator(); it.hasNext(); ) {
-                v.visit(PAG.getAllocNodeNumberer().get(it.next()));
+                v.visit(it.next());
             }
         }
         return v.getReturnValue();
     }
 
     /**
-     * Adds n to this set, returns true if n was not already in this set.
+     * Returns true iff the set contains node idx.
      */
-    public boolean add(Node n) {
-        if (PTAUtils.castNeverFails(n.getType(), type)) {
-            return fastAdd(n);
-        }
-        return false;
-    }
-
-    /**
-     * Returns true iff the set contains n.
-     */
-    public boolean contains(Node n) {
+    public boolean contains(int idx) {
         if (bits == null) {
-            for (Node node : nodes) {
-                if (node == n) {
+            for (int nodeIdx : nodeIdxs) {
+                if (idx == nodeIdx) {
                     return true;
                 }
-                if (node == null) {
+                if (nodeIdx == 0) {
                     break;
                 }
             }
             return false;
         } else {
-            return bits.get(n.getNumber());
+            return bits.get(idx);
         }
     }
 
-    private boolean fastAdd(Node n) {
+    /**
+     * Adds idx to this set, returns true if idx was not already in this set.
+     */
+    public boolean add(int idx) {
         if (bits == null) {
-            for (int i = 0; i < nodes.length; i++) {
-                if (nodes[i] == null) {
+            for (int i = 0; i < nodeIdxs.length; i++) {
+                if (nodeIdxs[i] == 0) {
                     empty = false;
-                    nodes[i] = n;
+                    nodeIdxs[i] = idx;
+                    ++size;
                     return true;
-                } else if (nodes[i] == n) {
+                } else if (nodeIdxs[i] == idx) {
                     return false;
                 }
             }
-            convertToBits();
+            // convert to Bits
+            bits = new BitVector();
+            for (int nodeIdx : nodeIdxs) {
+                if (nodeIdx != 0) {
+                    bits.set(nodeIdx);
+                }
+            }
         }
-        boolean ret = bits.set(n.getNumber());
+        boolean ret = bits.set(idx);
         if (ret) {
+            ++size;
             empty = false;
         }
         return ret;
     }
 
-    private void convertToBits() {
-        if (bits != null) {
-            return;
-        }
-        bits = new BitVector(PAG.getAllocNodeNumberer().size());
-        for (Node node : nodes) {
-            if (node != null) {
-                fastAdd(node);
-            }
-        }
-    }
-
-    @Override
-    public PointsToSetInternal mapToCIPointsToSet() {
-        if (ciPointsToSet == null) {
-            PointsToSetInternal ret = new HybridPointsToSet(type);
-            this.forall(new P2SetVisitor() {
-                @Override
-                public void visit(Node n) {
-                    AllocNode heap = (AllocNode) n;
-                    ret.add(heap.base());
-                }
-            });
-            ciPointsToSet = ret;
-        }
-        return ciPointsToSet;
-    }
 }

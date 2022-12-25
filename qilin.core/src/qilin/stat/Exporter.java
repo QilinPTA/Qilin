@@ -22,10 +22,8 @@ import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.pag.AllocNode;
 import qilin.core.pag.LocalVarNode;
-import qilin.core.pag.Node;
 import qilin.core.pag.Parm;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.util.Util;
 import soot.SootClass;
 import soot.SootMethod;
@@ -41,10 +39,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Exporter {
     private final String metrics = "Metrics.csv";
@@ -165,7 +160,7 @@ public class Exporter {
         Util.writeToFile(finalPath, builder.toString());
     }
 
-    public void dumpMethodThrowPointsto(Map<SootMethod, PointsToSetInternal> m2pts) {
+    public void dumpMethodThrowPointsto(Map<SootMethod, PointsToSet> m2pts) {
         String methodThrowPts = "MethodThrowPointsTo.csv";
         String finalPath = getFilePath(methodThrowPts);
         try {
@@ -174,23 +169,21 @@ public class Exporter {
             mfile.createNewFile();
             BufferedWriter writer = new BufferedWriter(new FileWriter(mfile, true));
             for (SootMethod sm : m2pts.keySet()) {
-                PointsToSetInternal pts = m2pts.get(sm).mapToCIPointsToSet();
-                pts.forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        StringBuilder builder = new StringBuilder();
-                        builder.append(n.toString());
-                        builder.append("\t");
-                        String sig = Util.stripQuotes(sm.getSignature());
-                        builder.append(sig);
-                        builder.append("\n");
-                        try {
-                            writer.write(builder.toString());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                PointsToSet pts = m2pts.get(sm).toCIPointsToSet();
+                for (Iterator<AllocNode> it = pts.iterator(); it.hasNext(); ) {
+                    AllocNode n = it.next();
+                    StringBuilder builder = new StringBuilder();
+                    builder.append(n.toString());
+                    builder.append("\t");
+                    String sig = Util.stripQuotes(sm.getSignature());
+                    builder.append(sig);
+                    builder.append("\n");
+                    try {
+                        writer.write(builder.toString());
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
             }
             writer.flush();
             writer.close();
@@ -271,14 +264,11 @@ public class Exporter {
             for (LocalVarNode lvn : lvns) {
                 String varName = getDoopVarName(lvn);
                 final Set<AllocNode> callocSites = new HashSet<>();
-                PointsToSetInternal cpts = (PointsToSetInternal) pta.reachingObjects(lvn);
-                cpts.mapToCIPointsToSet().forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        AllocNode heap = (AllocNode) n;
-                        callocSites.add(heap);
-                    }
-                });
+                PointsToSet cpts = pta.reachingObjects(lvn).toCIPointsToSet();
+                for (Iterator<AllocNode> it = cpts.iterator(); it.hasNext(); ) {
+                    AllocNode heap = it.next();
+                    callocSites.add(heap);
+                }
                 for (AllocNode heap : callocSites) {
                     String str = heap.getNewExpr() + "\t" + varName + "\n";
                     if (heap.getMethod() != null) {

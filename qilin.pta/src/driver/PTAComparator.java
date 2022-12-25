@@ -20,11 +20,9 @@ package driver;
 
 import qilin.core.PTA;
 import qilin.core.pag.AllocNode;
-import qilin.core.pag.Node;
 import qilin.core.pag.PAG;
 import qilin.core.pag.VarNode;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.pta.PTAConfig;
 import qilin.util.Util;
 import soot.Local;
@@ -86,16 +84,14 @@ public class PTAComparator {
 
         @Override
         void record(PTA pta) {
-            pta.getPag().getValNodeNumberer().forEach(valNode -> {
+            pta.getPag().getValNodes().forEach(valNode -> {
                 if (valNode instanceof VarNode varNode) {
                     final Set<Object> allocSites = getOldAllocs(varNode.getVariable());
-                    PointsToSetInternal pts = ((PointsToSetInternal) pta.reachingObjects(varNode)).mapToCIPointsToSet();
-                    pts.forall(new P2SetVisitor() {
-                        @Override
-                        public void visit(Node n) {
-                            allocSites.add(((AllocNode) n).getNewExpr());
-                        }
-                    });
+                    PointsToSet pts = pta.reachingObjects(varNode).toCIPointsToSet();
+                    for (Iterator<AllocNode> it = pts.iterator(); it.hasNext(); ) {
+                        AllocNode n = it.next();
+                        allocSites.add(n.getNewExpr());
+                    }
                 }
             });
         }
@@ -104,16 +100,15 @@ public class PTAComparator {
         void compare(PTA pta) {
             count = 0;
             PAG pag = pta.getPag();
-            pag.getValNodeNumberer().forEach(valNode -> {
+            pag.getValNodes().forEach(valNode -> {
                 if (valNode instanceof VarNode varNode) {
                     final Set<Object> allocSites = getNewAllocs(varNode.getVariable());
-                    PointsToSetInternal pts1 = ((PointsToSetInternal) pta.reachingObjects(varNode)).mapToCIPointsToSet();
-                    pts1.forall(new P2SetVisitor() {
-                        @Override
-                        public void visit(Node n) {
-                            allocSites.add(((AllocNode) n).getNewExpr());
-                        }
-                    });
+
+                    PointsToSet pts1 = pta.reachingObjects(varNode).toCIPointsToSet();
+                    for (Iterator<AllocNode> it = pts1.iterator(); it.hasNext(); ) {
+                        AllocNode n = it.next();
+                        allocSites.add(n.getNewExpr());
+                    }
                 }
             });
             valToNewAllocs.forEach((val, allocSites) -> {
@@ -157,7 +152,5 @@ public class PTAComparator {
             out.println("\nTotal pts over:" + count);
             out.println("\nTotal pts lose:" + count2);
         }
-
     }
-
 }

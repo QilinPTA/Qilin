@@ -39,7 +39,10 @@ public class MahjongAbstractor implements HeapAbstractor {
     }
 
     @Override
-    public AllocNode abstractHeap(Object newExpr, Type type, SootMethod m) {
+    public AllocNode abstractHeap(AllocNode heap) {
+        Object newExpr = heap.getNewExpr();
+        Type type = heap.getType();
+        SootMethod m = heap.getMethod();
         Object mergedIr = this.heapModelMap.get(newExpr);
         if (this.mergedHeap.contains(mergedIr)) {
             return pag.makeAllocNode(mergedIr, type, null);

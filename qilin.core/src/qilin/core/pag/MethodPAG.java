@@ -50,7 +50,6 @@ public class MethodPAG {
      */
     private final Map<Node, Set<Node>> exceptionEdges = DataFactory.createMap();
     protected MethodNodeFactory nodeFactory;
-    protected PAG pag;
     SootMethod method;
     /*
      * List[i-1] is wrappered in List[i].
@@ -62,7 +61,6 @@ public class MethodPAG {
     public final Map<Node, Map<Stmt, List<Trap>>> node2wrapperedTraps = DataFactory.createMap();
 
     public MethodPAG(PAG pag, SootMethod m, Body body) {
-        this.pag = pag;
         this.method = m;
         this.nodeFactory = new MethodNodeFactory(pag, this);
         this.body = body;
@@ -129,7 +127,7 @@ public class MethodPAG {
                 Node src = null;
                 if (stmt.containsInvokeExpr()) {
                     // note, method.getExceptions() does not return implicit exceptions.
-                    src = pag.makeInvokeStmtThrowVarNode(stmt, method);
+                    src = nodeFactory.makeInvokeStmtThrowVarNode(stmt, method);
                 } else if (stmt instanceof ThrowStmt ts) {
                     src = nodeFactory.getNode(ts.getOp());
                 }
@@ -146,7 +144,7 @@ public class MethodPAG {
             Stmt stmt = (Stmt) unit;
             Node src = null;
             if (stmt.containsInvokeExpr()) {
-                src = pag.makeInvokeStmtThrowVarNode(stmt, method);
+                src = nodeFactory.makeInvokeStmtThrowVarNode(stmt, method);
             } else if (stmt instanceof ThrowStmt ts) {
                 src = nodeFactory.getNode(ts.getOp());
             }

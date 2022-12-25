@@ -21,17 +21,15 @@ package qilin.parm.heapabst;
 import qilin.core.pag.AllocNode;
 import qilin.core.pag.MergedNewExpr;
 import qilin.core.pag.PAG;
+import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
-import soot.RefType;
-import soot.SootMethod;
-import soot.Type;
+import soot.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class HeuristicAbstractor implements HeapAbstractor {
     private final PAG pag;
-    private final Set<Type> mergedTypes = new HashSet<>();
+    private final Set<Type> mergedTypes = DataFactory.createSet();
 
     public HeuristicAbstractor(PAG pag) {
         this.pag = pag;
@@ -40,11 +38,13 @@ public class HeuristicAbstractor implements HeapAbstractor {
     }
 
     @Override
-    public AllocNode abstractHeap(Object newExpr, Type type, SootMethod m) {
+    public AllocNode abstractHeap(AllocNode heap) {
+        Type type = heap.getType();
+        SootMethod m = heap.getMethod();
         if (mergedTypes.contains(type) || (PTAUtils.isThrowable(type) && mergedTypes.add(type))) {
-            return pag.makeAllocNode(MergedNewExpr.v((RefType) type), type, null);
+            return pag.makeAllocNode(MergedNewExpr.v((RefLikeType) type), type, null);
         } else {
-            return pag.makeAllocNode(newExpr, type, m);
+            return heap;
         }
     }
 }

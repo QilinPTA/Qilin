@@ -46,11 +46,11 @@ public class Zipper {
         System.out.println("#OAG:" + oag.allNodes().size());
         this.pce = new PotentialContextElement(pta, oag);
         this.ofg = buildObjectFlowGraph();
-        this.methodPts = getMethodPointsToSize(pta);
+        this.methodPts = getMethodPointsToSize();
     }
 
-    public static void outputNumberOfClasses(PAG pag) {
-        int nrClasses = (int) pag.getAllocNodes().stream()
+    public static void outputNumberOfClasses(PTA pta) {
+        int nrClasses = (int) pta.getPag().getAllocNodes().stream()
                 .map(AllocNode::getType)
                 .distinct()
                 .count();
@@ -163,12 +163,14 @@ public class Zipper {
                 .map(pce::methodsInvokedOn)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
-
+        if (type.toString().equals("java.util.HashMap")) {
+            System.out.println("ssssss");
+        }
         // Obtain IN methods
         Set<SootMethod> inms = ms.stream()
                 .filter(m -> !m.isPrivate())
                 .filter(m -> ToolUtil.getParameters(pta.getPag(), m).stream()
-                        .anyMatch(p -> !ToolUtil.pointsToSetOf(pta, p).isEmpty()))
+                        .anyMatch(p -> !pta.reachingObjects(p).toCIPointsToSet().isEmpty()))
                 .collect(Collectors.toSet());
 
         // Obtain OUT methods
@@ -176,7 +178,7 @@ public class Zipper {
         ms.stream()
                 .filter(m -> !m.isPrivate())
                 .filter(m -> ToolUtil.getRetVars(pta.getPag(), m).stream()
-                        .anyMatch(r -> !ToolUtil.pointsToSetOf(pta, r).isEmpty()))
+                        .anyMatch(r -> !pta.reachingObjects(r).toCIPointsToSet().isEmpty()))
                 .forEach(outms::add);
 
         // OUT methods of inner classes and special access$ methods
@@ -251,10 +253,10 @@ public class Zipper {
     private int computePCMThreshold() {
         // Use points-to size of whole program as denominator
         int totalPTSSize = 0;
-        for (ValNode var : pta.getPag().getValNodeNumberer()) {
+        for (ValNode var : pta.getPag().getValNodes()) {
             if (var instanceof VarNode varNode) {
-                Collection<AllocNode> pts = ToolUtil.pointsToSetOf(pta, varNode);
-                totalPTSSize += pts.size();
+//                Collection<AllocNode> pts = ToolUtil.pointsToSetOf(pta, varNode);
+                totalPTSSize += pta.reachingObjects(varNode).toCIPointsToSet().size();
             }
         }
         return (int) (Global.getExpressThreshold() * totalPTSSize);
@@ -284,14 +286,14 @@ public class Zipper {
         pcmMap.clear();
     }
 
-    private Map<SootMethod, Integer> getMethodPointsToSize(PTA prePTA) {
+    private Map<SootMethod, Integer> getMethodPointsToSize() {
         Map<SootMethod, Integer> results = new HashMap<>();
-        for (ValNode valnode : prePTA.getPag().getValNodeNumberer()) {
+        for (ValNode valnode : pta.getPag().getValNodes()) {
             if (!(valnode instanceof LocalVarNode lvn)) {
                 continue;
             }
             SootMethod inMethod = lvn.getMethod();
-            int ptSize = ToolUtil.pointsToSetSizeOf(prePTA, lvn);
+            int ptSize = ToolUtil.pointsToSetSizeOf(pta, lvn);
             if (results.containsKey(inMethod)) {
                 int oldValue = results.get(inMethod);
                 results.replace(inMethod, oldValue, oldValue + ptSize);

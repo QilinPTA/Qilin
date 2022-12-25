@@ -46,7 +46,6 @@ public class AllocNode extends Node implements ContextElement, Numberable {
             }
         }
         this.newExpr = newExpr;
-        PAG.getAllocNodeNumberer().add(this);
     }
 
     /**

@@ -21,11 +21,11 @@ package qilin.core.builder;
 import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
-import qilin.core.VirtualCalls;
 import qilin.core.pag.*;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.util.DataFactory;
+import qilin.util.PTAUtils;
 import soot.*;
 import soot.jimple.*;
 import soot.jimple.internal.JInvokeStmt;
@@ -38,8 +38,6 @@ import soot.util.queue.QueueReader;
 import java.util.*;
 
 public class CallGraphBuilder {
-    protected final RefType clRunnable = RefType.v("java.lang.Runnable");
-
     protected final Map<VarNode, Collection<VirtualCallSite>> receiverToSites;
     protected final Map<SootMethod, Map<Object, Stmt>> methodToInvokeStmt;
     protected final Set<MethodOrMethodContext> reachMethods;
@@ -130,29 +128,12 @@ public class CallGraphBuilder {
 
     protected void dispatch(AllocNode receiverNode, VirtualCallSite site) {
         Type type = receiverNode.getType();
-        if (site.kind() == Kind.THREAD && !PTAScene.v().getOrMakeFastHierarchy().canStoreType(type, clRunnable)) {
-            return;
-        }
-        final ChunkedQueue<SootMethod> targetsQueue = new ChunkedQueue<>();
-        final QueueReader<SootMethod> targets = targetsQueue.reader();
-        MethodOrMethodContext container = site.container();
-        if (site.iie() instanceof SpecialInvokeExpr && site.kind() != Kind.THREAD) {
-            SootMethod target = VirtualCalls.v().resolveSpecial((SpecialInvokeExpr) site.iie(), site.subSig(), container.method());
-            // if the call target resides in a phantom class then
-            // "target" will be null, simply do not add the target in that case
-            if (target != null) {
-                targetsQueue.add(target);
-            }
-        } else {
-            Type mType = site.recNode().getType();
-            VirtualCalls.v().resolve(type, mType, site.subSig(), container.method(), targetsQueue);
-        }
+        final QueueReader<SootMethod> targets = PTAUtils.dispatch(type, site);
         while (targets.hasNext()) {
             SootMethod target = targets.next();
             if (site.iie() instanceof SpecialInvokeExpr) {
                 Type calleeDeclType = target.getDeclaringClass().getType();
-                Type receiverType = receiverNode.getType();
-                if (!Scene.v().getFastHierarchy().canStoreType(receiverType, calleeDeclType)) {
+                if (!Scene.v().getFastHierarchy().canStoreType(type, calleeDeclType)) {
                     continue;
                 }
             }
@@ -201,7 +182,7 @@ public class CallGraphBuilder {
     }
 
     public void virtualCallDispatch(PointsToSetInternal p2set, VirtualCallSite site) {
-        p2set.forall(new P2SetVisitor() {
+        p2set.forall(new P2SetVisitor(pta) {
             public void visit(Node n) {
                 dispatch((AllocNode) n, site);
             }
@@ -265,7 +246,8 @@ public class CallGraphBuilder {
              * a_throw = x.foo(); here, a_throw is a variable to receive exception values thrown by foo();
              * */
             throwNode = pta.parameterize(throwNode, tgtContext);
-            Node dst = pag.makeInvokeStmtThrowVarNode(s, srcmpag.getMethod());
+            MethodNodeFactory mnf = srcmpag.nodeFactory();
+            Node dst = mnf.makeInvokeStmtThrowVarNode(s, srcmpag.getMethod());
             dst = pta.parameterize(dst, srcContext);
             pag.addEdge(throwNode, dst);
         }

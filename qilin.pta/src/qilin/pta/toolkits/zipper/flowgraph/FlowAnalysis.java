@@ -8,10 +8,7 @@ import qilin.pta.toolkits.zipper.analysis.PotentialContextElement;
 import qilin.util.ANSIColor;
 import qilin.util.graph.ConcurrentDirectedGraphImpl;
 import qilin.util.graph.Reachability;
-import soot.RefType;
-import soot.SootMethod;
-import soot.Type;
-import soot.Value;
+import soot.*;
 import soot.jimple.AssignStmt;
 import soot.jimple.InstanceInvokeExpr;
 import soot.jimple.InvokeExpr;
@@ -139,6 +136,7 @@ public class FlowAnalysis {
             // add unwrapped flow edges
             if (Global.isEnableUnwrappedFlow()) {
                 if (node instanceof VarNode var) {
+                    Collection<AllocNode> varPts = pta.reachingObjects(var).toCIPointsToSet().toCollection();
                     // Optimization: approximate unwrapped flows to make
                     // Zipper and pointer analysis run faster
                     pta.getCgb().getReceiverToSitesMap()
@@ -151,13 +149,13 @@ public class FlowAnalysis {
                                 }
                                 if (callsiteStmt instanceof AssignStmt assignStmt) {
                                     Value lv = assignStmt.getLeftOp();
-                                    if (!(lv.getType() instanceof RefType)) {
+                                    if (!(lv.getType() instanceof RefLikeType)) {
                                         return;
                                     }
                                     final VarNode to = (VarNode) pta.getPag().findValNode(lv);
                                     if (outNodes.contains(to)) {
                                         for (VarNode inVar : inVars) {
-                                            if (!Collections.disjoint(ToolUtil.pointsToSetOf(pta, inVar), ToolUtil.pointsToSetOf(pta, var))) {
+                                            if (!Collections.disjoint(pta.reachingObjects(inVar).toCIPointsToSet().toCollection(), varPts)) {
                                                 Edge unwrappedEdge = new Edge(Kind.UNWRAPPED_FLOW, node, to);
                                                 addWUEdge(node, unwrappedEdge);
                                                 break;

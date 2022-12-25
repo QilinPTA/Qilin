@@ -37,7 +37,7 @@ public class Main {
         System.out.println(ANSIColor.BOLD + ANSIColor.YELLOW + zipperStr + " starts ..." + ANSIColor.RESET);
         String flows = Global.getFlow() != null ? Global.getFlow() : "Direct+Wrapped+Unwrapped";
         System.out.println("Precision loss patterns: " + ANSIColor.BOLD + ANSIColor.GREEN + flows + ANSIColor.RESET);
-        Zipper.outputNumberOfClasses(pta.getPag());
+        Zipper.outputNumberOfClasses(pta);
         Stopwatch zipperTimer = Stopwatch.newAndStart("Zipper Timer");
         Zipper zipper = new Zipper(pta);
         Set<SootMethod> pcm = zipper.analyze();

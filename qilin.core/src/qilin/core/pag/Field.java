@@ -20,6 +20,7 @@ package qilin.core.pag;
 
 import soot.SootField;
 import soot.Type;
+import soot.jimple.spark.pag.SparkField;
 
 import java.util.Objects;
 

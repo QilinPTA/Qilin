@@ -26,11 +26,13 @@ import qilin.core.builder.ExceptionHandler;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
 import qilin.core.sets.DoublePointsToSet;
+import qilin.core.sets.HybridPointsToSet;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.util.PTAUtils;
 import soot.*;
 import soot.jimple.*;
+import soot.jimple.spark.pag.SparkField;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
 import soot.util.NumberedString;
@@ -161,7 +163,7 @@ public class Solver extends Propagator {
             MethodNodeFactory nodeFactory = mpag.nodeFactory();
             Node src;
             if (stmt.containsInvokeExpr()) {
-                src = pag.makeInvokeStmtThrowVarNode(stmt, sm);
+                src = nodeFactory.makeInvokeStmtThrowVarNode(stmt, sm);
             } else {
                 assert stmt instanceof ThrowStmt;
                 ThrowStmt ts = (ThrowStmt) stmt;
@@ -183,6 +185,9 @@ public class Solver extends Propagator {
         for (QueueReader<Node> reader = mpag.getInternalReader().clone(); reader.hasNext(); ) {
             Node from = reader.next();
             Node to = reader.next();
+            if (from instanceof AllocNode heap) {
+                from = pta.heapAbstractor().abstractHeap(heap);
+            }
             if (from instanceof AllocNode && to instanceof GlobalVarNode) {
                 pag.addGlobalPAGEdge(from, to);
             } else {
@@ -214,34 +219,35 @@ public class Solver extends Propagator {
 
     private void handleStoreAndLoadOnBase(VarNode base) {
         for (final FieldRefNode fr : base.getAllFieldRefs()) {
-            final FieldValNode fvn = pag.makeFieldValNode(fr.getField());
             for (final VarNode v : pag.storeInvLookup(fr)) {
-                handleStoreEdge(base.getP2Set().getNewSet(), fvn, v);
+                handleStoreEdge(base.getP2Set().getNewSet(), fr.getField(), v);
             }
             for (final VarNode to : pag.loadLookup(fr)) {
-                handleLoadEdge(base.getP2Set().getNewSet(), fvn, to);
+                handleLoadEdge(base.getP2Set().getNewSet(), fr.getField(), to);
             }
         }
     }
 
-    private void handleStoreEdge(PointsToSetInternal baseHeaps, FieldValNode fvn, ValNode from) {
-        baseHeaps.forall(new P2SetVisitor() {
+    private void handleStoreEdge(PointsToSetInternal baseHeaps, SparkField field, ValNode from) {
+        baseHeaps.forall(new P2SetVisitor(pta) {
             public void visit(Node n) {
                 if (disallowStoreOrLoadOn((AllocNode) n)) {
                     return;
                 }
+                final FieldValNode fvn = pag.makeFieldValNode(field);
                 final ValNode oDotF = (ValNode) pta.parameterize(fvn, PTAUtils.plusplusOp((AllocNode) n));
                 pag.addEdge(from, oDotF);
             }
         });
     }
 
-    private void handleLoadEdge(PointsToSetInternal baseHeaps, FieldValNode fvn, ValNode to) {
-        baseHeaps.forall(new P2SetVisitor() {
+    private void handleLoadEdge(PointsToSetInternal baseHeaps, SparkField field, ValNode to) {
+        baseHeaps.forall(new P2SetVisitor(pta) {
             public void visit(Node n) {
                 if (disallowStoreOrLoadOn((AllocNode) n)) {
                     return;
                 }
+                final FieldValNode fvn = pag.makeFieldValNode(field);
                 final ValNode oDotF = (ValNode) pta.parameterize(fvn, PTAUtils.plusplusOp((AllocNode) n));
                 pag.addEdge(oDotF, to);
             }
@@ -278,11 +284,9 @@ public class Solver extends Propagator {
                 final ValNode tgtv = (ValNode) addedTgt;
                 propagatePTS(tgtv, srcv.getP2Set().getOldSet());
             } else if (addedSrc instanceof final FieldRefNode srcfrn) { // b = a.f
-                final FieldValNode fvn = pag.makeFieldValNode(srcfrn.getField());
-                handleLoadEdge(srcfrn.getBase().getP2Set().getOldSet(), fvn, (ValNode) addedTgt);
+                handleLoadEdge(srcfrn.getBase().getP2Set().getOldSet(), srcfrn.getField(), (ValNode) addedTgt);
             } else if (addedTgt instanceof final FieldRefNode tgtfrn) { // a.f = b;
-                final FieldValNode fvn = pag.makeFieldValNode(tgtfrn.getField());
-                handleStoreEdge(tgtfrn.getBase().getP2Set().getOldSet(), fvn, (ValNode) addedSrc);
+                handleStoreEdge(tgtfrn.getBase().getP2Set().getOldSet(), tgtfrn.getField(), (ValNode) addedSrc);
             } else if (addedSrc instanceof AllocNode) { // alloc x = new T;
                 propagatePTS((VarNode) addedTgt, (AllocNode) addedSrc);
             }
@@ -290,11 +294,11 @@ public class Solver extends Propagator {
     }
 
     protected void propagatePTS(final ValNode pointer, PointsToSetInternal other) {
-        final PointsToSetInternal addTo = pointer.makeP2Set();
-        P2SetVisitor p2SetVisitor = new P2SetVisitor() {
+        final DoublePointsToSet addTo = pointer.getP2Set();
+        P2SetVisitor p2SetVisitor = new P2SetVisitor(pta) {
             @Override
             public void visit(Node n) {
-                if (addTo.add(n)) {
+                if (PTAUtils.addWithTypeFiltering(addTo, pointer.getType(), n)) {
                     returnValue = true;
                 }
             }
@@ -306,7 +310,7 @@ public class Solver extends Propagator {
     }
 
     protected void propagatePTS(final ValNode pointer, AllocNode heap) {
-        if (pointer.makeP2Set().add(heap)) {
+        if (PTAUtils.addWithTypeFiltering(pointer.getP2Set(), pointer.getType(), heap)) {
             valNodeWorkList.add(pointer);
         }
     }

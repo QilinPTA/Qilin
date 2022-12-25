@@ -19,9 +19,7 @@
 package qilin.parm.heapabst;
 
 import qilin.core.pag.AllocNode;
-import soot.SootMethod;
-import soot.Type;
 
 public interface HeapAbstractor {
-    AllocNode abstractHeap(Object newExpr, Type type, SootMethod m);
+    AllocNode abstractHeap(AllocNode heap);
 }

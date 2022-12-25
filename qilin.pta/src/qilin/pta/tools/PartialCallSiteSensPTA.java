@@ -57,7 +57,7 @@ public abstract class PartialCallSiteSensPTA extends StagedPTA {
         if (PTAConfig.v().getPtaConfig().mergeHeap) {
             this.heapAbst = new HeuristicAbstractor(pag);
         } else {
-            this.heapAbst = new AllocSiteAbstractor(pag);
+            this.heapAbst = new AllocSiteAbstractor();
         }
         this.prePTA = new Spark();
         this.prePAG = prePTA.getPag();

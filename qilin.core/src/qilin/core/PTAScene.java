@@ -19,7 +19,6 @@
 package qilin.core;
 
 import qilin.core.builder.FakeMainFactory;
-import qilin.core.pag.PAG;
 import qilin.util.DataFactory;
 import soot.*;
 import soot.jimple.toolkits.callgraph.CallGraph;
@@ -47,14 +46,12 @@ public class PTAScene {
 
     public static void junitReset() {
         VirtualCalls.reset();
-        PAG.reset();
         instance = null;
     }
 
     public static void reset() {
         G.reset();
         VirtualCalls.reset();
-        PAG.reset();
         instance = null;
     }
 

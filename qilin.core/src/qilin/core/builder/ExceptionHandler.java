@@ -49,7 +49,7 @@ public class ExceptionHandler {
     }
 
     public void exceptionDispatch(PointsToSetInternal p2set, ExceptionThrowSite site) {
-        p2set.forall(new P2SetVisitor() {
+        p2set.forall(new P2SetVisitor(pta) {
             public void visit(Node n) {
                 dispatch((AllocNode) n, site);
             }

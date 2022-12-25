@@ -21,12 +21,9 @@ package qilin.pta.toolkits.common;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.AllocNode;
-import qilin.core.pag.Node;
 import qilin.core.pag.PAG;
 import qilin.core.pag.VarNode;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import soot.RefLikeType;
 import soot.RefType;
 import soot.SootClass;
 import soot.SootMethod;
@@ -45,7 +42,7 @@ public class ToolUtil {
         MethodNodeFactory mthdNF = pag.getMethodPAG(m).nodeFactory();
         Set<qilin.core.pag.VarNode> ret = new HashSet<>();
         for (int i = 0; i < m.getParameterCount(); ++i) {
-            if (m.getParameterType(i) instanceof RefType) {
+            if (m.getParameterType(i) instanceof RefLikeType) {
                 qilin.core.pag.VarNode param = mthdNF.caseParm(i);
                 ret.add(param);
             }
@@ -55,27 +52,15 @@ public class ToolUtil {
 
     public static Set<VarNode> getRetVars(PAG pag, SootMethod m) {
         MethodNodeFactory mthdNF = pag.getMethodPAG(m).nodeFactory();
-        if (m.getReturnType() instanceof RefType) {
+        if (m.getReturnType() instanceof RefLikeType) {
             VarNode ret = mthdNF.caseRet();
             return Collections.singleton(ret);
         }
         return Collections.emptySet();
     }
 
-    public static Set<AllocNode> pointsToSetOf(final PTA pta, final VarNode var) {
-        Set<AllocNode> ret = new HashSet<>();
-        PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjects(var);
-        pts.mapToCIPointsToSet().forall(new P2SetVisitor() {
-            @Override
-            public void visit(Node n) {
-                ret.add((AllocNode) n);
-            }
-        });
-        return ret;
-    }
-
     public static int pointsToSetSizeOf(final PTA pta, VarNode var) {
-        return pointsToSetOf(pta, var).size();
+        return pta.reachingObjects(var).toCIPointsToSet().size();
     }
 
     /**

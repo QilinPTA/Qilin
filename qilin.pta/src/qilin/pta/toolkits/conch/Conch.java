@@ -21,9 +21,7 @@ package qilin.pta.toolkits.conch;
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
-import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Pair;
 import soot.SootMethod;
@@ -33,6 +31,7 @@ import soot.jimple.InvokeExpr;
 import soot.jimple.InvokeStmt;
 import soot.jimple.SpecialInvokeExpr;
 import soot.jimple.Stmt;
+import soot.jimple.spark.pag.SparkField;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +51,14 @@ public class Conch extends AbstractConch {
         return csHeaps.stream().map(AllocNode::getNewExpr).collect(Collectors.toSet());
     }
 
+    public Set<AllocNode> ctxIndenpendentHeaps() {
+        return ciHeaps;
+    }
+
+    public Set<AllocNode> ctxDependentHeaps2() {
+        return csHeaps;
+    }
+
     public Conch(PTA pta) {
         super(pta);
         this.mfg = new LeakAnalysis(pta);
@@ -68,9 +75,9 @@ public class Conch extends AbstractConch {
                 if (expr instanceof SpecialInvokeExpr iie) {
                     Value base = iie.getBase();
                     VarNode baseNode = (VarNode) nodeFactory.getNode(base);
-                    PointsToSetInternal v1pts = (PointsToSetInternal) pta.reachingObjects(baseNode);
+                    PointsToSet v1pts = pta.reachingObjects(baseNode);
                     SootMethod target = iie.getMethod();
-                    if (v1pts.size() == 1 && v1pts.mapToCIPointsToSet().contains(heap) && target.isConstructor()) {
+                    if (v1pts.size() == 1 && v1pts.toCIPointsToSet().contains(heap) && target.isConstructor()) {
                         return target;
                     }
                 }
@@ -342,17 +349,8 @@ public class Conch extends AbstractConch {
             boolean existUnknown = false;
             Set<AllocNode> tos = new HashSet<>();
             for (SparkField sf : ifs) {
-                final PointsToSetInternal ret = new DoublePointsToSet(heap.getType());
-                ret.add(heap);
-                PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjectsInternal(ret, sf);
-                Set<AllocNode> tmp = new HashSet<>();
-                pts.mapToCIPointsToSet().forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        tmp.add((AllocNode) n);
-                    }
-                });
-                for (AllocNode o : tmp) {
+                PointsToSet pts = pta.reachingObjectsInternal(heap, sf);
+                for (AllocNode o : pts.toCIPointsToSet().toCollection()) {
                     // if o is cs, then heap is cs;
                     if (csHeaps.contains(o)) {
                         cs = true;

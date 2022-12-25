@@ -4,8 +4,7 @@ import qilin.core.PTA;
 import qilin.core.builder.FakeMainFactory;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Stopwatch;
 import soot.*;
@@ -77,13 +76,7 @@ public class SimplifiedEvaluator implements IEvaluator {
                             continue;
                         }
                         boolean fails = false;
-                        Set<Node> pts = new HashSet<>();
-                        ((PointsToSetInternal) pta.reachingObjects((Local) v)).mapToCIPointsToSet().forall(new P2SetVisitor() {
-                            @Override
-                            public void visit(Node n) {
-                                pts.add(n);
-                            }
-                        });
+                        Collection<AllocNode> pts = pta.reachingObjects((Local) v).toCollection();
                         for (Node n : pts) {
                             if (fails) {
                                 break;
@@ -141,8 +134,7 @@ public class SimplifiedEvaluator implements IEvaluator {
                 tmp.add(lvn);
                 continue;
             }
-            PointsToSetInternal cpts = (PointsToSetInternal) pta.reachingObjects(lvn);
-            final Set<Object> callocSites = getPointsToNewExpr(cpts);
+            final Set<Object> callocSites = getPointsToNewExpr(pta.reachingObjects(lvn));
             if (callocSites.size() > 0) {
                 if (!handledNatives.contains(sm.toString())) {
                     ptsCntNoNative += callocSites.size();
@@ -176,13 +168,11 @@ public class SimplifiedEvaluator implements IEvaluator {
 
     private final Set<LocalVarNode> mLocalVarNodes = new HashSet<>();
 
-    protected Set<Object> getPointsToNewExpr(PointsToSetInternal pts) {
+    protected Set<Object> getPointsToNewExpr(PointsToSet pts) {
         final Set<Object> allocSites = new HashSet<>();
-        pts.forall(new P2SetVisitor() {
-            public void visit(Node n) {
-                allocSites.add(((AllocNode) n).getNewExpr());
-            }
-        });
+        for (AllocNode n : pts.toCollection()) {
+            allocSites.add(n.getNewExpr());
+        }
         return allocSites;
     }
 

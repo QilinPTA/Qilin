@@ -34,6 +34,7 @@ import soot.jimple.*;
 import soot.jimple.internal.JArrayRef;
 import soot.jimple.internal.JAssignStmt;
 import soot.jimple.internal.JimpleLocal;
+import soot.jimple.spark.pag.SparkField;
 import soot.util.ArrayNumberer;
 import soot.util.queue.ChunkedQueue;
 import soot.util.queue.QueueReader;
@@ -59,9 +60,9 @@ public class PAG {
     protected final Map<Context, Map<SparkField, ContextField>> contextFieldMap;
 
     // ==========================data=========================
-    protected static ArrayNumberer<AllocNode> allocNodeNumberer = new ArrayNumberer<>();
-    protected static ArrayNumberer<ValNode> valNodeNumberer = new ArrayNumberer<>();
-    protected static ArrayNumberer<FieldRefNode> fieldRefNodeNumberer = new ArrayNumberer<>();
+    protected ArrayNumberer<AllocNode> allocNodeNumberer = new ArrayNumberer<>();
+    protected ArrayNumberer<ValNode> valNodeNumberer = new ArrayNumberer<>();
+    protected ArrayNumberer<FieldRefNode> fieldRefNodeNumberer = new ArrayNumberer<>();
     private static AtomicInteger maxFinishNumber = new AtomicInteger(0);
 
     // ========================= ir to Node ==============================================
@@ -106,10 +107,6 @@ public class PAG {
         this.methodToPag = DataFactory.createMap();
         this.globals = DataFactory.createSet(100000);
         this.locals = DataFactory.createSet(100000);
-//        this.edgeQueue = new ChunkedQueue<>();
-//        this.allocNodeNumberer = new ArrayNumberer<>(); // support concurrency.
-//        this.valNodeNumberer = new ArrayNumberer<>();
-//        this.fieldRefNodeNumberer = new ArrayNumberer<>();
     }
 
     public void setEdgeQueue(ChunkedQueue<Node> edgeQueue) {
@@ -254,21 +251,21 @@ public class PAG {
         return maxFinishNumber.incrementAndGet();
     }
 
-    public static ArrayNumberer<AllocNode> getAllocNodeNumberer() {
+    public ArrayNumberer<AllocNode> getAllocNodeNumberer() {
         return allocNodeNumberer;
     }
 
-    public static ArrayNumberer<FieldRefNode> getFieldRefNodeNumberer() {
+    public ArrayNumberer<FieldRefNode> getFieldRefNodeNumberer() {
         return fieldRefNodeNumberer;
     }
 
-    public static ArrayNumberer<ValNode> getValNodeNumberer() {
+    public ArrayNumberer<ValNode> getValNodeNumberer() {
         return valNodeNumberer;
     }
 
-//    public Collection<ValNode> getValNodes() {
-//        return valToValNode.values();
-//    }
+    public Collection<ValNode> getValNodes() {
+        return valToValNode.values();
+    }
 
     public Collection<AllocNode> getAllocNodes() {
         return valToAllocNode.values();
@@ -295,28 +292,36 @@ public class PAG {
 
     // ==========================create nodes==================================
     public AllocNode makeAllocNode(Object newExpr, Type type, SootMethod m) {
-        AllocNode ret = valToAllocNode.computeIfAbsent(newExpr, k -> new AllocNode(newExpr, type, m));
-//        AllocNode ret = valToAllocNode.get(newExpr);
-//        if (ret == null) {
-//            valToAllocNode.put(newExpr, ret = );
-//        } else
-        if (!(ret.getType().equals(type))) {
-            throw new RuntimeException(
-                    "NewExpr " + newExpr + " of type " + type + " previously had type " + ret.getType());
+        AllocNode ret = valToAllocNode.get(newExpr);
+        if (ret == null) {
+            valToAllocNode.put(newExpr, ret = new AllocNode(newExpr, type, m));
+            allocNodeNumberer.add(ret);
+        } else if (!(ret.getType().equals(type))) {
+            throw new RuntimeException("NewExpr " + newExpr + " of type " + type + " previously had type " + ret.getType());
         }
         return ret;
     }
 
     public AllocNode makeStringConstantNode(StringConstant sc) {
+        StringConstant stringConstant = sc;
         if (!CoreConfig.v().getPtaConfig().stringConstants) {
-            StringConstant mergedConstant = StringConstant.v(PointsToAnalysis.STRING_NODE);
-            return valToAllocNode.computeIfAbsent(mergedConstant, k -> new StringConstantNode(mergedConstant));
+            stringConstant = StringConstant.v(PointsToAnalysis.STRING_NODE);
         }
-        return valToAllocNode.computeIfAbsent(sc, k -> new StringConstantNode(sc));
+        AllocNode ret = valToAllocNode.get(stringConstant);
+        if (ret == null) {
+            valToAllocNode.put(stringConstant, ret = new StringConstantNode(stringConstant));
+            allocNodeNumberer.add(ret);
+        }
+        return ret;
     }
 
     public AllocNode makeClassConstantNode(ClassConstant cc) {
-        return valToAllocNode.computeIfAbsent(cc, k -> new ClassConstantNode(cc));
+        AllocNode ret = valToAllocNode.get(cc);
+        if (ret == null) {
+            valToAllocNode.put(cc, ret = new ClassConstantNode(cc));
+            allocNodeNumberer.add(ret);
+        }
+        return ret;
     }
 
     /**
@@ -326,6 +331,7 @@ public class PAG {
         GlobalVarNode ret = (GlobalVarNode) valToValNode.get(value);
         if (ret == null) {
             ret = (GlobalVarNode) valToValNode.computeIfAbsent(value, k -> new GlobalVarNode(value, type));
+            valNodeNumberer.add(ret);
             if (value instanceof SootField) {
                 globals.add((SootField) value);
             }
@@ -341,7 +347,8 @@ public class PAG {
     public LocalVarNode makeLocalVarNode(Object value, Type type, SootMethod method) {
         LocalVarNode ret = (LocalVarNode) valToValNode.get(value);
         if (ret == null) {
-            ret = (LocalVarNode) valToValNode.computeIfAbsent(value, k -> new LocalVarNode(value, type, method));
+            valToValNode.put(value, ret = new LocalVarNode(value, type, method));
+            valNodeNumberer.add(ret);
             if (value instanceof Local local) {
                 if (local.getNumber() == 0) {
                     PTAScene.v().getLocalNumberer().add(local);
@@ -359,7 +366,12 @@ public class PAG {
      * Treat Java field and array element as normal local variable.
      */
     public FieldValNode makeFieldValNode(SparkField field) {
-        return (FieldValNode) valToValNode.computeIfAbsent(field, k -> new FieldValNode(field));
+        FieldValNode ret = (FieldValNode) valToValNode.get(field);
+        if (ret == null) {
+            valToValNode.put(field, ret = new FieldValNode(field));
+            valNodeNumberer.add(ret);
+        }
+        return ret;
     }
 
     /**
@@ -370,6 +382,7 @@ public class PAG {
         FieldRefNode ret = base.dot(field);
         if (ret == null) {
             ret = new FieldRefNode(base, field);
+            fieldRefNodeNumberer.add(ret);
         }
         return ret;
     }
@@ -379,7 +392,12 @@ public class PAG {
      */
     public ContextVarNode makeContextVarNode(VarNode base, Context context) {
         Map<Context, ContextVarNode> contextMap = contextVarNodeMap.computeIfAbsent(base, k1 -> DataFactory.createMap());
-        return contextMap.computeIfAbsent(context, k -> new ContextVarNode(base, context));
+        ContextVarNode ret = contextMap.get(context);
+        if (ret == null) {
+            contextMap.put(context, ret = new ContextVarNode(base, context));
+            valNodeNumberer.add(ret);
+        }
+        return ret;
     }
 
     /**
@@ -387,7 +405,12 @@ public class PAG {
      */
     public ContextAllocNode makeContextAllocNode(AllocNode allocNode, Context context) {
         Map<Context, ContextAllocNode> contextMap = contextAllocNodeMap.computeIfAbsent(allocNode, k1 -> DataFactory.createMap());
-        return contextMap.computeIfAbsent(context, k -> new ContextAllocNode(allocNode, context));
+        ContextAllocNode ret = contextMap.get(context);
+        if (ret == null) {
+            contextMap.put(context, ret = new ContextAllocNode(allocNode, context));
+            allocNodeNumberer.add(ret);
+        }
+        return ret;
     }
 
     /**
@@ -433,7 +456,12 @@ public class PAG {
     public ContextField makeContextField(Context context, FieldValNode fieldValNode) {
         SparkField field = fieldValNode.getField();
         Map<SparkField, ContextField> field2odotf = contextFieldMap.computeIfAbsent(context, k -> DataFactory.createMap());
-        return field2odotf.computeIfAbsent(field, k -> new ContextField(context, field));
+        ContextField ret = field2odotf.get(field);
+        if (ret == null) {
+            field2odotf.put(field, ret = new ContextField(context, field));
+            valNodeNumberer.add(ret);
+        }
+        return ret;
     }
 
     public Collection<VarNode> getVarNodes(Local local) {
@@ -577,10 +605,4 @@ public class PAG {
         addedContexts.clear();
     }
 
-    public static void reset() {
-        allocNodeNumberer = new ArrayNumberer<>();
-        valNodeNumberer = new ArrayNumberer<>();
-        fieldRefNodeNumberer = new ArrayNumberer<>();
-        maxFinishNumber = new AtomicInteger(0);
-    }
 }

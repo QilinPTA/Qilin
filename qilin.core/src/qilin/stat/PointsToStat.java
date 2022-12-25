@@ -22,8 +22,7 @@ import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import soot.*;
 
@@ -32,7 +31,6 @@ import java.util.*;
 public class PointsToStat implements AbstractStat {
     private final PTA pta;
     private final PAG pag;
-
     private int contextCnt = 0;
     private double avgCtxPerMthd = 0.0;
 
@@ -59,7 +57,7 @@ public class PointsToStat implements AbstractStat {
     private int totalFieldPointsToCs = 0;
     private int methodThrowCnt = 0;
 
-    private final Map<SootMethod, PointsToSetInternal> methodThrowPts;
+    private final Map<SootMethod, PointsToSet> methodThrowPts;
     private final Set<LocalVarNode> mLocalVarNodes = new HashSet<>();
     private int ptsCnt = 0;
     private int varCnt = 0;
@@ -91,13 +89,12 @@ public class PointsToStat implements AbstractStat {
             "<java.security.AccessController: java.lang.Object doPrivileged(java.security.PrivilegedExceptionAction,java.security.AccessControlContext)>"
     );
 
-    protected Set<Object> getPointsToNewExpr(PointsToSetInternal pts) {
+    protected Set<Object> getPointsToNewExpr(PointsToSet pts) {
         final Set<Object> allocSites = new HashSet<>();
-        pts.forall(new P2SetVisitor() {
-            public void visit(Node n) {
-                allocSites.add(((AllocNode) n).getNewExpr());
-            }
-        });
+        for (Iterator<AllocNode> it = pts.iterator(); it.hasNext(); ) {
+            AllocNode n = it.next();
+            allocSites.add(n.getNewExpr());
+        }
         return allocSites;
     }
 
@@ -117,7 +114,7 @@ public class PointsToStat implements AbstractStat {
                     appGlobalPointers++;
                 }
 
-                PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjects(gvn);
+                PointsToSet pts = pta.reachingObjects(gvn);
                 final Set<Object> allocSites = getPointsToNewExpr(pts);
 
                 totalGlobalPointsToCi += allocSites.size();
@@ -153,19 +150,8 @@ public class PointsToStat implements AbstractStat {
                     appLocalPointersCs += varNodes.size();
                 }
 
-
-                PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjects(local);
+                PointsToSet pts = pta.reachingObjects(local);
                 final Set<Object> allocSites = getPointsToNewExpr(pts);
-//                if (lvn.getMethod().toString().equals("<fine.B: fine.O id(fine.O,fine.A)>")) {
-//                    System.out.println("hello2333:" + lvn + lvn.getType());
-//                    pts.forall(new P2SetVisitor() {
-//                        @Override
-//                        public void visit(Node n) {
-////                            if (lvn.getType().toString().contains("java.lang.ExceptionInInitializerError"))
-//                            System.out.println(n);
-//                        }
-//                    });
-//                }
 
                 totalLocalCiToCi += allocSites.size();
                 totalLocalCiToCs += pts.size();
@@ -175,7 +161,7 @@ public class PointsToStat implements AbstractStat {
                 }
 
                 for (VarNode cvn : varNodes) {
-                    PointsToSetInternal cpts = (PointsToSetInternal) pta.reachingObjects(cvn);
+                    PointsToSet cpts = pta.reachingObjects(cvn);
                     final Set<Object> callocSites = getPointsToNewExpr(cpts);
                     totalLocalCsToCi += callocSites.size();
                     totalLocalCsToCs += cpts.size();
@@ -207,7 +193,7 @@ public class PointsToStat implements AbstractStat {
         // stat method throw points-to.
         for (SootMethod sm : pta.getNakedReachableMethods()) {
             Node mThrow = pag.getMethodPAG(sm).nodeFactory().caseMethodThrow();
-            PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjects(mThrow);
+            PointsToSet pts = pta.reachingObjects(mThrow);
             if (!pts.isEmpty()) {
                 methodThrowCnt++;
                 methodThrowPts.put(sm, pts);
@@ -241,7 +227,7 @@ public class PointsToStat implements AbstractStat {
                 tmp.add(lvn);
                 continue;
             }
-            PointsToSetInternal cpts = (PointsToSetInternal) pta.reachingObjects(lvn);
+            PointsToSet cpts = pta.reachingObjects(lvn);
             final Set<Object> callocSites = getPointsToNewExpr(cpts);
             if (callocSites.size() > 0) {
                 ptsCnt += callocSites.size();

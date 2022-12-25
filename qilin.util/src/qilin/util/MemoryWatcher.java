@@ -18,13 +18,12 @@
 
 package qilin.util;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
+import oshi.SystemInfo;
+import oshi.software.os.OSProcess;
+import oshi.software.os.OperatingSystem;
+
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 public class MemoryWatcher extends Timer {
     private final long pid;
@@ -44,7 +43,10 @@ public class MemoryWatcher extends Timer {
         task = new TimerTask() {
             @Override
             public void run() {
-                long mem = getVMRSS(pid);
+                SystemInfo si = new SystemInfo();
+                OperatingSystem os = si.getOperatingSystem();
+                OSProcess process = os.getProcess((int) pid);
+                long mem = process.getResidentSetSize();
                 if (mem > maxMemory[0]) {
                     maxMemory[0] = mem;
                 }
@@ -58,36 +60,16 @@ public class MemoryWatcher extends Timer {
         this.cancel();
     }
 
-    private long getVMRSS(long pid) {
-        String s = String.format("/proc/%d/status", pid);
-        long[] vmrss = new long[1];
-        vmrss[0] = -1;
-        try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(s)));
-            for (String line : br.lines().collect(Collectors.toSet())) {
-                if (line.startsWith("VmRSS")) {
-                    String mem = line.substring(6, line.length() - 2);
-                    mem = mem.trim();
-                    vmrss[0] = Long.parseLong(mem);
-                    break;
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return vmrss[0];
-    }
-
     public double inKiloByte() {
-        return maxMemory[0];
-    }
-
-    public double inMegaByte() {
         return maxMemory[0] / 1024.0;
     }
 
-    public double inGigaByte() {
+    public double inMegaByte() {
         return maxMemory[0] / (1024.0 * 1024.0);
+    }
+
+    public double inGigaByte() {
+        return maxMemory[0] / (1024.0 * 1024.0 * 1024.0);
     }
 
     @Override

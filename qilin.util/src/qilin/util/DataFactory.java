@@ -1,12 +1,10 @@
 package qilin.util;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DataFactory {
     public static <T> List<T> createList() {
-         return new ArrayList<>();
+        return new ArrayList<>();
 //        return new CopyOnWriteArrayList<>();
     }
 

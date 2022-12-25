@@ -19,7 +19,6 @@
 package qilin.core.pag;
 
 import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.PointsToSetInternal;
 import qilin.util.PTAUtils;
 import soot.Type;
 import soot.util.Numberable;
@@ -31,19 +30,20 @@ import soot.util.Numberable;
  */
 public class Node implements Numberable {
     protected Type type;
-    protected volatile DoublePointsToSet p2set;
+    protected DoublePointsToSet p2set;
     private int number = 0;
 
     /**
      * Creates a new node of pointer assignment graph pag, with type type.
      */
-    Node(Type type) {
+    protected Node(Type type) {
         if (PTAUtils.isUnresolved(type)) {
             throw new RuntimeException("Unresolved type " + type);
         }
         this.type = type;
     }
 
+    @Override
     public final int hashCode() {
         return number;
     }

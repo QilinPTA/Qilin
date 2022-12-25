@@ -18,8 +18,6 @@
 
 package qilin.core.pag;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import qilin.core.sets.DoublePointsToSet;
 import soot.Type;
 import soot.util.Numberable;
@@ -28,23 +26,14 @@ import soot.util.Numberable;
  * Represents a simple of pointer node in the pointer assignment graph.
  */
 public class ValNode extends Node implements Comparable, Numberable {
-    private static final Logger logger = LoggerFactory.getLogger(ValNode.class);
-    protected int finishingNumber;
 
     protected ValNode(Type t) {
         super(t);
-        PAG.getValNodeNumberer().add(this);
-        this.finishingNumber = PAG.nextFinishNumber();
     }
 
     public int compareTo(Object o) {
         ValNode other = (ValNode) o;
-        if (other.finishingNumber == finishingNumber && other != this) {
-            logger.debug("" + "This is: " + this + " with id " + getNumber() + " and number " + finishingNumber);
-            logger.debug("" + "Other is: " + other + " with id " + other.getNumber() + " and number " + other.finishingNumber);
-            throw new RuntimeException("Comparison error");
-        }
-        return other.finishingNumber - finishingNumber;
+        return other.getNumber() - this.getNumber();
     }
 
     /**
@@ -54,7 +43,8 @@ public class ValNode extends Node implements Comparable, Numberable {
         if (p2set != null) {
             return p2set;
         } else {
-            return DoublePointsToSet.emptySet;
+            p2set = new DoublePointsToSet();
+            return p2set;
         }
     }
 
@@ -65,17 +55,4 @@ public class ValNode extends Node implements Comparable, Numberable {
         p2set = null;
     }
 
-    /**
-     * Returns the points-to set for this node, makes it if necessary.
-     */
-    public DoublePointsToSet makeP2Set() {
-        if (p2set == null) {
-            synchronized (this) {
-                if (p2set == null) {
-                    p2set = new DoublePointsToSet(type);
-                }
-            }
-        }
-        return p2set;
-    }
 }

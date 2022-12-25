@@ -22,7 +22,6 @@ import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.sets.PointsToSet;
-import qilin.core.sets.PointsToSetInternal;
 import soot.MethodOrMethodContext;
 import soot.SootMethod;
 import soot.Unit;
@@ -77,11 +76,8 @@ public class YummyStat implements AbstractStat {
 
         for (SootMethod method : instanceReachables) {
             MethodNodeFactory nf = pta.getPag().getMethodPAG(method).nodeFactory();
-            PointsToSet pts = pta.reachingObjects(nf.caseThis());
+            PointsToSet pts = pta.reachingObjects(nf.caseThis()).toCIPointsToSet();
             int ptSize = pts.size();
-            if (pts instanceof PointsToSetInternal) {
-                ptSize = ((PointsToSetInternal) pts).mapToCIPointsToSet().size();
-            }
             if (ptSize == 1) {
                 singleReceivers.add(method);
             }

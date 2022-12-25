@@ -19,9 +19,7 @@
 package qilin.test.util;
 
 import qilin.core.PTA;
-import qilin.core.PTAScene;
 import qilin.core.sets.PointsToSet;
-import qilin.core.sets.PointsToSetInternal;
 import qilin.pta.PTAConfig;
 import qilin.util.PTAUtils;
 import soot.Local;
@@ -89,36 +87,31 @@ public class AliasAssertion implements IAssertion {
             if (!PTAConfig.v().getPtaConfig().stringConstants) {
                 s = "STRING_NODE";
             }
-            PointsToSet pts = ((PointsToSetInternal) pta.reachingObjects((Local) vb)).mapToCIPointsToSet();
+            PointsToSet pts = pta.reachingObjects((Local) vb).toCIPointsToSet();
             return pts.possibleStringConstants().contains(s);
         } else if (vb instanceof StringConstant) {
             String s = ((StringConstant) vb).value;
             if (!PTAConfig.v().getPtaConfig().stringConstants) {
                 s = "STRING_NODE";
             }
-            PointsToSet pts = ((PointsToSetInternal) pta.reachingObjects((Local) va)).mapToCIPointsToSet();
-            for (String s1 : pts.possibleStringConstants()) {
-                System.out.println(s1);
-            }
+            PointsToSet pts = pta.reachingObjects((Local) va).toCIPointsToSet();
             return pts.possibleStringConstants().contains(s);
         } else if (va instanceof ClassConstant) {
-            PointsToSet pts = ((PointsToSetInternal) pta.reachingObjects((Local) vb)).mapToCIPointsToSet();
+            PointsToSet pts = pta.reachingObjects((Local) vb).toCIPointsToSet();
             return pts.possibleClassConstants().contains(va);
         } else if (vb instanceof ClassConstant) {
-            PointsToSet pts = ((PointsToSetInternal) pta.reachingObjects((Local) va)).mapToCIPointsToSet();
+            PointsToSet pts = pta.reachingObjects((Local) va).toCIPointsToSet();
             return pts.possibleClassConstants().contains(vb);
         }
-        PointsToSetInternal pts1 = ((PointsToSetInternal) pta.reachingObjects((Local) va)).mapToCIPointsToSet();
+        PointsToSet pts1 = pta.reachingObjects((Local) va).toCIPointsToSet();
         if (DEBUG) {
-//            PTAUtils.dumpPts(pta, true);
-//            PTAUtils.dumpPAG(pta.getPag(), "pag.txt");
             System.out.println("va points to: " + PTAUtils.getNodeLabel(pta.getPag().findLocalVarNode(va)) + pta.getPag().findLocalVarNode(va));
-            PTAUtils.printPts(pts1);
+            PTAUtils.printPts(pta, pts1);
         }
-        PointsToSetInternal pts2 = ((PointsToSetInternal) pta.reachingObjects((Local) vb)).mapToCIPointsToSet();
+        PointsToSet pts2 = pta.reachingObjects((Local) vb).toCIPointsToSet();
         if (DEBUG) {
             System.out.println("vb points to: " + PTAUtils.getNodeLabel(pta.getPag().findLocalVarNode(vb)) + pta.getPag().findLocalVarNode(vb));
-            PTAUtils.printPts(pts2);
+            PTAUtils.printPts(pta, pts2);
         }
         return pts1.hasNonEmptyIntersection(pts2);
     }

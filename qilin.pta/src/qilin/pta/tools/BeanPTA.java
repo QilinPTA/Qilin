@@ -52,7 +52,7 @@ public class BeanPTA extends StagedPTA {
         if (PTAConfig.v().getPtaConfig().mergeHeap) {
             this.heapAbst = new HeuristicAbstractor(pag);
         } else {
-            this.heapAbst = new AllocSiteAbstractor(pag);
+            this.heapAbst = new AllocSiteAbstractor();
         }
         prePTA = new Spark();
         System.out.println("bean ...");

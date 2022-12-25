@@ -21,14 +21,13 @@ package qilin.pta.toolkits.conch;
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
-import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Pair;
 import soot.ArrayType;
 import soot.PrimType;
 import soot.SootMethod;
+import soot.jimple.spark.pag.SparkField;
 
 import java.util.*;
 
@@ -95,14 +94,11 @@ public class AbstractConch {
                 invokedMethods.computeIfAbsent(a, k -> new HashSet<>()).add(m);
             });
         } else {
-            PointsToSetInternal thisPts = PTAUtils.fetchInsensitivePointsToResult(pta, thisRef);
-            thisPts.forall(new P2SetVisitor() {
-                @Override
-                public void visit(Node n) {
-                    AllocNode a = (AllocNode) n;
-                    invokedMethods.computeIfAbsent(a, k -> new HashSet<>()).add(m);
-                }
-            });
+            PointsToSet thisPts = pta.reachingObjects(thisRef).toCIPointsToSet();
+            for (Iterator<AllocNode> it = thisPts.iterator(); it.hasNext(); ) {
+                AllocNode n = it.next();
+                invokedMethods.computeIfAbsent(n, k -> new HashSet<>()).add(m);
+            }
         }
     }
 
@@ -128,19 +124,15 @@ public class AbstractConch {
                 Map<SparkField, Set<VarNode>> f2bs = m2thisFLoads.computeIfAbsent(method, k -> new HashMap<>());
                 f2bs.computeIfAbsent(field, k -> new HashSet<>()).add(loadBase);
             } else {
-                PTAUtils.fetchInsensitivePointsToResult(pta, loadBase).forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        AllocNode heap = (AllocNode) n;
-                        if (heap.getMethod() != method) {
-                            /* we filter loads in the containing method,
-                             * since this often not satisfy the second theoretical condition O.f*--)-->v.
-                             */
-                            Map<SparkField, Set<VarNode>> f2bs = o2nonThisFLoads.computeIfAbsent(heap, k -> new HashMap<>());
-                            f2bs.computeIfAbsent(field, k -> new HashSet<>()).add(loadBase);
-                        }
+                for (AllocNode heap : pta.reachingObjects(loadBase).toCIPointsToSet().toCollection()) {
+                    if (heap.getMethod() != method) {
+                        /* we filter loads in the containing method,
+                         * since this often not satisfy the second theoretical condition O.f*--)-->v.
+                         */
+                        Map<SparkField, Set<VarNode>> f2bs = o2nonThisFLoads.computeIfAbsent(heap, k -> new HashMap<>());
+                        f2bs.computeIfAbsent(field, k -> new HashSet<>()).add(loadBase);
                     }
-                });
+                }
             }
         }
     }
@@ -162,16 +154,12 @@ public class AbstractConch {
                 Map<SparkField, Set<Pair<VarNode, VarNode>>> m2s = m2thisFStores.computeIfAbsent(method, k -> new HashMap<>());
                 m2s.computeIfAbsent(field, k -> new HashSet<>()).add(new Pair<>(storeBase, from));
             } else {
-                PTAUtils.fetchInsensitivePointsToResult(pta, storeBase).forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        AllocNode heap = (AllocNode) n;
-                        if (!emptyFieldPts(heap, field)) {
-                            Map<SparkField, Set<Pair<VarNode, VarNode>>> f2bs = o2nonThisFStores.computeIfAbsent(heap, k -> new HashMap<>());
-                            f2bs.computeIfAbsent(field, k -> new HashSet<>()).add(new Pair<>(storeBase, from));
-                        }
+                for (AllocNode heap : pta.reachingObjects(storeBase).toCIPointsToSet().toCollection()) {
+                    if (!emptyFieldPts(heap, field)) {
+                        Map<SparkField, Set<Pair<VarNode, VarNode>>> f2bs = o2nonThisFStores.computeIfAbsent(heap, k -> new HashMap<>());
+                        f2bs.computeIfAbsent(field, k -> new HashSet<>()).add(new Pair<>(storeBase, from));
                     }
-                });
+                }
             }
         }
     }
@@ -190,20 +178,15 @@ public class AbstractConch {
     }
 
     protected boolean emptyFieldPts(AllocNode heap, SparkField field) {
-        final PointsToSetInternal ret = new DoublePointsToSet(heap.getType());
-        ret.add(heap);
-        PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjectsInternal(ret, field);
+        PointsToSet pts = pta.reachingObjectsInternal(heap, field);
         Set<AllocNode> tmp = new HashSet<>();
-        pts.mapToCIPointsToSet().forall(new P2SetVisitor() {
-            @Override
-            public void visit(Node n) {
-                AllocNode h = (AllocNode) n;
-                // filter StringConstant.
-                if (!(h instanceof StringConstantNode)) {
-                    tmp.add(h);
-                }
+        for (Iterator<AllocNode> it = pts.iterator(); it.hasNext(); ) {
+            AllocNode n = it.next();
+            // filter StringConstant.
+            if (!(n instanceof StringConstantNode)) {
+                tmp.add(n);
             }
-        });
+        }
         return tmp.isEmpty();
     }
 

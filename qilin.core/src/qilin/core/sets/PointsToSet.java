@@ -18,8 +18,12 @@
 
 package qilin.core.sets;
 
+import qilin.core.pag.AllocNode;
+import soot.Type;
 import soot.jimple.ClassConstant;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -34,9 +38,19 @@ public interface PointsToSet {
     boolean isEmpty();
 
     /**
+     * Returns true iff the set contains n.
+     */
+    boolean contains(AllocNode n);
+
+    /**
      * Returns true if this set shares some objects with other.
      */
     boolean hasNonEmptyIntersection(PointsToSet other);
+
+    /**
+     * Set of all possible run-time types of objects in the set.
+     */
+    Set<Type> possibleTypes();
 
     /**
      * If this points-to set consists entirely of string constants, returns a set of these constant strings. If this point-to
@@ -65,8 +79,20 @@ public interface PointsToSet {
     void clear();
 
     /**
+     * Computes a hash code based on the contents of the points-to set. Note that hashCode() is not overwritten on purpose.
+     * This is because Spark relies on comparison by object identity.
+     */
+    int pointsToSetHashCode();
+
+    /**
      * Returns <code>true</code> if and only if other holds the same alloc nodes as this. Note that equals() is not overwritten
      * on purpose. This is because Spark relies on comparison by object identity.
      */
     boolean pointsToSetEquals(Object other);
+
+    PointsToSet toCIPointsToSet();
+
+    Collection<AllocNode> toCollection();
+
+    Iterator<AllocNode> iterator();
 }

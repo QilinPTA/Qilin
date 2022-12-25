@@ -116,7 +116,8 @@ public abstract class AbstractMVFG {
 
     protected void buildVFG() {
         CallGraph callGraph = prePTA.getCallGraph();
-        MethodPAG srcmpag = prePTA.getPag().getMethodPAG(method);
+        PAG pag = prePTA.getPag();
+        MethodPAG srcmpag = pag.getMethodPAG(method);
         MethodNodeFactory srcnf = srcmpag.nodeFactory();
         LocalVarNode thisRef = (LocalVarNode) srcnf.caseThis();
         QueueReader<Node> reader = srcmpag.getInternalReader().clone();
@@ -164,12 +165,12 @@ public abstract class AbstractMVFG {
             if (s instanceof AssignStmt) {
                 Value dest = ((AssignStmt) s).getLeftOp();
                 if (dest.getType() instanceof RefLikeType) {
-                    retDest = prePTA.getPag().findLocalVarNode(dest);
+                    retDest = pag.findLocalVarNode(dest);
                 }
             }
             LocalVarNode receiver;
             if (ie instanceof InstanceInvokeExpr iie) {
-                receiver = prePTA.getPag().findLocalVarNode(iie.getBase());
+                receiver = pag.findLocalVarNode(iie.getBase());
             } else {
                 // static call
                 receiver = thisRef;
@@ -185,7 +186,7 @@ public abstract class AbstractMVFG {
                 for (int i = 0; i < numArgs; i++) {
                     if (args[i] == null)
                         continue;
-                    ValNode argNode = prePTA.getPag().findValNode(args[i]);
+                    ValNode argNode = pag.findValNode(args[i]);
                     if (argNode instanceof LocalVarNode && satisfyAddingStoreCondition(i, targets)) {
                         this.addStoreEdge((LocalVarNode) argNode, receiver);
                     }
@@ -196,7 +197,7 @@ public abstract class AbstractMVFG {
                     }
                 }
                 if (statisfyAddingLoadCondition(targets)) {
-                    LocalVarNode stmtThrowNode = prePTA.getPag().makeInvokeStmtThrowVarNode(s, method);
+                    LocalVarNode stmtThrowNode = srcnf.makeInvokeStmtThrowVarNode(s, method);
                     this.addLoadEdge(receiver, stmtThrowNode);
                 }
                 if (satisfyAddingStoreCondition(PointsToAnalysis.THIS_NODE, targets)) {
@@ -221,7 +222,7 @@ public abstract class AbstractMVFG {
             LocalVarNode mret = (LocalVarNode) srcnf.caseRet();
             addStoreEdge(mret, thisRef);
         }
-        LocalVarNode mThrow = prePTA.getPag().findLocalVarNode(new Parm(method, PointsToAnalysis.THROW_NODE));
+        LocalVarNode mThrow = pag.findLocalVarNode(new Parm(method, PointsToAnalysis.THROW_NODE));
         if (mThrow != null) {
             addStoreEdge(mThrow, thisRef);
         }

@@ -23,8 +23,7 @@ import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.AllocNode;
 import qilin.core.pag.LocalVarNode;
 import qilin.core.pag.MethodPAG;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.graph.DirectedGraph;
 import soot.SootMethod;
@@ -128,14 +127,11 @@ public class OAG implements DirectedGraph<AllocNode> {
                             addEdge(src, tgt);
                         });
                     } else {
-                        PointsToSetInternal thisPts = PTAUtils.fetchInsensitivePointsToResult(pta, thisRef);
-                        thisPts.forall(new P2SetVisitor() {
-                            @Override
-                            public void visit(qilin.core.pag.Node n) {
-                                AllocNode src = (AllocNode) n;
-                                addEdge(src, tgt);
-                            }
-                        });
+                        PointsToSet thisPts = pta.reachingObjects(thisRef).toCIPointsToSet();
+                        for (Iterator<AllocNode> it = thisPts.iterator(); it.hasNext(); ) {
+                            AllocNode src = it.next();
+                            addEdge(src, tgt);
+                        }
                     }
                 }
             }

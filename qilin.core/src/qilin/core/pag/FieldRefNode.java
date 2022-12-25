@@ -18,6 +18,7 @@
 
 package qilin.core.pag;
 
+import soot.jimple.spark.pag.SparkField;
 import soot.util.Numberable;
 
 /**
@@ -34,7 +35,6 @@ public class FieldRefNode extends Node implements Numberable {
         this.base = base;
         this.field = field;
         base.addField(this, field);
-        PAG.getFieldRefNodeNumberer().add(this);
     }
 
     /**

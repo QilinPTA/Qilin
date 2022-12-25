@@ -18,8 +18,7 @@
 
 package qilin.core.sets;
 
-import qilin.core.pag.Node;
-import soot.Type;
+import java.util.Iterator;
 
 /**
  * Implementation of points-to set that holds two sets: one for new elements that have not yet been propagated, and the other
@@ -28,20 +27,18 @@ import soot.Type;
  * @author Ondrej Lhotak
  */
 public class DoublePointsToSet extends PointsToSetInternal {
-    public static DoublePointsToSet emptySet = new DoublePointsToSet(null);
+    protected HybridPointsToSet newSet;
+    protected HybridPointsToSet oldSet;
 
-    protected PointsToSetInternal newSet;
-    protected PointsToSetInternal oldSet;
-
-    public DoublePointsToSet(Type type) {
-        super(type);
-        newSet = new HybridPointsToSet(type);
-        oldSet = new HybridPointsToSet(type);
+    public DoublePointsToSet() {
+        newSet = new HybridPointsToSet();
+        oldSet = new HybridPointsToSet();
     }
 
     /**
      * Returns true if this set contains no run-time objects.
      */
+    @Override
     public boolean isEmpty() {
         return oldSet.isEmpty() && newSet.isEmpty();
     }
@@ -49,8 +46,36 @@ public class DoublePointsToSet extends PointsToSetInternal {
     /**
      * Returns true if this set shares some objects with other.
      */
-    public boolean hasNonEmptyIntersection(PointsToSet other) {
+    public boolean hasNonEmptyIntersection(PointsToSetInternal other) {
         return oldSet.hasNonEmptyIntersection(other) || newSet.hasNonEmptyIntersection(other);
+    }
+
+    @Override
+    public int size() {
+        return oldSet.size() + newSet.size();
+    }
+
+    private class DoublePTSIterator implements Iterator<Integer> {
+        private final Iterator<Integer> oldIt = oldSet.iterator();
+        private final Iterator<Integer> newIt = newSet.iterator();
+
+        @Override
+        public boolean hasNext() {
+            return oldIt.hasNext() || newIt.hasNext();
+        }
+
+        @Override
+        public Integer next() {
+            if (oldIt.hasNext()) {
+                return oldIt.next();
+            } else {
+                return newIt.next();
+            }
+        }
+    }
+
+    public Iterator<Integer> iterator() {
+        return new DoublePTSIterator();
     }
 
     /*
@@ -67,7 +92,7 @@ public class DoublePointsToSet extends PointsToSetInternal {
      */
     public boolean addAll(PointsToSetInternal other, PointsToSetInternal exclude) {
         if (exclude != null) {
-            throw new RuntimeException("NYI");
+            throw new RuntimeException("exclude set must be null.");
         }
         return newSet.addAll(other, oldSet);
     }
@@ -75,6 +100,7 @@ public class DoublePointsToSet extends PointsToSetInternal {
     /**
      * Calls v's visit method on all nodes in this set.
      */
+    @Override
     public boolean forall(P2SetVisitor v) {
         oldSet.forall(v);
         newSet.forall(v);
@@ -82,38 +108,33 @@ public class DoublePointsToSet extends PointsToSetInternal {
     }
 
     /**
-     * Adds n to this set, returns true if n was not already in this set.
+     * Adds n to this set, returns true if idx was not already in this set.
      */
-    public boolean add(Node n) {
-        if (oldSet.contains(n)) {
+    public boolean add(int idx) {
+        if (oldSet.contains(idx)) {
             return false;
         }
-        return newSet.add(n);
+        return newSet.add(idx);
     }
 
     /**
      * Returns set of nodes already present before last call to flushNew.
      */
-    public PointsToSetInternal getOldSet() {
+    public HybridPointsToSet getOldSet() {
         return oldSet;
     }
 
     /**
      * Returns set of newly-added nodes since last call to flushNew.
      */
-    public PointsToSetInternal getNewSet() {
+    public HybridPointsToSet getNewSet() {
         return newSet;
     }
 
-    @Override
-    public PointsToSetInternal mapToCIPointsToSet() {
-        if (ciPointsToSet == null) {
-            DoublePointsToSet ret = new DoublePointsToSet(type);
-            ret.newSet.addAll(newSet.mapToCIPointsToSet(), null);
-            ret.oldSet.addAll(oldSet.mapToCIPointsToSet(), null);
-            ciPointsToSet = ret;
-        }
-        return ciPointsToSet;
+    public HybridPointsToSet getNewSetCopy() {
+        HybridPointsToSet newCopy = new HybridPointsToSet();
+        newCopy.addAll(newSet, null);
+        return newCopy;
     }
 
     /**
@@ -121,13 +142,14 @@ public class DoublePointsToSet extends PointsToSetInternal {
      */
     public void flushNew() {
         oldSet.addAll(newSet, null);
-        newSet = new HybridPointsToSet(type);
+        newSet = new HybridPointsToSet();
     }
 
     /**
-     * Returns true iff the set contains n.
+     * Returns true iff the set contains idx.
      */
-    public boolean contains(Node n) {
-        return oldSet.contains(n) || newSet.contains(n);
+    @Override
+    public boolean contains(int idx) {
+        return oldSet.contains(idx) || newSet.contains(idx);
     }
 }

@@ -21,11 +21,11 @@ package qilin.pta.toolkits.turner;
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.pta.PTAConfig;
 import qilin.util.PTAUtils;
 import soot.*;
+import soot.jimple.spark.pag.SparkField;
 
 import java.util.*;
 
@@ -59,16 +59,14 @@ public class OCG {
                     return;
                 }
             }
-            contextField.getP2Set().mapToCIPointsToSet().forall(new P2SetVisitor() {
-                @Override
-                public void visit(Node n) {
-                    AllocNode h1 = (AllocNode) n;
-                    if (h1 instanceof ConstantNode) {
-                        return;
-                    }
-                    addEdge(findOrCreate(base), findOrCreate(h1));
+            PointsToSet pts = pta.reachingObjects(contextField).toCIPointsToSet();
+            for (Iterator<AllocNode> it = pts.iterator(); it.hasNext(); ) {
+                AllocNode n = it.next();
+                if (n instanceof ConstantNode) {
+                    continue;
                 }
-            });
+                addEdge(findOrCreate(base), findOrCreate(n));
+            }
         });
     }
 
@@ -253,12 +251,11 @@ public class OCG {
                 return false;
             }
         }
-        PAG pag = pta.getPag();
-        MethodPAG methodPAG = pag.getMethodPAG(method);
+        MethodPAG methodPAG = pta.getPag().getMethodPAG(method);
         MethodNodeFactory factory = methodPAG.nodeFactory();
         Node retNode = factory.caseRet();
-        PointsToSetInternal pts = (PointsToSetInternal) pta.reachingObjects(retNode);
-        return pts.mapToCIPointsToSet().contains(heap);
+        PointsToSet pts = pta.reachingObjects(retNode).toCIPointsToSet();
+        return pts.contains(heap);
     }
 
 }

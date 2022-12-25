@@ -19,19 +19,10 @@
 package qilin.parm.heapabst;
 
 import qilin.core.pag.AllocNode;
-import qilin.core.pag.PAG;
-import soot.SootMethod;
-import soot.Type;
 
 public class AllocSiteAbstractor implements HeapAbstractor {
-    private final PAG pag;
-
-    public AllocSiteAbstractor(PAG pag) {
-        this.pag = pag;
-    }
-
     @Override
-    public AllocNode abstractHeap(Object newExpr, Type type, SootMethod m) {
-        return pag.makeAllocNode(newExpr, type, m);
+    public AllocNode abstractHeap(AllocNode heap) {
+        return heap;
     }
 }

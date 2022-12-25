@@ -21,9 +21,7 @@ package qilin.stat;
 import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.builder.FakeMainFactory;
-import qilin.core.pag.Node;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.pag.AllocNode;
 import qilin.util.PTAUtils;
 import soot.*;
 import soot.jimple.*;
@@ -114,14 +112,8 @@ public class TypeClientStat implements AbstractStat {
                             appCasts++;
                         }
                         boolean fails = false;
-                        Set<Node> pts = new HashSet<>();
-                        ((PointsToSetInternal) pta.reachingObjects((Local) v)).mapToCIPointsToSet().forall(new P2SetVisitor() {
-                            @Override
-                            public void visit(Node n) {
-                                pts.add(n);
-                            }
-                        });
-                        for (Node n : pts) {
+                        Collection<AllocNode> pts = pta.reachingObjects((Local) v).toCollection();
+                        for (AllocNode n : pts) {
                             if (fails) {
                                 break;
                             }

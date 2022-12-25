@@ -28,6 +28,7 @@ import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
 import soot.*;
 import soot.jimple.*;
+import soot.jimple.spark.pag.SparkField;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.queue.QueueReader;
 
@@ -304,7 +305,7 @@ public class Selectx {
                         LocalVarNode ret = (LocalVarNode) tgtnf.caseRet();
                         this.addExitEdge(ret, retDest, callSite);
                     }
-                    LocalVarNode stmtThrowNode = prePAG.makeInvokeStmtThrowVarNode(s, method);
+                    LocalVarNode stmtThrowNode = srcnf.makeInvokeStmtThrowVarNode(s, method);
                     LocalVarNode throwFinal = prePAG.findLocalVarNode(new Parm(tgtmtd, PointsToAnalysis.THROW_NODE));
                     if (throwFinal != null) {
                         this.addExitEdge(throwFinal, stmtThrowNode, callSite);

@@ -92,7 +92,7 @@ public class PTAPattern {
             case CALLSITE: {
                 if (approach != Approach.NONE && approach != Approach.ZIPPER && approach != Approach.MAHJONG
                         && approach != Approach.DATADRIVEN && approach != Approach.TUNNELING
-                        && approach != Approach.SELECTX && approach != Approach.P3CTX
+                        && approach != Approach.SELECTX
                 ) {
                     throw new RuntimeException("Approach <" + approach.toString() + "> is currently not designed for call-site sensitivity.");
                 }
@@ -176,7 +176,6 @@ public class PTAPattern {
         TUNNELING,
         MERCURIAL,
         MAHJONG,
-        P3CTX,
         SELECTX;
 
         static final Map<String, Approach> approaches = new HashMap<>();
@@ -191,7 +190,6 @@ public class PTAPattern {
             Util.add(approaches, DATADRIVEN, "datadriven", "D");
             Util.add(approaches, TUNNELING, "tunneling", "t");
             Util.add(approaches, SELECTX, "selectx", "s");
-            Util.add(approaches, P3CTX, "p3ctx", "P");
             Util.add(approaches, SPARK, "insens", "ci");
         }
 
@@ -215,7 +213,6 @@ public class PTAPattern {
                 case MERCURIAL -> "mercurial";
                 case MAHJONG -> "mahjong";
                 case SELECTX -> "selectx";
-                case P3CTX -> "p3ctx";
                 case SPARK -> "spark";
                 default -> "";
             };

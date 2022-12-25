@@ -23,6 +23,7 @@ import soot.AnySubType;
 import soot.Context;
 import soot.RefLikeType;
 import soot.Type;
+import soot.jimple.spark.pag.SparkField;
 
 import java.util.Collection;
 import java.util.Collections;

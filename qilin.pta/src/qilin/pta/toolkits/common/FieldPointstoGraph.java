@@ -20,10 +20,9 @@ package qilin.pta.toolkits.common;
 
 import qilin.core.PTA;
 import qilin.core.pag.AllocNode;
-import qilin.core.pag.Node;
 import qilin.core.pag.PAG;
-import qilin.core.pag.SparkField;
-import qilin.core.sets.P2SetVisitor;
+import qilin.core.sets.PointsToSet;
+import soot.jimple.spark.pag.SparkField;
 
 import java.util.*;
 
@@ -32,10 +31,11 @@ public class FieldPointstoGraph {
     private final Map<AllocNode, Map<SparkField, Set<AllocNode>>> pointedBy = new HashMap<>();
 
     public FieldPointstoGraph(PTA pta) {
-        buildFPG(pta.getPag());
+        buildFPG(pta);
     }
 
-    private void buildFPG(PAG pag) {
+    private void buildFPG(PTA pta) {
+        PAG pag = pta.getPag();
         pag.getAllocNodes().forEach(this::insertObj);
         pag.getContextFields().forEach(contextField -> {
             AllocNode base = contextField.getBase();
@@ -43,12 +43,11 @@ public class FieldPointstoGraph {
                 return;
             }
             SparkField field = contextField.getField();
-            contextField.getP2Set().mapToCIPointsToSet().forall(new P2SetVisitor() {
-                @Override
-                public void visit(Node n) {
-                    insertFPT(base, field, (AllocNode) n);
-                }
-            });
+            PointsToSet pts = pta.reachingObjects(contextField).toCIPointsToSet();
+            for (Iterator<AllocNode> it = pts.iterator(); it.hasNext(); ) {
+                AllocNode n = it.next();
+                insertFPT(base, field, n);
+            }
         });
     }
 

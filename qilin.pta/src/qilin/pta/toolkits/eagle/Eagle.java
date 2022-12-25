@@ -22,8 +22,7 @@ import qilin.core.PTA;
 import qilin.core.PointsToAnalysis;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
-import qilin.core.sets.P2SetVisitor;
-import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Util;
 import qilin.util.queue.UniqueQueue;
@@ -32,6 +31,7 @@ import soot.SootMethod;
 import soot.Unit;
 import soot.Value;
 import soot.jimple.*;
+import soot.jimple.spark.pag.SparkField;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.queue.QueueReader;
@@ -312,14 +312,11 @@ public class Eagle {
                     addParamEdges(a, thisRef, parms, mret, throwFinal);
                 });
             } else {
-                PointsToSetInternal thisPts = PTAUtils.fetchInsensitivePointsToResult(prePTA, thisRef);
-                thisPts.forall(new P2SetVisitor() {
-                    @Override
-                    public void visit(Node n) {
-                        AllocNode a = (AllocNode) n;
-                        addParamEdges(a, thisRef, parms, mret, throwFinal);
-                    }
-                });
+                PointsToSet thisPts = prePTA.reachingObjects(thisRef).toCIPointsToSet();
+                for (Iterator<AllocNode> it = thisPts.iterator(); it.hasNext(); ) {
+                    AllocNode n = it.next();
+                    addParamEdges(n, thisRef, parms, mret, throwFinal);
+                }
             }
 
             // add invoke edges
@@ -362,7 +359,7 @@ public class Eagle {
                     if (retDest != null && tgtmtd.getReturnType() instanceof RefLikeType) {
                         this.addLoadEdge(receiver, retDest);
                     }
-                    LocalVarNode stmtThrowNode = prePAG.makeInvokeStmtThrowVarNode(s, method);
+                    LocalVarNode stmtThrowNode = srcnf.makeInvokeStmtThrowVarNode(s, method);
                     this.addLoadEdge(receiver, stmtThrowNode);
                     this.addStoreEdge(receiver, receiver);// do not move this out of loop
                 }

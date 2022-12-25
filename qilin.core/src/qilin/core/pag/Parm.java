@@ -30,10 +30,9 @@ import java.util.Objects;
  *
  * @author Ondrej Lhotak
  */
-public class Parm implements SparkField {
+public class Parm {
     private final int index;
     private final SootMethod method;
-    private int number = 0;
 
     public Parm(SootMethod m, int i) {
         index = i;
@@ -64,14 +63,6 @@ public class Parm implements SparkField {
 
     public boolean isThrowRet() {
         return index == PointsToAnalysis.THROW_NODE;
-    }
-
-    public final int getNumber() {
-        return number;
-    }
-
-    public final void setNumber(int number) {
-        this.number = number;
     }
 
     public Type getType() {

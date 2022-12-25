@@ -18,6 +18,7 @@
 
 package qilin.core.sets;
 
+import qilin.core.PTA;
 import qilin.core.pag.Node;
 
 /**
@@ -27,8 +28,19 @@ import qilin.core.pag.Node;
  */
 public abstract class P2SetVisitor {
     protected boolean returnValue = false;
+    protected final PTA pta;
 
-    public abstract void visit(Node n);
+    protected P2SetVisitor(PTA pta) {
+        this.pta = pta;
+    }
+
+
+    protected abstract void visit(Node n);
+
+    public void visit(long idx) {
+        Node node = pta.getPag().getAllocNodeNumberer().get(idx);
+        visit(node);
+    }
 
     public boolean getReturnValue() {
         return returnValue;
