@@ -90,9 +90,11 @@ public class SimplifiedEvaluator implements IEvaluator {
                 }
             }
         }
+        AliasStat aliasStat = new AliasStat(pta);
+        aliasStat.aliasesProcessing();
         exporter.collectMetric("#May Fail Cast (Total):", String.valueOf(totalCastsMayFail));
         exporter.collectMetric("#Virtual Call Site(Polymorphic):", String.valueOf(totalPolyCalls));
-
+        exporter.collectMetric("#globalAlias_incstst:", String.valueOf(aliasStat.getGlobalAliasesIncludingStSt()));
         ptsStat();
     }
 

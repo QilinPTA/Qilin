@@ -27,7 +27,6 @@ import qilin.parm.select.HeuristicSelector;
 import qilin.parm.select.PartialMethodLvSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
-import qilin.pta.StagedPTA;
 import qilin.pta.toolkits.zipper.Main;
 import qilin.util.Stopwatch;
 import soot.*;

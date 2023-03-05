@@ -50,6 +50,13 @@ public class LocalVarNode extends VarNode {
         return false;
     }
 
+    public boolean isReturn() {
+        if (variable instanceof Parm parm) {
+            return parm.isReturn();
+        }
+        return false;
+    }
+
     @Override
     public VarNode base() {
         return this;

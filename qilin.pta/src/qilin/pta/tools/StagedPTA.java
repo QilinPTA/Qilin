@@ -1,6 +1,6 @@
-package qilin.pta;
+package qilin.pta.tools;
 
-import qilin.pta.tools.BasePTA;
+import qilin.pta.PTAConfig;
 
 /*
  * Many recent pointer analyses are two-staged analyses with a preanalysis and a main analysis.

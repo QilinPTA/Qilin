@@ -25,7 +25,6 @@ import qilin.parm.heapabst.AllocSiteAbstractor;
 import qilin.parm.heapabst.HeuristicAbstractor;
 import qilin.parm.select.*;
 import qilin.pta.PTAConfig;
-import qilin.pta.StagedPTA;
 import qilin.util.PTAUtils;
 import qilin.util.Stopwatch;
 import soot.*;
