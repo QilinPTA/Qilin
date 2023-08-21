@@ -244,9 +244,9 @@ public final class PTAUtils {
         }
         if (!(type instanceof RefType rt))
             return false;
-        if (!rt.hasSootClass()) {
-            return true;
-        }
+//        if (!rt.hasSootClass()) {
+//            return true;
+//        }
         SootClass cl = rt.getSootClass();
         return cl.resolvingLevel() < SootClass.HIERARCHY;
     }
