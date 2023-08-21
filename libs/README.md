@@ -1,6 +1,3 @@
-The official soot (version 4.2.1) contains bugs. Thus, Qilin is built on top of a modified version of Soot.
-The following steps introduce how to build the version of Soot that we use.
-
 # How to build the Soot?
 ## Step 1: Download [Soot](https://github.com/soot-oss/soot/archive/refs/tags/4.4.0.zip)
 ## Step 2: Build Soot
