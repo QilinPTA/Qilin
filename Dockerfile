@@ -16,5 +16,5 @@ COPY artifact/util/ $workdir/util/
 COPY artifact/run.py $workdir/
 COPY artifact/qilin.py $workdir/
 COPY artifact/__init__.py $workdir/
-COPY --from=buildEnv /build/artifact/Qilin-1.0-SNAPSHOT.jar $workdir/
+COPY --from=buildEnv /build/artifact/Qilin-0.9.4-SNAPSHOT.jar $workdir/
 CMD /bin/bash
