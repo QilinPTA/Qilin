@@ -3,7 +3,9 @@
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/QilinPTA/Qilin) 
 
 > :warning: [Documentation for Qilin](https://qilinpta.github.io/) is under development.
-
+# News
+* <b>[DebloaterX](https://github.com/DongjieHe/DebloaterX) published in our [OOPSLA paper](https://dongjiehe.github.io/mypaper/OOPSLA2023_DebloaterX_Preprint.pdf) is now available in Qilin</b>
+* <b>Qilin now supports Soot-4.4.0</b>
 # Qilin: A fully imperative Java Pointer Analysis Framework.
 The repository hosts Qilin, a new Java pointer analysis framework for supporting fine-grained context-sensitivity.
 
