@@ -16,25 +16,26 @@ from util.benchmark import MAINCLASSES
 from util.benchmark import JREVERSION
 
 # ANALYSES = ['1o', 'Z-2o', 'E-2o', 'T-2o', '2o', 'Z-3o', 'T-3o', 'E-3o', '3o', '1c', '2c', 'M-2o', '2h', '2t', 'Z-2c', 'M-2c']
-ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c']
-# ANALYSES = ['D-2o', '2o', 'D-2c', 'D-2h', 'D-2ht', '2h', '2t', 't-1c', '1c', 't-2t', 't-2o', 't-2h']
-# for EAGLEOPTIONS
-UNSCALABLE2 = {
-    'T-3o': ['eclipse', 'checkstyle'],
-    'E-3o': ['chart', 'eclipse', 'checkstyle', 'findbugs'],
-    'Z-3o': ['chart', 'eclipse', 'checkstyle', 'findbugs'],
-    '3o': ['chart', 'eclipse', 'checkstyle', 'findbugs', 'xalan'],
-}
+ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c', '3o', 'T-3o', 'E-3o', 'Z-3o']
 
 # for ZIPPEROPTIONS
-UNSCALABLE = {
-    # 'T-3o': ['eclipse', ],
+OoM = {
     'E-3o': ['eclipse', ],
     'Z-3o': ['eclipse', ],
-    '3o': ['eclipse', ],
+    '3o': ['chart', 'eclipse', 'checkstyle', 'findbugs', 'xalan'],
+    '3o+D':['eclipse',],
+    '3o+DX':['eclipse'],
+    '3o+DC':['eclipse']
+}
+TIMEOUT = {
+    '3o': ['bloat'],
+    '3o+D': ['checkstyle'],
+    '3o+DC': ['checkstyle', 'checkstyle'],
+    'E-3o': ['checkstyle', 'findbugs'],
+    'Z-3o': ['checkstyle'],
 }
 
-BASICOPTIONS = ['-Xmx256g', '-timeout=43200', ]
+BASICOPTIONS = ['-Xmx512g', '-timeout=43200', ]
 # This setting is same as that used in Zipper's artifact.
 ZIPPEROPTIONS = ['-pae', '-pe', '-clinit=ONFLY', '-lcs', '-mh']
 MAHJONGOPTIONS = ['-pae', '-pe', '-clinit=ONFLY']
@@ -73,10 +74,14 @@ def runPTA(analysis, bm, OPTIONSTYLE):
         if MODULAR:
             analysisName = analysis + "+M"
     if DEBLOAT:
-        outputFile = os.path.join(OUTPUTPATH, bm + '_' + analysisName + '+D' + '.txt')
-    else:
-        outputFile = os.path.join(OUTPUTPATH, bm + '_' + analysisName + '.txt')
-    if analysis in UNSCALABLE and bm in UNSCALABLE[analysis]:
+        if DEBLOATAPPROACH == 'CONCH':
+            analysisName = analysis + '+D'
+        elif DEBLOATAPPROACH == 'DEBLOATERX':
+            analysisName = analysis + '+DX'
+        else:
+            analysisName = analysis + '+DC'
+    outputFile = os.path.join(OUTPUTPATH, bm + '_' + analysisName + '.txt')
+    if (analysisName in OoM and bm in OoM[analysisName]) or (analysisName in TIMEOUT and bm in TIMEOUT[analysisName]):
         print('predicted unscalable. skip this.')
         if not os.path.exists(outputFile):
             with open(outputFile, 'a') as f:
@@ -88,6 +93,7 @@ def runPTA(analysis, bm, OPTIONSTYLE):
         cmd += ' -dumpstats '
     if DEBLOAT:
         cmd += ' -cd '
+        cmd += ' -cda=' + DEBLOATAPPROACH
     if not PRINT:
         if os.path.exists(outputFile):
             print('old result found. skip this.')
@@ -102,6 +108,7 @@ OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-print', 'print the analyses results on screen.') \
                 + option('-clean', 'remove previous outputs.') \
                 + option('-cd', 'enable context debloating.') \
+                + option('-cda=<[CONCH|DEBLOATERX|COLLECTION]>', 'specify the debloating approach (default value is CONCH)') \
                 + option('-dump', 'dump statistics into files.') \
                 + option('<PTA>', 'specify pointer analysis.') \
                 + option('<Benchmark>', 'specify benchmark.') \
@@ -119,8 +126,8 @@ PRINT = False
 PREONLY = False
 MODULAR = False
 DEBLOAT = False
+DEBLOATAPPROACH = 'CONCH'
 OPTIONSTYLE = 'zipper'
-DACAPO = '2006'
 
 if __name__ == '__main__':
     if '-help' in sys.argv or '-h' in sys.argv:
@@ -140,7 +147,7 @@ if __name__ == '__main__':
     if "-dump" in sys.argv:
         DUMP = True
 
-    ALLBENCHMARKS = BENCHMARKS2018 if DACAPO == '2018'else BENCHMARKS
+    ALLBENCHMARKS = BENCHMARKS
     analyses = []
     benchmarks = []
     for arg in sys.argv:
@@ -153,6 +160,9 @@ if __name__ == '__main__':
         elif arg.startswith('-OS='):
             OPTIONSTYLE = arg[len('-OS='):]
             print(OPTIONSTYLE)
+        elif arg.startswith('-cda='):
+            DEBLOATAPPROACH = arg[len('-cda='):]
+            print(DEBLOATAPPROACH)
 
     if "-all" in sys.argv:
         if len(benchmarks) == 0:

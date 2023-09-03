@@ -50,7 +50,7 @@ public class PTAFactory {
                         assert ptaPattern.getContextDepth() == ptaPattern.getHeapContextDepth() + 1;
                         BasePTA eagle = new EaglePTA(ptaPattern.getContextDepth());
                         if (PTAConfig.v().getPtaConfig().ctxDebloating) {
-                            return new DebloatedPTA(eagle);
+                            return new DebloatedPTA(eagle, PTAConfig.v().getPtaConfig().debloatApproach);
                         } else {
                             return eagle;
                         }
@@ -66,7 +66,7 @@ public class PTAFactory {
                         CtxConstructor ctxCons = new ObjCtxConstructor();
                         BasePTA zipperPTA = new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
                         if (PTAConfig.v().getPtaConfig().ctxDebloating) {
-                            return new DebloatedPTA(zipperPTA);
+                            return new DebloatedPTA(zipperPTA, PTAConfig.v().getPtaConfig().debloatApproach);
                         } else {
                             return zipperPTA;
                         }
@@ -75,7 +75,7 @@ public class PTAFactory {
                         CtxConstructor ctxCons = new ObjCtxConstructor();
                         BasePTA mahjongPTA = new MahjongPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
                         if (PTAConfig.v().getPtaConfig().ctxDebloating) {
-                            return new DebloatedPTA(mahjongPTA);
+                            return new DebloatedPTA(mahjongPTA, PTAConfig.v().getPtaConfig().debloatApproach);
                         } else {
                             return mahjongPTA;
                         }
@@ -92,7 +92,7 @@ public class PTAFactory {
                         BasePTA kobj = new ObjectSensPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth());
 
                         if (PTAConfig.v().getPtaConfig().ctxDebloating) {
-                            return new DebloatedPTA(kobj);
+                            return new DebloatedPTA(kobj, PTAConfig.v().getPtaConfig().debloatApproach);
                         } else {
                             // normal object-sensitive pointer analysis, Milanova TOSEM'05
                             return kobj;

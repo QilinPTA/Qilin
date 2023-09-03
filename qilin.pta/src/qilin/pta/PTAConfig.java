@@ -20,6 +20,7 @@ package qilin.pta;
 
 import driver.PTAPattern;
 import qilin.CoreConfig;
+import qilin.pta.tools.DebloatedPTA;
 
 public class PTAConfig extends CoreConfig {
     private static PTAConfig config = null;
@@ -49,6 +50,7 @@ public class PTAConfig extends CoreConfig {
          * If this option is turned on, we will apply context debloating techniques.
          */
         public boolean ctxDebloating = false;
+        public DebloatedPTA.DebloatApproach debloatApproach = DebloatedPTA.DebloatApproach.CONCH;
 
     }
 

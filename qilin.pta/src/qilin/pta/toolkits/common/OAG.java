@@ -38,9 +38,9 @@ public class OAG implements DirectedGraph<AllocNode> {
     protected final PTA pta;
     protected final Map<AllocNode, Set<AllocNode>> successors;
     protected final Map<AllocNode, Set<AllocNode>> predecessors;
-    private final Set<AllocNode> nodes = new HashSet<>();
-    private Collection<AllocNode> rootNodes;
-    private Collection<AllocNode> tailNodes;
+    protected final Set<AllocNode> nodes = new HashSet<>();
+    protected Collection<AllocNode> rootNodes;
+    protected Collection<AllocNode> tailNodes;
 
     public OAG(PTA prePta) {
         this.pta = prePta;
@@ -148,4 +148,15 @@ public class OAG implements DirectedGraph<AllocNode> {
         this.successors.computeIfAbsent(src, k -> new HashSet<>()).add(tgt);
     }
 
+    public int nodeSize() {
+        return this.nodes.size();
+    }
+
+    public int edgeSize() {
+        int ret = 0;
+        for (AllocNode obj : predecessors.keySet()) {
+            ret += predecessors.get(obj).size();
+        }
+        return ret;
+    }
 }
