@@ -44,6 +44,7 @@ def getPTACommand(analysis, bm, OPTIONSTYLE):
     options += ['-reflectionlog', getPath(BATCHPATH, db.getTamiflexLog(bm))]
     options += ['-mainclass', 'Harness']
     options += ['-jre=jre1.8.0_121_debug']
+    options.append('-cga=' + CALLGRAPHALG)
     cmd = ' '.join(options)
     return cmd
 
@@ -87,6 +88,7 @@ OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-clean', 'remove previous outputs.') \
                 + option('-dump', 'dump statistics into files.') \
                 + option('<PTA>', 'specify pointer analysis.') \
+                + option('-cga=<[CHA|VTA|RTA|GEOM|SPARK|QILIN]>', 'specify the callgraph construction algorithm (default value is QILIN)') \
                 + option('<Benchmark>', 'specify benchmark.') \
                 + option('-out=<out>', 'specify output path.') \
                 + option('-pre', 'run pre-analysis only.') \
@@ -102,6 +104,7 @@ PRINT = False
 PREONLY = False
 DEBLOAT = False
 DEBLOATAPPROACH = 'CONCH'
+CALLGRAPHALG = 'QILIN'
 OPTIONSTYLE = 'zipper'
 
 if __name__ == '__main__':
@@ -135,6 +138,9 @@ if __name__ == '__main__':
         elif arg.startswith('-cda='):
             DEBLOATAPPROACH = arg[len('-cda='):]
             print(DEBLOATAPPROACH)
+        elif arg.startswith('-cga='):
+            CALLGRAPHALG = arg[len('-cga='):]
+            print(CALLGRAPHALG)
 
     if "-all" in sys.argv:
         if len(benchmarks) == 0:

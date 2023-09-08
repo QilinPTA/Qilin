@@ -86,6 +86,9 @@ public class PTAOption extends Options {
         addOption("cda", "debloatapproach", "[CONCH, DEBLOATERX]", "Specify debloating approach (default value: CONCH)");
         addOption("tmd", "modular", "Enable Turner to run modularly (default value: false)");
 
+        // callgraph algorithm configurations
+        addOption("cga", "callgraphalg", "[CHA, VTA, RTA, SPARK, GEOM, QILIN]", "Specify callgraph construction algorithm (default value: QILIN)");
+
         // others
         addOption("h", "help", "print this message");
         addOption("pre", "preonly", "Run only pre-analysis (default value: false)");
@@ -174,7 +177,10 @@ public class PTAOption extends Options {
         if (cmd.hasOption("turnerconfig")) {
             PTAConfig.v().turnerConfig = PTAConfig.TurnerConfig.valueOf(cmd.getOptionValue("turnerconfig"));
         }
-
+        // callgraph
+        if (cmd.hasOption("callgraphalg")) {
+            PTAConfig.v().callgraphAlg = PTAConfig.CallgraphAlgorithm.valueOf(cmd.getOptionValue("callgraphalg"));
+        }
         // output
         if (cmd.hasOption("dumpjimple")) {
             PTAConfig.v().getOutConfig().dumpJimple = true;

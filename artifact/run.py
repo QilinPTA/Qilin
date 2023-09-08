@@ -62,6 +62,7 @@ def getPTACommand(analysis, bm, OPTIONSTYLE):
     options += ['-mainclass', MAINCLASSES[bm]]
     if MODULAR:
         options.append('-tmd')
+    options.append('-cga=' + CALLGRAPHALG)
     cmd = ' '.join(options)
     return cmd
 
@@ -111,6 +112,7 @@ OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-cda=<[CONCH|DEBLOATERX|COLLECTION]>', 'specify the debloating approach (default value is CONCH)') \
                 + option('-dump', 'dump statistics into files.') \
                 + option('<PTA>', 'specify pointer analysis.') \
+                + option('-cga=<[CHA|VTA|RTA|GEOM|SPARK|QILIN]>', 'specify the callgraph construction algorithm (default value is QILIN)') \
                 + option('<Benchmark>', 'specify benchmark.') \
                 + option('-jre=<[jre1.6.0_45|jre1.8.0_312]>', 'specify the JRE version.') \
                 + option('-out=<out>', 'specify output path.') \
@@ -127,6 +129,7 @@ PREONLY = False
 MODULAR = False
 DEBLOAT = False
 DEBLOATAPPROACH = 'CONCH'
+CALLGRAPHALG = 'QILIN'
 OPTIONSTYLE = 'zipper'
 
 if __name__ == '__main__':
@@ -163,6 +166,9 @@ if __name__ == '__main__':
         elif arg.startswith('-cda='):
             DEBLOATAPPROACH = arg[len('-cda='):]
             print(DEBLOATAPPROACH)
+        elif arg.startswith('-cga='):
+            CALLGRAPHALG = arg[len('-cga='):]
+            print(CALLGRAPHALG)
 
     if "-all" in sys.argv:
         if len(benchmarks) == 0:

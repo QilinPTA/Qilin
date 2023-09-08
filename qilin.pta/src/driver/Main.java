@@ -27,6 +27,8 @@ import qilin.pta.PTAConfig;
 import qilin.util.MemoryWatcher;
 import qilin.util.PTAUtils;
 import qilin.util.Stopwatch;
+import soot.PackManager;
+import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.options.Options;
 
 import java.io.*;
@@ -45,6 +47,10 @@ public class Main {
             PTAUtils.dumpJimple(jimplePath);
             System.out.println("Jimple files have been dumped to: " + jimplePath);
         }
+        logger.info("Constructing the callgraph...");
+        PackManager.v().getPack("cg").apply();
+        CallGraph cg = PTAScene.v().getCallGraph();
+        System.out.println("#CALLGRAPH:" + cg.size());
         pta = PTAFactory.createPTA(PTAConfig.v().getPtaConfig().ptaPattern);
         pta.run();
         return pta;
@@ -98,6 +104,9 @@ public class Main {
             Options.v().set_no_bodies_for_excluded(true);
             Options.v().set_exclude(appConfig.EXCLUDE);
         }
+
+        // configure callgraph construction algorithm
+        configureCallgraphAlg(config.callgraphAlg);
 
         Options.v().setPhaseOption("jb", "use-original-names:true");
         Options.v().setPhaseOption("jb", "model-lambdametafactory:false");
@@ -169,7 +178,80 @@ public class Main {
         return null;
     }
 
+    // callgraph relevant APIs
+    // refer to https://github.com/secure-software-engineering/FlowDroid/blob/develop/soot-infoflow-android/src/soot/jimple/infoflow/android/SetupApplication.java
+    private static void configureCallgraphAlg(PTAConfig.CallgraphAlgorithm cgAlg) {
+        switch (cgAlg) {
+            case CHA -> {
+                Options.v().setPhaseOption("cg.cha", "on");
+                break;
+            }
+            case VTA -> {
+                Options.v().setPhaseOption("cg.spark", "on");
+                Options.v().setPhaseOption("cg.spark", "vta:true");
+                break;
+            }
+            case RTA -> {
+                Options.v().setPhaseOption("cg.spark", "on");
+                Options.v().setPhaseOption("cg.spark", "rta:true");
+                Options.v().setPhaseOption("cg.spark", "on-fly-cg:false");
+                break;
+            }
+            case GEOM -> {
+                Options.v().setPhaseOption("cg.spark", "on");
+                Options.v().setPhaseOption("cg.spark", "geom-pta:true");
+                // Those are default options, not sure whether removing them works.
+                Options.v().setPhaseOption("cg.spark", "geom-encoding:Geom");
+                Options.v().setPhaseOption("cg.spark", "geom-worklist:PQ");
+                break;
+            }
+            case SPARK -> {
+                Options.v().setPhaseOption("cg.spark", "on");
+                break;
+            }
+            case QILIN -> {
+            }
+            default -> {
+                break;
+            }
+        }
+    }
+
+    public static CallGraph runCallgraphAlg(String[] args) {
+        CallGraph cg;
+        new PTAOption().parseCommandLine(args);
+        setupSoot();
+        if (PTAConfig.v().getOutConfig().dumpJimple) {
+            String jimplePath = PTAConfig.v().getAppConfig().APP_PATH.replace(".jar", "");
+            PTAUtils.dumpJimple(jimplePath);
+            System.out.println("Jimple files have been dumped to: " + jimplePath);
+        }
+        logger.info("Constructing the callgraph using " + PTAConfig.v().callgraphAlg + "...");
+        if (PTAConfig.v().callgraphAlg == PTAConfig.CallgraphAlgorithm.QILIN) {
+            PTA pta = PTAFactory.createPTA(PTAConfig.v().getPtaConfig().ptaPattern);
+            pta.run();
+        } else {
+            PackManager.v().getPack("cg").apply();
+        }
+        cg = PTAScene.v().getCallGraph();
+        System.out.println("#CALLGRAPH:" + cg.size());
+        return cg;
+    }
+
+    public static void mainCG(String[] args) {
+        Stopwatch cgTimer = Stopwatch.newAndStart("Main CG");
+        long pid = ProcessHandle.current().pid();
+        MemoryWatcher memoryWatcher = new MemoryWatcher(pid, "Main CG");
+        memoryWatcher.start();
+        runCallgraphAlg(args);
+        cgTimer.stop();
+        System.out.println(cgTimer);
+        memoryWatcher.stop();
+        System.out.println(memoryWatcher);
+    }
+
     public static void main(String[] args) {
         mainRun(args);
+        // mainCG(args);
     }
 }

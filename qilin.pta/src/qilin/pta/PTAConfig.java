@@ -73,4 +73,14 @@ public class PTAConfig extends CoreConfig {
     public PointerAnalysisConfiguration getPtaConfig() {
         return (PointerAnalysisConfiguration) this.ptaConfig;
     }
+
+    /*
+     * Configures the callgraph options
+     * */
+    public enum CallgraphAlgorithm {
+        /*CHA, VTA, RTA, GEOM, and SPARK are all provided by Soot */
+        CHA, VTA, RTA, GEOM, SPARK, QILIN
+    }
+
+    public CallgraphAlgorithm callgraphAlg = CallgraphAlgorithm.QILIN;
 }

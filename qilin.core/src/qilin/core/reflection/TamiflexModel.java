@@ -42,7 +42,7 @@ public class TamiflexModel extends ReflectionModel {
 
     public TamiflexModel() {
         reflectionMap = DataFactory.createMap();
-        parseTamiflexLog(CoreConfig.v().getAppConfig().REFLECTION_LOG, false);
+        parseTamiflexLog(CoreConfig.v().getAppConfig().REFLECTION_LOG, true);
     }
 
     @Override
