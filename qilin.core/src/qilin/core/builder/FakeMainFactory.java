@@ -29,8 +29,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class FakeMainFactory extends ArtificialMethod {
-    public static FakeMainFactory instance;
-
     public static int implicitCallEdges;
     private final SootClass fakeClass;
 

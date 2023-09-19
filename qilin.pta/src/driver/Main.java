@@ -47,10 +47,6 @@ public class Main {
             PTAUtils.dumpJimple(jimplePath);
             System.out.println("Jimple files have been dumped to: " + jimplePath);
         }
-        logger.info("Constructing the callgraph...");
-        PackManager.v().getPack("cg").apply();
-        CallGraph cg = PTAScene.v().getCallGraph();
-        System.out.println("#CALLGRAPH:" + cg.size());
         pta = PTAFactory.createPTA(PTAConfig.v().getPtaConfig().ptaPattern);
         pta.run();
         return pta;
