@@ -11,10 +11,8 @@ sourceSets.test {
 }
 
 repositories {
+    maven { url "https://repo.maven.apache.org/maven2/" }
     maven { url "https://repo1.maven.org/maven2/" }
-    flatDir {
-        dirs 'libs'
-    }
 }
 
 test {
@@ -23,11 +21,15 @@ test {
 }
 
 dependencies {
+    implementation("org.soot-oss:soot:4.4.0")
+    implementation("de.upb.cs.swt:axml:2.1.1")
+    implementation("de.upb.cs.swt:heros:1.2.3")
+    implementation("ca.mcgill.sable:jasmin:3.0.3")
     testImplementation(project(':qilin.microben'))
     implementation(project(':qilin.core'))
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.2'
-    implementation group: 'com.google.guava', name: 'guava', version: '28.1-jre'
+    implementation group: 'com.google.guava', name: 'guava', version: '32.0.1-jre'
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
