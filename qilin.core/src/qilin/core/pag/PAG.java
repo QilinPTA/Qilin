@@ -29,10 +29,12 @@ import qilin.core.reflection.TamiflexModel;
 import qilin.parm.heapabst.HeapAbstractor;
 import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
+import qilin.util.Pair;
 import soot.*;
 import soot.jimple.*;
 import soot.jimple.internal.JArrayRef;
 import soot.jimple.internal.JAssignStmt;
+import soot.jimple.internal.JCaughtExceptionRef;
 import soot.jimple.internal.JimpleLocal;
 import soot.jimple.spark.pag.SparkField;
 import soot.util.ArrayNumberer;
@@ -345,6 +347,14 @@ public class PAG {
      * Finds or creates the LocalVarNode for the variable value, of type type.
      */
     public LocalVarNode makeLocalVarNode(Object value, Type type, SootMethod method) {
+        if (value instanceof Parm || value instanceof Local || value instanceof Stmt || value instanceof Pair || value instanceof Expr
+            || value instanceof JCaughtExceptionRef
+        ) {
+
+        } else {
+            System.out.println(value + ";;" + value.getClass());
+        }
+        JCaughtExceptionRef x;
         LocalVarNode ret = (LocalVarNode) valToValNode.get(value);
         if (ret == null) {
             valToValNode.put(value, ret = new LocalVarNode(value, type, method));
@@ -587,15 +597,6 @@ public class PAG {
             body.getUnits().insertAfter(newUnits.get(unit), unit);
         }
     }
-
-    public LocalVarNode makeInvokeStmtThrowVarNode(Stmt invoke, SootMethod method) {
-        return makeLocalVarNode(invoke, RefType.v("java.lang.Throwable"), method);
-    }
-
-    public HeapAbstractor heapAbstractor() {
-        return pta.heapAbstractor();
-    }
-
 
     public void resetPointsToSet() {
         this.addedContexts.clear();
