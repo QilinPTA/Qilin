@@ -347,14 +347,6 @@ public class PAG {
      * Finds or creates the LocalVarNode for the variable value, of type type.
      */
     public LocalVarNode makeLocalVarNode(Object value, Type type, SootMethod method) {
-        if (value instanceof Parm || value instanceof Local || value instanceof Stmt || value instanceof Pair || value instanceof Expr
-            || value instanceof JCaughtExceptionRef
-        ) {
-
-        } else {
-            System.out.println(value + ";;" + value.getClass());
-        }
-        JCaughtExceptionRef x;
         LocalVarNode ret = (LocalVarNode) valToValNode.get(value);
         if (ret == null) {
             valToValNode.put(value, ret = new LocalVarNode(value, type, method));
@@ -437,10 +429,6 @@ public class PAG {
 
     public Map<MethodPAG, Set<Context>> getMethod2ContextsMap() {
         return addedContexts;
-    }
-
-    public boolean containsMethodPAG(SootMethod m) {
-        return methodToPag.containsKey(m);
     }
 
     public Collection<ContextField> getContextFields() {
