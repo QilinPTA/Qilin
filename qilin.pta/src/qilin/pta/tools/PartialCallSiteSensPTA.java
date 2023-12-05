@@ -18,7 +18,6 @@
 
 package qilin.pta.tools;
 
-import qilin.core.CorePTA;
 import qilin.core.pag.*;
 import qilin.parm.ctxcons.CallsiteCtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
@@ -38,7 +37,6 @@ import java.util.Set;
 public abstract class PartialCallSiteSensPTA extends StagedPTA {
     protected Set<Object> csnodes = new HashSet<>();
     protected Set<SootMethod> csmethods = new HashSet<>();
-    protected CorePTA prePTA;
     protected PAG prePAG;
 
     // just for stats
