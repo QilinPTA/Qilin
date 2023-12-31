@@ -92,7 +92,7 @@ public class PTAOption extends Options {
         // others
         addOption("h", "help", "print this message");
         addOption("pre", "preonly", "Run only pre-analysis (default value: false)");
-
+        addOption("mult", "multisolver", "Use multi-threaded solver (default value: false)");
     }
 
     public void parseCommandLine(String[] args) {
@@ -139,6 +139,9 @@ public class PTAOption extends Options {
         }
         if (cmd.hasOption("preonly")) {
             PTAConfig.v().getPtaConfig().preAnalysisOnly = true;
+        }
+        if (cmd.hasOption("multisolver")) {
+            PTAConfig.v().getPtaConfig().useMultiSolver = true;
         }
         if (cmd.hasOption("ctxdebloat")) {
             PTAConfig.v().getPtaConfig().ctxDebloating = true;

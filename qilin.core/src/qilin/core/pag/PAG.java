@@ -18,6 +18,7 @@
 
 package qilin.core.pag;
 
+import heros.solver.CountingThreadPoolExecutor;
 import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
@@ -26,15 +27,14 @@ import qilin.core.natives.NativeMethodDriver;
 import qilin.core.reflection.NopReflectionModel;
 import qilin.core.reflection.ReflectionModel;
 import qilin.core.reflection.TamiflexModel;
+import qilin.core.solver.concurrent.ActivateNewPAGEdgeTask;
 import qilin.parm.heapabst.HeapAbstractor;
 import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
-import qilin.util.Pair;
 import soot.*;
 import soot.jimple.*;
 import soot.jimple.internal.JArrayRef;
 import soot.jimple.internal.JAssignStmt;
-import soot.jimple.internal.JCaughtExceptionRef;
 import soot.jimple.internal.JimpleLocal;
 import soot.jimple.spark.pag.SparkField;
 import soot.util.ArrayNumberer;
@@ -75,6 +75,7 @@ public class PAG {
     protected final Set<Local> locals;
     // ==========================outer objects==============================
     protected ChunkedQueue<Node> edgeQueue;
+    protected CountingThreadPoolExecutor executor;
 
     protected final Map<ValNode, Set<ValNode>> simple;
     protected final Map<ValNode, Set<ValNode>> simpleInv;
@@ -113,6 +114,10 @@ public class PAG {
 
     public void setEdgeQueue(ChunkedQueue<Node> edgeQueue) {
         this.edgeQueue = edgeQueue;
+    }
+
+    public void setExecutor(CountingThreadPoolExecutor executor) {
+        this.executor = executor;
     }
 
     public Map<AllocNode, Set<VarNode>> getAlloc() {
@@ -192,8 +197,14 @@ public class PAG {
      */
     public final void addEdge(Node from, Node to) {
         if (addEdgeIntenal(from, to)) {
-            edgeQueue.add(from);
-            edgeQueue.add(to);
+            if (PTAUtils.useMultiThreadedSolver()) {
+                ActivateNewPAGEdgeTask anpet = new ActivateNewPAGEdgeTask(from, to, pta, executor);
+                this.executor.execute(anpet);
+            } else {
+                    edgeQueue.add(from);
+                    edgeQueue.add(to);
+            }
+
         }
     }
 
@@ -431,6 +442,10 @@ public class PAG {
         return addedContexts;
     }
 
+    public boolean containsMethodPAG(SootMethod m) {
+        return methodToPag.containsKey(m);
+    }
+
     public Collection<ContextField> getContextFields() {
         return contextFieldMap.values().stream().flatMap(m -> m.values().stream()).collect(Collectors.toSet());
     }
@@ -585,6 +600,15 @@ public class PAG {
             body.getUnits().insertAfter(newUnits.get(unit), unit);
         }
     }
+
+    public LocalVarNode makeInvokeStmtThrowVarNode(Stmt invoke, SootMethod method) {
+        return makeLocalVarNode(invoke, RefType.v("java.lang.Throwable"), method);
+    }
+
+    public HeapAbstractor heapAbstractor() {
+        return pta.heapAbstractor();
+    }
+
 
     public void resetPointsToSet() {
         this.addedContexts.clear();

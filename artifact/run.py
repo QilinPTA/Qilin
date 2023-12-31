@@ -88,6 +88,8 @@ def runPTA(analysis, bm, OPTIONSTYLE):
             with open(outputFile, 'a') as f:
                 f.write('predicted unscalable.')
         return
+    if MULTSOLVER:
+        cmd += ' -mult '
     if PREONLY:
         cmd += ' -pre '
     if DUMP:
@@ -118,6 +120,7 @@ OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-out=<out>', 'specify output path.') \
                 + option('-M', 'run Turner modularly.') \
                 + option('-pre', 'run pre-analysis only.') \
+                + option('-mult', 'use multiple-threaded solver.') \
                 + option('-OS=<eagle|zipper|mahjong>', 'specify the style of configurations.') \
                 + option('-all', 'run all analyses for specified benchmark(s) if ONLY benchmark(s) is specified;\n\
 				run specified analyses for all benchmark(s) if ONLY analyses is specified;\n\
@@ -128,6 +131,7 @@ PRINT = False
 PREONLY = False
 MODULAR = False
 DEBLOAT = False
+MULTSOLVER = False
 DEBLOATAPPROACH = 'CONCH'
 CALLGRAPHALG = 'QILIN'
 OPTIONSTYLE = 'zipper'
@@ -143,6 +147,8 @@ if __name__ == '__main__':
         PRINT = True
     if "-pre" in sys.argv:
         PREONLY = True
+    if "-mult" in sys.argv:
+        MULTSOLVER = True
     if "-M" in sys.argv:
         MODULAR = True
     if "-cd" in sys.argv:

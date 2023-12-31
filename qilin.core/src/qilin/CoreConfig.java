@@ -89,6 +89,12 @@ public class CoreConfig {
         public boolean enforceEmptyCtxForIgnoreTypes = false;
 
         public String ptaName;
+
+        /*
+         * Use multithreaded solver
+         * */
+        public boolean useMultiSolver = false;
+        public int threadNum = Runtime.getRuntime().availableProcessors();
     }
 
     public static class ApplicationConfiguration {

@@ -40,6 +40,7 @@ import java.util.*;
  */
 public class MethodPAG {
     private final ChunkedQueue<Node> internalEdges = new ChunkedQueue<>();
+    private final Map<Node, Set<Node>> src2dsts = DataFactory.createMap();
     private final QueueReader<Node> internalReader = internalEdges.reader();
     private final Set<SootMethod> clinits = DataFactory.createSet();
     private final Collection<Unit> invokeStmts = DataFactory.createSet();
@@ -174,8 +175,21 @@ public class MethodPAG {
         if (src == null) {
             return;
         }
-        internalEdges.add(src);
-        internalEdges.add(dst);
+        if (PTAUtils.useMultiThreadedSolver()) {
+            Set<Node> dsts = src2dsts.computeIfAbsent(src, k -> DataFactory.createSet());
+            if (!dsts.contains(dst)) {
+                synchronized (dsts) {
+                    if (!dsts.contains(dst)) {
+                        dsts.add(dst);
+                        internalEdges.add(src);
+                        internalEdges.add(dst);
+                    }
+                }
+            }
+        } else {
+            internalEdges.add(src);
+            internalEdges.add(dst);
+        }
     }
 
     public QueueReader<Node> getInternalReader() {

@@ -18,12 +18,14 @@
 
 package qilin.core.builder;
 
+import heros.solver.CountingThreadPoolExecutor;
 import qilin.CoreConfig;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
 import qilin.core.pag.*;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
+import qilin.core.solver.concurrent.ProcessStmtsTask;
 import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
 import soot.*;
@@ -42,6 +44,7 @@ public class CallGraphBuilder {
     protected final Map<SootMethod, Map<Object, Stmt>> methodToInvokeStmt;
     protected final Set<MethodOrMethodContext> reachMethods;
     private ChunkedQueue<MethodOrMethodContext> rmQueue;
+    private CountingThreadPoolExecutor executor;
 
     protected final Set<Edge> calledges;
     protected final PTA pta;
@@ -62,6 +65,9 @@ public class CallGraphBuilder {
         this.rmQueue = rmQueue;
     }
 
+    public void setThreadExecutor(CountingThreadPoolExecutor executor) {
+        this.executor = executor;
+    }
     public Collection<MethodOrMethodContext> getReachableMethods() {
         return reachMethods;
     }
@@ -116,7 +122,12 @@ public class CallGraphBuilder {
     public void initReachableMethods() {
         for (MethodOrMethodContext momc : getEntryPoints()) {
             if (reachMethods.add(momc)) {
-                rmQueue.add(momc);
+                if (PTAUtils.useMultiThreadedSolver()) {
+                    ProcessStmtsTask pst = new ProcessStmtsTask(momc, pta, executor);
+                    this.executor.execute(pst);
+                } else {
+                    rmQueue.add(momc);
+                }
             }
         }
     }
@@ -170,7 +181,12 @@ public class CallGraphBuilder {
         if (calledges.add(edge)) {
             MethodOrMethodContext callee = edge.getTgt();
             if (reachMethods.add(callee)) {
-                rmQueue.add(callee);
+                if (PTAUtils.useMultiThreadedSolver()) {
+                    ProcessStmtsTask pst = new ProcessStmtsTask(callee, pta, executor);
+                    this.executor.execute(pst);
+                } else {
+                    rmQueue.add(callee);
+                }
             }
             processCallAssign(edge);
         }

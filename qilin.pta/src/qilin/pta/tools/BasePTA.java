@@ -24,6 +24,7 @@ import qilin.core.builder.CallGraphBuilder;
 import qilin.core.pag.PAG;
 import qilin.core.solver.Propagator;
 import qilin.core.solver.Solver;
+import qilin.core.solver.concurrent.ConcurrentSolver;
 import qilin.stat.IEvaluator;
 import qilin.stat.PTAEvaluator;
 import qilin.stat.SimplifiedEvaluator;
@@ -53,6 +54,9 @@ public abstract class BasePTA extends CorePTA {
 
     @Override
     public Propagator getPropagator() {
+        if (PTAUtils.useMultiThreadedSolver()) {
+            return new ConcurrentSolver(this);
+        }
         return new Solver(this);
     }
 

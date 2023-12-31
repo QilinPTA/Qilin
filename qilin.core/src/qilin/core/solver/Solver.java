@@ -26,7 +26,6 @@ import qilin.core.builder.ExceptionHandler;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.*;
 import qilin.core.sets.DoublePointsToSet;
-import qilin.core.sets.HybridPointsToSet;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
 import qilin.util.PTAUtils;
