@@ -7,19 +7,8 @@
 * <b>[DebloaterX](https://github.com/DongjieHe/DebloaterX) published in our [OOPSLA paper](https://dongjiehe.github.io/mypaper/OOPSLA2023_DebloaterX_Preprint.pdf) is now available in Qilin</b>
 * <b>Qilin now supports Soot-4.4.0</b>
 # Qilin: A fully imperative Java Pointer Analysis Framework.
-The repository hosts Qilin, a new Java pointer analysis framework for supporting fine-grained context-sensitivity.
+The repository hosts Qilin, a new Java pointer analysis framework for supporting fine-grained context-sensitivity. For technical details, please refer to our [ECOOP'22 paper](https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.ECOOP.2022.30).
 
-Qilin is introduced in our ECOOP'22 paper. You can cite our paper as follows:
-```
-@InProceedings{he2022qilin,
-  author = {He, Dongjie and Lu, Jingbo and Xue, Jingling},
-  title =	{Qilin: A New Framework for Supporting Fine-Grained Context-Sensitivity in Java Pointer Analysis},
-  booktitle =	{36th European Conference on Object-Oriented Programming (ECOOP 2022)},
-  year =	{2022},
-  publisher =	{Schloss Dagstuhl -- Leibniz-Zentrum f{\"u}r Informatik},
-  address =	{Dagstuhl, Germany},
-}
-```
 ## A Quick Start
 ### Prerequisites
 * Java 16+ (Qilin uses the pattern matching for `instanceof` provided since Java 16).
