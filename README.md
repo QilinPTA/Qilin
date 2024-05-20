@@ -9,7 +9,7 @@
 * <b>[DebloaterX](https://github.com/DongjieHe/DebloaterX) published in
   our [OOPSLA paper](https://dongjiehe.github.io/mypaper/OOPSLA2023_DebloaterX_Preprint.pdf) is now available in
   Qilin</b>
-* <b>Qilin now supports Soot-4.4.0</b>
+* <b>Qilin now supports Soot-4.5.0</b>
 
 # Qilin: A fully imperative Java Pointer Analysis Framework.
 

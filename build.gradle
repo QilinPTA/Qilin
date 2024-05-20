@@ -11,7 +11,7 @@ plugins {
 
 group 'qilin'
 // version format: major.minor.patch
-version '0.9.4-SNAPSHOT'
+version '0.9.5-SNAPSHOT'
 
 java {
     toolchain {
@@ -31,7 +31,8 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
-task fatJar(type: Jar, dependsOn: ['build']) {
+tasks.register('fatJar', Jar) {
+    dependsOn(tasks.named('build'))
     manifest {
         attributes 'artifact': 'qilin',
                 'Version': getArchiveVersion(),
@@ -56,14 +57,14 @@ subprojects {
     group rootProject.group
     version rootProject.version
 
-    task sourcesJar(type: Jar) {
+    tasks.register('sourcesJar', Jar) {
         archiveClassifier.set('sources')
-        from sourceSets.main.allJava
+        from(sourceSets.main.allSource)
     }
 
-    task javadocJar(type: Jar) {
+    tasks.register('javadocJar', Jar) {
         archiveClassifier.set('javadoc')
-        from javadoc.destinationDir
+        from(javadoc.destinationDir)
     }
 
     java {

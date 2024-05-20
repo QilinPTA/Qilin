@@ -11,7 +11,5 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.slf4j:slf4j-api:2.0.3'
-    implementation 'org.slf4j:slf4j-simple:2.0.3'
-    implementation 'com.github.oshi:oshi-core:6.4.0'
+    implementation 'com.github.oshi:oshi-core:6.6.0'
 }

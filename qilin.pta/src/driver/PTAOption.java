@@ -48,7 +48,11 @@ public class PTAOption extends Options {
      * add option "-brief -option <arg>" with description
      */
     protected void addOption(String brief, String option, String arg, String description) {
-        addOption(OptionBuilder.withLongOpt(option).withArgName(arg).hasArg().withDescription(description).create(brief));
+        OptionBuilder.withLongOpt(option);
+        OptionBuilder.withArgName(arg);
+        OptionBuilder.hasArg();
+        OptionBuilder.withDescription(description);
+        addOption(OptionBuilder.create(brief));
     }
 
     public PTAOption() {
@@ -119,7 +123,6 @@ public class PTAOption extends Options {
     /**
      * Set all variables from the command line arguments.
      *
-     * @param cmd
      */
     protected void parseCommandLineOptions(CommandLine cmd) {
         // pointer analysis configuration

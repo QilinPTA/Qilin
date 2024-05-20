@@ -13,9 +13,6 @@ repositories {
 dependencies {
     // api files("${rootDir}/libs/sootclasses-4.4.0-jar-with-dependencies.jar")
     implementation("org.soot-oss:soot:4.5.0")
-    implementation("de.upb.cs.swt:axml:2.1.1")
-    implementation("de.upb.cs.swt:heros:1.2.3")
-    implementation("ca.mcgill.sable:jasmin:3.0.3")
     api(project(':qilin.util'))
 }
 
