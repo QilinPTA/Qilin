@@ -20,7 +20,14 @@ package qilin.pta.toolkits.conch;
 
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.StringConstantNode;
+import qilin.core.pag.VarNode;
 import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Pair;
@@ -29,7 +36,12 @@ import soot.PrimType;
 import soot.SootMethod;
 import soot.jimple.spark.pag.SparkField;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class AbstractConch {
     public final PTA pta;

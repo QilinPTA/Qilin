@@ -31,8 +31,11 @@ import soot.PackManager;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.options.Options;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class Main {

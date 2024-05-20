@@ -18,14 +18,21 @@
 
 package driver;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import qilin.pta.PTAConfig;
 import qilin.pta.toolkits.turner.Turner;
 import qilin.pta.tools.DebloatedPTA;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class PTAOption extends Options {
     private static final Logger logger = LoggerFactory.getLogger(PTAOption.class);

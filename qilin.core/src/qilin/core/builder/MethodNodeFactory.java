@@ -21,11 +21,49 @@ package qilin.core.builder;
 import qilin.CoreConfig;
 import qilin.core.PTAScene;
 import qilin.core.PointsToAnalysis;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.ArrayElement;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.Parm;
+import qilin.core.pag.VarNode;
 import qilin.util.PTAUtils;
 import qilin.util.Pair;
-import soot.*;
-import soot.jimple.*;
+import soot.ArrayType;
+import soot.Local;
+import soot.Modifier;
+import soot.RefLikeType;
+import soot.RefType;
+import soot.SootClass;
+import soot.SootField;
+import soot.SootMethod;
+import soot.Type;
+import soot.Value;
+import soot.jimple.AbstractStmtSwitch;
+import soot.jimple.ArrayRef;
+import soot.jimple.AssignStmt;
+import soot.jimple.CastExpr;
+import soot.jimple.CaughtExceptionRef;
+import soot.jimple.ClassConstant;
+import soot.jimple.IdentityStmt;
+import soot.jimple.InstanceFieldRef;
+import soot.jimple.InstanceInvokeExpr;
+import soot.jimple.IntConstant;
+import soot.jimple.InvokeExpr;
+import soot.jimple.NewArrayExpr;
+import soot.jimple.NewExpr;
+import soot.jimple.NewMultiArrayExpr;
+import soot.jimple.NullConstant;
+import soot.jimple.ParameterRef;
+import soot.jimple.ReturnStmt;
+import soot.jimple.StaticFieldRef;
+import soot.jimple.Stmt;
+import soot.jimple.StringConstant;
+import soot.jimple.ThisRef;
+import soot.jimple.ThrowStmt;
 import soot.jimple.internal.JNewArrayExpr;
 
 /**
@@ -189,11 +227,10 @@ public class MethodNodeFactory {
         SootField sf = ifr.getField();
         if (sf == null) {
             sf = new SootField(ifr.getFieldRef().name(), ifr.getType(), Modifier.PUBLIC);
-            sf.setNumber(Scene.v().getFieldNumberer().size());
-            Scene.v().getFieldNumberer().add(sf);
             System.out.println("Warnning:" + ifr + " is resolved to be a null field in Scene.");
         }
-        return pag.makeFieldRefNode(pag.makeLocalVarNode(ifr.getBase(), ifr.getBase().getType(), method), new Field(sf));
+        return pag.makeFieldRefNode(
+                pag.makeLocalVarNode(ifr.getBase(), ifr.getBase().getType(), method), sf);
     }
 
     private VarNode caseNewMultiArrayExpr(NewMultiArrayExpr nmae) {
@@ -307,6 +344,4 @@ public class MethodNodeFactory {
         mpag.addInternalEdge(classConstantVar, vn);
         return vn;
     }
-
-
 }

@@ -18,12 +18,24 @@
 
 package qilin.core;
 
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.CallSite;
+import qilin.core.pag.ContextAllocNode;
+import qilin.core.pag.ContextField;
+import qilin.core.pag.ContextVarNode;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.FieldValNode;
+import qilin.core.pag.GlobalVarNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.Node;
+import qilin.core.pag.VarNode;
 import qilin.core.solver.Propagator;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.HeapAbstractor;
 import qilin.parm.select.CtxSelector;
-import soot.*;
+import soot.Context;
+import soot.MethodOrMethodContext;
+import soot.SootMethod;
 
 /*
  * This represents a parameterized PTA which could be concreted to many pointer analyses.

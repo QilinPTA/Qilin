@@ -2,7 +2,7 @@
 <html lang="en-us">
 <head>
     <meta charset="UTF-8">
-    <title>Qilin: Java Pointer Analysis with Fine-Grained Context Sensitivity  </title>
+    <title>Qilin: Java Pointer Analysis with Fine-Grained Context Sensitivity </title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -13,18 +13,22 @@
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-WV6GXX4');</script>
+    })(window,document,'script','dataLayer','GTM-WV6GXX4');
+    </script>
     <!-- End Google Tag Manager -->
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WV6GXX4"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WV6GXX4"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
 <!-- End Google Tag Manager (noscript) -->
-    
+
 <section class="page-header">
     <h1 class="project-name">Qilin</h1>
-    <h2 class="project-tagline">A New Framework for Supporting Fine-Grained Context-Sensitivity in Java Pointer Analysis</h2>
+    <h2 class="project-tagline">A New Framework for Supporting Fine-Grained Context-Sensitivity in Java Pointer
+        Analysis</h2>
     <a href="https://github.com//QilinPTA/Qilin/wiki" class="btn">View Wiki on GitHub</a>
     <a href="https://github.com/QilinPTA/Qilin/" class="btn" id="qilindownload">Download Source Code </a>
     <a href="https://github.com//QilinPTA/Qilin/wiki/Try-Qilin-in-Docker" class="btn">Download Docker Image</a>
@@ -33,98 +37,142 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <section class="main-content">
     <h2>
-        <a id="what-is-qilin" class="anchor" href="#what-is-qilin" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is Qilin?</h2>
+        <a id="what-is-qilin" class="anchor" href="#what-is-qilin" aria-hidden="true"><span
+                class="octicon octicon-link"></span></a>What is Qilin?</h2>
 
-    <p>Qilin is a new pointer (or alias) analysis framework designed for supporting fine-grained context-sensitivity 
-        for Java programs precisely, efficiently, and modularly. 
-        Qilin enables different variables/objects in a method to be analysed under different context abstractions at the variable level, by supporting naturally the traditional 
-        method-level context-sensitivity   as a special case. </p>
-    
-    For a pointer analysis framework that works for C and C++, we refer to 
-    <a href="https://svf-tools.github.io/SVF/">SVF</a>. 
-    
+    <p>Qilin is a new pointer (or alias) analysis framework designed for supporting fine-grained context-sensitivity
+        for Java programs precisely, efficiently, and modularly.
+        Qilin enables different variables/objects in a method to be analysed under different context abstractions at the
+        variable level, by supporting naturally the traditional
+        method-level context-sensitivity as a special case. </p>
+
+    For a pointer analysis framework that works for C and C++, we refer to
+    <a href="https://svf-tools.github.io/SVF/">SVF</a>.
+
 
     <h2>
-        <a id="what-kind-of-analyses-does-qilin-provide" class="anchor" href="#what-kind-of-analyses-does-qilin-provide" aria-hidden="true"><span class="octicon octicon-link"></span></a>What kind of analyses does Qilin provide?</h2>
-        Qilin's toolbox includes already a rich set of pointer analyses for supporting (1) <a href="https://link.springer.com/chapter/10.1007/3-540-36579-6_12"> <em>insens</em> </a> (Andersen's context-insensitive analysis), 
+        <a id="what-kind-of-analyses-does-qilin-provide" class="anchor" href="#what-kind-of-analyses-does-qilin-provide"
+           aria-hidden="true"><span class="octicon octicon-link"></span></a>What kind of analyses does Qilin provide?
+    </h2>
+    Qilin's toolbox includes already a rich set of pointer analyses for supporting (1) <a
+        href="https://link.springer.com/chapter/10.1007/3-540-36579-6_12"> <em>insens</em> </a> (Andersen's
+    context-insensitive analysis),
     (2) all common flavors of method-level context-sensitivity as listed below:
     <ul>
-      <li>
-        <a href="https://www.cse.psu.edu/~trj1/cse598-f11/docs/sharir_pnueli1.pdf"><em>k</em>c</a>: <em>k</em>-callsite-sensitive pointer analysis (<em>k</em>CFA).
-      </li>
-      <li>
-        <a href="https://dl.acm.org/doi/abs/10.1145/1044834.1044835"><em>k</em>o</a>: <em>k</em>-object-sensitive pointer analysis (<em>k</em>OBJ).
-      </li>
-      <li>
-        <a href="https://dl.acm.org/doi/abs/10.1145/1926385.1926390"><em>k</em>t</a>: <em>k</em>-type-sensitive pointer analysis (<em>k</em>TYPE).
-      </li>
-      <li>
-        <a href="https://dl.acm.org/doi/10.1145/2499370.2462191"><em>k</em>h</a>: hybrid <em>k</em>-object-sensitive pointer analysis.
-      </li>
+        <li>
+            <a href="https://www.cse.psu.edu/~trj1/cse598-f11/docs/sharir_pnueli1.pdf"><em>k</em>c</a>: <em>k</em>-callsite-sensitive
+            pointer analysis (<em>k</em>CFA).
+        </li>
+        <li>
+            <a href="https://dl.acm.org/doi/abs/10.1145/1044834.1044835"><em>k</em>o</a>: <em>k</em>-object-sensitive
+            pointer analysis (<em>k</em>OBJ).
+        </li>
+        <li>
+            <a href="https://dl.acm.org/doi/abs/10.1145/1926385.1926390"><em>k</em>t</a>: <em>k</em>-type-sensitive
+            pointer analysis (<em>k</em>TYPE).
+        </li>
+        <li>
+            <a href="https://dl.acm.org/doi/10.1145/2499370.2462191"><em>k</em>h</a>: hybrid <em>k</em>-object-sensitive
+            pointer analysis.
+        </li>
     </ul>
-    and (3) many flavors of fine-grained context-sensitivity, enabled by different pre-analyses such as: 
+    and (3) many flavors of fine-grained context-sensitivity, enabled by different pre-analyses such as:
     <ul>
-      <li>
-        <a href="https://link.springer.com/chapter/10.1007/978-3-662-53413-7_24">B-2o</a>: BEAN-guided <em>2</em>-object-sensitive pointer analysis.
-      </li>
-      <li>
-        <a href="https://dl.acm.org/doi/10.1145/3133924">D-2o</a>: Data-driven <em>2</em>-object-sensitive pointer analysis.
-      </li>    
-      <li>
-        <a href="https://doi.org/10.1145/3062341.3062360">M-<em>k</em>o</a>: MAHJONG-guided <em>k</em>-object-sensitive pointer analysis.
-      </li>
-      <li>
-        <a href="https://doi.org/10.1145/3360574">E-<em>k</em>o</a>: EAGLE-guided <em>k</em>-object-sensitive pointer analysis.
-      </li>
-      <li>
-        <a href="https://drops.dagstuhl.de/opus/volltexte/2021/14059">T-<em>k</em>o</a>: TURNER-guided <em>k</em>-object-sensitive pointer analysis.
-      </li>
+        <li>
+            <a href="https://link.springer.com/chapter/10.1007/978-3-662-53413-7_24">B-2o</a>: BEAN-guided <em>2</em>-object-sensitive
+            pointer analysis.
+        </li>
+        <li>
+            <a href="https://dl.acm.org/doi/10.1145/3133924">D-2o</a>: Data-driven <em>2</em>-object-sensitive pointer
+            analysis.
+        </li>
+        <li>
+            <a href="https://doi.org/10.1145/3062341.3062360">M-<em>k</em>o</a>: MAHJONG-guided <em>k</em>-object-sensitive
+            pointer analysis.
+        </li>
+        <li>
+            <a href="https://doi.org/10.1145/3360574">E-<em>k</em>o</a>: EAGLE-guided <em>k</em>-object-sensitive
+            pointer analysis.
+        </li>
+        <li>
+            <a href="https://drops.dagstuhl.de/opus/volltexte/2021/14059">T-<em>k</em>o</a>: TURNER-guided <em>k</em>-object-sensitive
+            pointer analysis.
+        </li>
     </ul>
-            A full list of pointer analyses that are currently supported by Qilin can be found <a href="https://github.com/QilinPTA/Qilin/wiki/Full-list-of-PTAs">here</a>.
-            
-    <p> In addition,  Qilin can also be used to <a href="https://github.com/QilinPTA/Qilin/wiki/Analyse-a-Simple-Java-Program#dump-the-callgraph"> construct callgraphs </a> for Java programs.</p>
-            
-  <p> Finally,  Qilin can be easily extended to handle  Android applications.  Work is underway ... </p>
+    A full list of pointer analyses that are currently supported by Qilin can be found <a
+        href="https://github.com/QilinPTA/Qilin/wiki/Full-list-of-PTAs">here</a>.
+
+    <p> In addition, Qilin can also be used to <a
+            href="https://github.com/QilinPTA/Qilin/wiki/Analyse-a-Simple-Java-Program#dump-the-callgraph"> construct
+        callgraphs </a> for Java programs.</p>
+
+    <p> Finally, Qilin can be easily extended to handle Android applications. Work is underway ... </p>
 
     <h2>
-        <a id="how-to-setup-qilin" class="anchor" href="#how-to-setup-qilin" aria-hidden="true"><span class="octicon octicon-link">
+        <a id="how-to-setup-qilin" class="anchor" href="#how-to-setup-qilin" aria-hidden="true"><span
+                class="octicon octicon-link">
             </span></a>How to setup Qilin?</h2>
 
-    <p>Please download the <a href="https://github.com/QilinPTA/Qilin" id="qilindownload">source code</a> of Qilin and refer to this 
-        <a href="https://github.com/QilinPTA/Qilin/wiki/Setup-Guide#getting-started"> step-by-step guide</a> to setup Qilin.</p>
+    <p>Please download the <a href="https://github.com/QilinPTA/Qilin" id="qilindownload">source code</a> of Qilin and
+        refer to this
+        <a href="https://github.com/QilinPTA/Qilin/wiki/Setup-Guide#getting-started"> step-by-step guide</a> to setup
+        Qilin.</p>
 
     <h2>
-        <a id="how-to-run-qilin" class="anchor" href="#how-to-run-qilin" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to run Qilin?</h2>
+        <a id="how-to-run-qilin" class="anchor" href="#how-to-run-qilin" aria-hidden="true"><span
+                class="octicon octicon-link"></span></a>How to run Qilin?</h2>
 
-    <p>Qilin analyses a Java program by taking its class files or Jar files as input. Please refer to 
-        <a href="https://github.com/QilinPTA/Qilin/wiki/User-Guide#quick-start">this user guide</a> to run Qilin with 
-        <a href="https://github.com/QilinPTA/Qilin/wiki/Analyse-a-Simple-Java-Program#an-example">a simple example</a> 
-        and generate the <a href="https://github.com/QilinPTA/Qilin/wiki/User-Guide#analysis-outputs">analysis outputs</a> on your local machine.</p>
+    <p>Qilin analyses a Java program by taking its class files or Jar files as input. Please refer to
+        <a href="https://github.com/QilinPTA/Qilin/wiki/User-Guide#quick-start">this user guide</a> to run Qilin with
+        <a href="https://github.com/QilinPTA/Qilin/wiki/Analyse-a-Simple-Java-Program#an-example">a simple example</a>
+        and generate the <a href="https://github.com/QilinPTA/Qilin/wiki/User-Guide#analysis-outputs">analysis
+            outputs</a> on your local machine.</p>
 
-    <p>Alternatively, we have also prepared a <a href="https://hub.docker.com/r/hdjay2013/qilin">docker image</a> for you to run Qilin on any machine with 
-        <a href="https://www.docker.com/get-started">Docker</a> installed. Please refer to this 
-        <a href="https://github.com/QilinPTA/Qilin/wiki/Try-Qilin-in-Docker"> step-by-step guide</a> to try Qilin in a Docker container. </p>
+    <p>Alternatively, we have also prepared a <a href="https://hub.docker.com/r/hdjay2013/qilin">docker image</a> for
+        you to run Qilin on any machine with
+        <a href="https://www.docker.com/get-started">Docker</a> installed. Please refer to this
+        <a href="https://github.com/QilinPTA/Qilin/wiki/Try-Qilin-in-Docker"> step-by-step guide</a> to try Qilin in a
+        Docker container. </p>
 
     <h2>
         <a id="how-does-qilin-work-internally" class="anchor" href="#how-does-qilin-work-internally" aria-hidden="true">
             <span class="octicon octicon-link"></span></a>References</h2>
 
-    <p>Please refer to <a href="QilinCodeStructure.html">this documentation</a> 
+    <p>Please refer to <a href="QilinCodeStructure.html">this documentation</a>
         and our ECOOP'22 paper to understand the internal working of Qilin.</p>
-            
-    <p>You are welcome to use Qilin for research and development purposes under the license given. However, we would request you to kindly 
+
+    <p>You are welcome to use Qilin for research and development purposes under the license given. However, we would
+        request you to kindly
         cite our ECOOP'22 paper, and possibly other relevant papers also listed below. </p>
-    <p>Dongjie He, Yujiang Gui, Wei Li, Yonggang Tao, Chaiwei Zou, Yulei Sui, and Jingling Xue. <a href ="https://doi.org/10.1145/3622832">A Container-Usage-Pattern-Based Context Debloating Approach for Object-Sensitive Pointer Analysis</a>, ACM SIGPLAN Conference on Object-Oriented Programming, Systems, Languages, and Applications (OOPSLA'23)</p>
-    <p>Dongjie He, Jingbo Lu, and Jingling Xue. <a href="https://doi.org/10.1145/3579641">IFDS-based Context Debloating for Object-Sensitive Pointer Analysis</a>,  ACM Transactions on Software Engineering and Methodology (TOSEM 2023)</p>
-    <p>Dongjie He, Jingbo Lu, and Jingling Xue. <a href ="https://doi.org/10.4230/LIPIcs.ECOOP.2022.30">Qilin: A New Framework for Supporting Fine-Grained Context-Sensitivity in Java Pointer Analysis</a>, 36th European Conference on Object-Oriented Programming (ECOOP'22)</p>
-    <p>Dongjie He, Jingbo Lu, Yaoqing Gao, and Jingling Xue. <a href ="https://doi.org/10.1109/TSE.2022.3162236">Selecting Context-Sensitivity Modularly for Accelerating Object-Sensitive Pointer Analysis</a>, IEEE Transactions on Software Engineering (TSE'22)</p>
-    <p>Dongjie He, Jingbo Lu, and Jingling Xue. <a href ="https://doi.org/10.1109/ASE51524.2021.9678880">Context Debloating for Object-Sensitive Pointer Analysis</a>, 36th IEEE/ACM International Conference on Automated Software Engineering (ASE'21)</p>
-    <p>Dongjie He, Jingbo Lu, Yaoqing Gao, and Jingling Xue. <a href ="https://doi.org/10.4230/LIPIcs.ECOOP.2021.16">Accelerating Object-Sensitive Pointer Analysis by Exploiting Object Containment and Reachability</a>, 35th European Conference on Object-Oriented Programming (ECOOP'21)</p>
-    <p>Jingbo Lu, Dongjie He,  and Jingling Xue. <a href ="https://doi.org/10.1145/3450492">Eagle: CFL-Reachability-based Precision-Preserving Acceleration of Object-Sensitive Pointer Analysis</a>, ACM Transactions on Software Engineering and Methodology (TOSEM 2021)</p> 
-    <p>Jingbo Lu and Jingling Xue. <a href="https://doi.org/10.1145/3360574">Precision-Preserving Yet Fast Object-Sensitive Pointer Analysis with Partial Context Sensitivity</a>. ACM SIGPLAN Conference on Object-Oriented Programming, Systems, Languages, and Applications (OOPSLA'19) </p>
-    
+    <p>Dongjie He, Yujiang Gui, Wei Li, Yonggang Tao, Chaiwei Zou, Yulei Sui, and Jingling Xue. <a
+            href="https://doi.org/10.1145/3622832">A Container-Usage-Pattern-Based Context Debloating Approach for
+        Object-Sensitive Pointer Analysis</a>, ACM SIGPLAN Conference on Object-Oriented Programming, Systems,
+        Languages, and Applications (OOPSLA'23)</p>
+    <p>Dongjie He, Jingbo Lu, and Jingling Xue. <a href="https://doi.org/10.1145/3579641">IFDS-based Context Debloating
+        for Object-Sensitive Pointer Analysis</a>, ACM Transactions on Software Engineering and Methodology (TOSEM 2023)
+    </p>
+    <p>Dongjie He, Jingbo Lu, and Jingling Xue. <a href="https://doi.org/10.4230/LIPIcs.ECOOP.2022.30">Qilin: A New
+        Framework for Supporting Fine-Grained Context-Sensitivity in Java Pointer Analysis</a>, 36th European Conference
+        on Object-Oriented Programming (ECOOP'22)</p>
+    <p>Dongjie He, Jingbo Lu, Yaoqing Gao, and Jingling Xue. <a href="https://doi.org/10.1109/TSE.2022.3162236">Selecting
+        Context-Sensitivity Modularly for Accelerating Object-Sensitive Pointer Analysis</a>, IEEE Transactions on
+        Software Engineering (TSE'22)</p>
+    <p>Dongjie He, Jingbo Lu, and Jingling Xue. <a href="https://doi.org/10.1109/ASE51524.2021.9678880">Context
+        Debloating for Object-Sensitive Pointer Analysis</a>, 36th IEEE/ACM International Conference on Automated
+        Software Engineering (ASE'21)</p>
+    <p>Dongjie He, Jingbo Lu, Yaoqing Gao, and Jingling Xue. <a href="https://doi.org/10.4230/LIPIcs.ECOOP.2021.16">Accelerating
+        Object-Sensitive Pointer Analysis by Exploiting Object Containment and Reachability</a>, 35th European
+        Conference on Object-Oriented Programming (ECOOP'21)</p>
+    <p>Jingbo Lu, Dongjie He, and Jingling Xue. <a href="https://doi.org/10.1145/3450492">Eagle: CFL-Reachability-based
+        Precision-Preserving Acceleration of Object-Sensitive Pointer Analysis</a>, ACM Transactions on Software
+        Engineering and Methodology (TOSEM 2021)</p>
+    <p>Jingbo Lu and Jingling Xue. <a href="https://doi.org/10.1145/3360574">Precision-Preserving Yet Fast
+        Object-Sensitive Pointer Analysis with Partial Context Sensitivity</a>. ACM SIGPLAN Conference on
+        Object-Oriented Programming, Systems, Languages, and Applications (OOPSLA'19) </p>
+
     <h2>
-        <a id="qilin-released-license" class="anchor" href="#qilin-released-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License </h2>
+        <a id="qilin-released-license" class="anchor" href="#qilin-released-license" aria-hidden="true"><span
+                class="octicon octicon-link"></span></a>License </h2>
 
     GPL v2.1
 

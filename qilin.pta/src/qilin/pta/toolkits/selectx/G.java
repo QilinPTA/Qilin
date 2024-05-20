@@ -18,10 +18,13 @@
 
 package qilin.pta.toolkits.selectx;
 
-import java.util.*;
-import java.util.stream.Stream;
-
 import qilin.core.pag.GlobalVarNode;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
 
 public class G extends BNode {
     public static Map<GlobalVarNode, G> g2GN = new HashMap<>();

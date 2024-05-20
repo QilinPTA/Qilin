@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 
-import os, sys, shutil
+import os
+import shutil
+import sys
 
 assert sys.version_info >= (3, 5), "Python version does not meet the minimum requirements, i.e., >= 3.5"
 
@@ -16,16 +18,17 @@ from util.benchmark import MAINCLASSES
 from util.benchmark import JREVERSION
 
 # ANALYSES = ['1o', 'Z-2o', 'E-2o', 'T-2o', '2o', 'Z-3o', 'T-3o', 'E-3o', '3o', '1c', '2c', 'M-2o', '2h', '2t', 'Z-2c', 'M-2c']
-ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c', '3o', 'T-3o', 'E-3o', 'Z-3o']
+ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c',
+            '3o', 'T-3o', 'E-3o', 'Z-3o']
 
 # for ZIPPEROPTIONS
 OoM = {
     'E-3o': ['eclipse', ],
     'Z-3o': ['eclipse', ],
     '3o': ['chart', 'eclipse', 'checkstyle', 'findbugs', 'xalan'],
-    '3o+D':['eclipse',],
-    '3o+DX':['eclipse'],
-    '3o+DC':['eclipse']
+    '3o+D': ['eclipse', ],
+    '3o+DX': ['eclipse'],
+    '3o+DC': ['eclipse']
 }
 TIMEOUT = {
     '3o': ['bloat'],
@@ -104,15 +107,18 @@ def runPTA(analysis, bm, OPTIONSTYLE):
     print(cmd)
     pta.runPointsToAnalysis(cmd.split())
 
+
 OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-help|-h', 'print this message.') \
                 + option('-print', 'print the analyses results on screen.') \
                 + option('-clean', 'remove previous outputs.') \
                 + option('-cd', 'enable context debloating.') \
-                + option('-cda=<[CONCH|DEBLOATERX|COLLECTION]>', 'specify the debloating approach (default value is CONCH)') \
+                + option('-cda=<[CONCH|DEBLOATERX|COLLECTION]>',
+                         'specify the debloating approach (default value is CONCH)') \
                 + option('-dump', 'dump statistics into files.') \
                 + option('<PTA>', 'specify pointer analysis.') \
-                + option('-cga=<[CHA|VTA|RTA|GEOM|SPARK|QILIN]>', 'specify the callgraph construction algorithm (default value is QILIN)') \
+                + option('-cga=<[CHA|VTA|RTA|GEOM|SPARK|QILIN]>',
+                         'specify the callgraph construction algorithm (default value is QILIN)') \
                 + option('<Benchmark>', 'specify benchmark.') \
                 + option('-jre=<[jre1.6.0_45|jre1.8.0_312]>', 'specify the JRE version.') \
                 + option('-out=<out>', 'specify output path.') \

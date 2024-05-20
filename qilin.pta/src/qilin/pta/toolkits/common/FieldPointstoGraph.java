@@ -24,7 +24,12 @@ import qilin.core.pag.PAG;
 import qilin.core.sets.PointsToSet;
 import soot.jimple.spark.pag.SparkField;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class FieldPointstoGraph {
     private final Map<AllocNode, Map<SparkField, Set<AllocNode>>> pointsTo = new HashMap<>();

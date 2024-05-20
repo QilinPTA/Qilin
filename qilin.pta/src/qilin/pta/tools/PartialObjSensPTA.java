@@ -18,7 +18,13 @@
 
 package qilin.pta.tools;
 
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.VarNode;
 import qilin.parm.ctxcons.ObjCtxConstructor;
 import qilin.parm.heapabst.AllocSiteAbstractor;
 import qilin.parm.heapabst.HeuristicAbstractor;
@@ -29,8 +35,17 @@ import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.util.PTAUtils;
 import qilin.util.Stopwatch;
-import soot.*;
-import soot.jimple.*;
+import soot.Local;
+import soot.MethodOrMethodContext;
+import soot.RefLikeType;
+import soot.SootMethod;
+import soot.Unit;
+import soot.Value;
+import soot.jimple.AssignStmt;
+import soot.jimple.InstanceInvokeExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.NullConstant;
+import soot.jimple.Stmt;
 import soot.util.queue.QueueReader;
 
 import java.util.HashSet;

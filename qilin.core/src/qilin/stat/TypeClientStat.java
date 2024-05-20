@@ -23,12 +23,27 @@ import qilin.core.PTA;
 import qilin.core.builder.FakeMainFactory;
 import qilin.core.pag.AllocNode;
 import qilin.util.PTAUtils;
-import soot.*;
-import soot.jimple.*;
+import soot.Local;
+import soot.MethodOrMethodContext;
+import soot.RefLikeType;
+import soot.SootMethod;
+import soot.Type;
+import soot.Unit;
+import soot.Value;
+import soot.jimple.AssignStmt;
+import soot.jimple.CastExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.StaticInvokeExpr;
+import soot.jimple.Stmt;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class TypeClientStat implements AbstractStat {
     private final PTA pta;

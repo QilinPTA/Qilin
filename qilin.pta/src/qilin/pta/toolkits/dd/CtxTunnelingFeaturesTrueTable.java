@@ -19,8 +19,23 @@
 package qilin.pta.toolkits.dd;
 
 import qilin.util.PTAUtils;
-import soot.*;
-import soot.jimple.*;
+import soot.Body;
+import soot.Local;
+import soot.SootClass;
+import soot.SootMethod;
+import soot.Unit;
+import soot.Value;
+import soot.jimple.ArrayRef;
+import soot.jimple.AssignStmt;
+import soot.jimple.InstanceFieldRef;
+import soot.jimple.InterfaceInvokeExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.InvokeStmt;
+import soot.jimple.NewArrayExpr;
+import soot.jimple.NewExpr;
+import soot.jimple.NewMultiArrayExpr;
+import soot.jimple.StaticInvokeExpr;
+import soot.jimple.VirtualInvokeExpr;
 
 /*
  * features and formulas used in "Precise and Scalable Points-to Analysis via Data-Driven

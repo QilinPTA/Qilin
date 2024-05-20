@@ -1,7 +1,12 @@
 package qilin.pta.toolkits.zipper.analysis;
 
 import qilin.core.PTA;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.ContextField;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.Node;
+import qilin.core.pag.ValNode;
+import qilin.core.pag.VarNode;
 import qilin.pta.toolkits.common.OAG;
 import qilin.pta.toolkits.common.ToolUtil;
 import qilin.pta.toolkits.zipper.Global;
@@ -14,7 +19,15 @@ import soot.RefType;
 import soot.SootMethod;
 import soot.Type;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

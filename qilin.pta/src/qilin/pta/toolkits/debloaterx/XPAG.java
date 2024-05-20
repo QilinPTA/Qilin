@@ -2,19 +2,35 @@ package qilin.pta.toolkits.debloaterx;
 
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.ConstantNode;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.ValNode;
+import qilin.core.pag.VarNode;
 import qilin.util.PTAUtils;
-import qilin.util.queue.UniqueQueue;
 import soot.RefLikeType;
 import soot.RefType;
 import soot.SootMethod;
 import soot.Unit;
 import soot.Value;
-import soot.jimple.*;
+import soot.jimple.AssignStmt;
+import soot.jimple.InstanceInvokeExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.NullConstant;
+import soot.jimple.SpecialInvokeExpr;
+import soot.jimple.StaticInvokeExpr;
+import soot.jimple.Stmt;
 import soot.jimple.spark.pag.SparkField;
 import soot.util.queue.QueueReader;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class XPAG {

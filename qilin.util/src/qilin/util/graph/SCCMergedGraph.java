@@ -18,7 +18,11 @@
 
 package qilin.util.graph;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class SCCMergedGraph<N> implements DirectedGraph<MergedNode<N>> {
     private Set<MergedNode<N>> nodes;

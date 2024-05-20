@@ -20,7 +20,12 @@ package qilin.pta.toolkits.conch;
 
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.ConstantNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.VarNode;
 import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Pair;
@@ -33,7 +38,13 @@ import soot.jimple.SpecialInvokeExpr;
 import soot.jimple.Stmt;
 import soot.jimple.spark.pag.SparkField;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /*

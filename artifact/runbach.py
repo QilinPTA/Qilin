@@ -1,17 +1,20 @@
 #!/usr/bin/python3
-import os, sys, shutil
+import os
+import shutil
+import sys
+
 import qilin as pta
-from util.opt import *
 import util.TerminalColor as tc
 import util.dacapobach as db
+from util.opt import *
 
 ANALYSES = ['insens', 'Z-2o', 'E-2o', '2o', 'Z-3o', 'E-3o', '3o']
 
 # eclipse and jython are always unscalable.
 UNSCALABLE = {
-    '3o': ['avrora', 'batik', 'h2', 'luindex', 'lusearch', 'pmd', 'sunflow', 'tradebeans', 'xalan'], # OoM
-    'E-3o': ['avrora', 'batik', 'h2', 'luindex', 'lusearch', 'pmd', 'sunflow', 'tradebeans', 'xalan'], # OoM
-    'Z-3o': ['avrora', 'batik', 'h2', 'luindex', 'lusearch', 'pmd', 'sunflow', 'tradebeans', 'xalan'], # OoM
+    '3o': ['avrora', 'batik', 'h2', 'luindex', 'lusearch', 'pmd', 'sunflow', 'tradebeans', 'xalan'],  # OoM
+    'E-3o': ['avrora', 'batik', 'h2', 'luindex', 'lusearch', 'pmd', 'sunflow', 'tradebeans', 'xalan'],  # OoM
+    'Z-3o': ['avrora', 'batik', 'h2', 'luindex', 'lusearch', 'pmd', 'sunflow', 'tradebeans', 'xalan'],  # OoM
     '3o+D': ['batik', 'h2'],
     '3o+DX': ['h2'],
 }
@@ -26,8 +29,10 @@ OUTPUTPATH = 'output-bach'
 
 BATCHPATH = 'benchmarks/dacapo-bach/'
 
+
 def getPath(dir, file):
     return os.path.join(dir, file)
+
 
 def getPTACommand(analysis, bm, OPTIONSTYLE):
     options = []
@@ -88,12 +93,14 @@ OPTIONMESSAGE = 'The valid OPTIONs are:\n' \
                 + option('-clean', 'remove previous outputs.') \
                 + option('-dump', 'dump statistics into files.') \
                 + option('<PTA>', 'specify pointer analysis.') \
-                + option('-cga=<[CHA|VTA|RTA|GEOM|SPARK|QILIN]>', 'specify the callgraph construction algorithm (default value is QILIN)') \
+                + option('-cga=<[CHA|VTA|RTA|GEOM|SPARK|QILIN]>',
+                         'specify the callgraph construction algorithm (default value is QILIN)') \
                 + option('<Benchmark>', 'specify benchmark.') \
                 + option('-out=<out>', 'specify output path.') \
                 + option('-pre', 'run pre-analysis only.') \
                 + option('-cd', 'enable context debloating.') \
-                + option('-cda=<[CONCH|DEBLOATERX|COLLECTION]>', 'specify the debloating approach (default value is CONCH)') \
+                + option('-cda=<[CONCH|DEBLOATERX|COLLECTION]>',
+                         'specify the debloating approach (default value is CONCH)') \
                 + option('-OS=<zipper|mahjong>', 'specify the style of configurations.') \
                 + option('-all', 'run all analyses for specified benchmark(s) if ONLY benchmark(s) is specified;\n\
 				run specified analyses for all benchmark(s) if ONLY analyses is specified;\n\

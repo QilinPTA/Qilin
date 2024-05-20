@@ -20,14 +20,29 @@ package qilin.core;
 
 import qilin.core.builder.CallGraphBuilder;
 import qilin.core.builder.ExceptionHandler;
-import qilin.core.pag.*;
-import qilin.core.sets.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.ArrayElement;
+import qilin.core.pag.CallSite;
+import qilin.core.pag.ContextAllocNode;
+import qilin.core.pag.ContextField;
+import qilin.core.pag.ContextVarNode;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.VarNode;
+import qilin.core.sets.HybridPointsToSet;
 import qilin.core.sets.PointsToSet;
+import qilin.core.sets.PointsToSetInternal;
+import qilin.core.sets.UnmodifiablePointsToSet;
 import qilin.core.solver.Propagator;
 import qilin.parm.ctxcons.CtxConstructor;
 import qilin.parm.heapabst.HeapAbstractor;
 import qilin.parm.select.CtxSelector;
-import soot.*;
+import soot.Context;
+import soot.Local;
+import soot.MethodOrMethodContext;
+import soot.RefType;
+import soot.SootField;
+import soot.SootMethod;
 import soot.jimple.spark.pag.SparkField;
 import soot.jimple.toolkits.callgraph.CallGraph;
 
@@ -192,7 +207,7 @@ public abstract class PTA implements PointsToAnalysis {
         if (f.isStatic()) {
             throw new RuntimeException("The parameter f must be an *instance* field.");
         }
-        return reachingObjectsInternal(s, new Field(f));
+        return reachingObjectsInternal(s, f);
     }
 
     /**
@@ -216,9 +231,8 @@ public abstract class PTA implements PointsToAnalysis {
             }
         } else {
             ret = new HybridPointsToSet();
-            SparkField sparkField = new Field(f);
-            pag.getContextFieldVarNodeMap().values().stream().filter(map -> map.containsKey(sparkField)).forEach(map -> {
-                ContextField contextField = map.get(sparkField);
+            pag.getContextFieldVarNodeMap().values().stream().filter(map -> map.containsKey(f)).forEach(map -> {
+                ContextField contextField = map.get(f);
                 ret.addAll(contextField.getP2Set(), null);
             });
         }

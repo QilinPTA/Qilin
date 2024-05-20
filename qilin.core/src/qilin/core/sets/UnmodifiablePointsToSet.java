@@ -27,7 +27,11 @@ import soot.RefType;
 import soot.Type;
 import soot.jimple.ClassConstant;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
 
 public class UnmodifiablePointsToSet implements PointsToSet {
     private final PointsToSetInternal pts;

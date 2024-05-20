@@ -18,7 +18,11 @@
 
 package qilin.pta.toolkits.conch;
 
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
 import qilin.util.Pair;
 import qilin.util.graph.DirectedGraphImpl;
 import qilin.util.queue.UniqueQueue;

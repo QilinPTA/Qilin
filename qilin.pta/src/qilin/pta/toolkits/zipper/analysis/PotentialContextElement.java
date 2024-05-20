@@ -14,7 +14,14 @@ import qilin.util.graph.TopologicalSorter;
 import soot.SootMethod;
 import soot.Type;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

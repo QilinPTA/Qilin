@@ -20,8 +20,19 @@ package qilin.core;
 
 import qilin.core.builder.FakeMainFactory;
 import qilin.util.DataFactory;
-import soot.*;
+import soot.FastHierarchy;
+import soot.G;
+import soot.Local;
+import soot.RefType;
+import soot.Scene;
+import soot.SootClass;
+import soot.SootField;
+import soot.SootMethod;
+import soot.SourceLocator;
+import soot.Type;
+import soot.Value;
 import soot.jimple.toolkits.callgraph.CallGraph;
+import soot.util.ArrayNumberer;
 import soot.util.Chain;
 import soot.util.IterableNumberer;
 import soot.util.StringNumberer;
@@ -64,6 +75,9 @@ public class PTAScene {
     public final Set<SootMethod> reflectionBuilt = DataFactory.createSet();
     public final Set<SootMethod> arraycopyBuilt = DataFactory.createSet();
 
+    protected Set<SootMethod> allMethods = DataFactory.createSet();
+    protected IterableNumberer<Local> localNumberer = new ArrayNumberer<>();
+
     /*
      * wrapper methods for FakeMain.
      * */
@@ -96,11 +110,7 @@ public class PTAScene {
     }
 
     public IterableNumberer<Local> getLocalNumberer() {
-        return sootScene.getLocalNumberer();
-    }
-
-    public IterableNumberer<Type> getTypeNumberer() {
-        return sootScene.getTypeNumberer();
+        return localNumberer;
     }
 
     public FastHierarchy getOrMakeFastHierarchy() {
@@ -167,8 +177,8 @@ public class PTAScene {
         return sootScene.getSubSigNumberer();
     }
 
-    public IterableNumberer<SootMethod> getMethodNumberer() {
-        return sootScene.getMethodNumberer();
+    public Set<SootMethod> getAllMethods() {
+        return allMethods;
     }
 
     public void loadNecessaryClasses() {

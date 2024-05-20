@@ -20,7 +20,6 @@ package qilin.pta.toolkits.selectx;
 
 import qilin.core.pag.Node;
 
-import java.util.Set;
 import java.util.stream.Stream;
 
 public abstract class BNode {

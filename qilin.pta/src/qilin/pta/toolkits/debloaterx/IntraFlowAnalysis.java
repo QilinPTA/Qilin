@@ -1,11 +1,24 @@
 package qilin.pta.toolkits.debloaterx;
 
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.ValNode;
+import qilin.core.pag.VarNode;
+import qilin.core.pag.VirtualCallSite;
 import qilin.util.PTAUtils;
 import qilin.util.Pair;
 import qilin.util.queue.UniqueQueue;
-import soot.*;
+import soot.ArrayType;
+import soot.RefLikeType;
+import soot.RefType;
+import soot.SootMethod;
+import soot.Type;
+import soot.Unit;
+import soot.Value;
 import soot.jimple.InstanceInvokeExpr;
 import soot.jimple.InvokeExpr;
 import soot.jimple.NullConstant;

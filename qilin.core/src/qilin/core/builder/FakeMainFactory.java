@@ -21,7 +21,14 @@ package qilin.core.builder;
 import qilin.CoreConfig;
 import qilin.core.ArtificialMethod;
 import qilin.util.PTAUtils;
-import soot.*;
+import soot.EntryPoints;
+import soot.Modifier;
+import soot.RefType;
+import soot.SootClass;
+import soot.SootField;
+import soot.SootMethod;
+import soot.Value;
+import soot.VoidType;
 import soot.jimple.JimpleBody;
 
 import java.util.ArrayList;

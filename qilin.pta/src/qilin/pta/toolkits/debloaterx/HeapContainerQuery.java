@@ -1,12 +1,16 @@
 package qilin.pta.toolkits.debloaterx;
 
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.PAG;
 import qilin.util.PTAUtils;
-import soot.*;
+import soot.RefLikeType;
+import soot.SootMethod;
 import soot.jimple.spark.pag.SparkField;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class HeapContainerQuery {

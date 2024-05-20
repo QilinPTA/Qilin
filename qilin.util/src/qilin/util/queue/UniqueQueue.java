@@ -18,7 +18,12 @@
 
 package qilin.util.queue;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
 
 public class UniqueQueue<T> implements Queue<T> {
     private final Set<T> set;

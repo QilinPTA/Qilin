@@ -2,11 +2,11 @@ package qilin.pta.toolkits.mahjong;
 
 import qilin.core.pag.AllocNode;
 import qilin.core.pag.Node;
+import qilin.pta.toolkits.common.FieldPointstoGraph;
 import qilin.pta.toolkits.mahjong.automata.DFA;
 import qilin.pta.toolkits.mahjong.automata.DFAEquivalenceChecker;
 import qilin.pta.toolkits.mahjong.automata.DFAFactory;
 import qilin.pta.toolkits.mahjong.automata.DFAState;
-import qilin.pta.toolkits.common.FieldPointstoGraph;
 import qilin.util.UnionFindSet;
 import soot.Type;
 

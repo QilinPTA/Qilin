@@ -18,7 +18,9 @@
 
 package qilin.pta.tools;
 
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.CallSite;
+import qilin.core.pag.Node;
 import qilin.core.sets.PointsToSet;
 import qilin.core.solver.Propagator;
 import qilin.parm.select.CtxSelector;
@@ -27,14 +29,19 @@ import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.pta.toolkits.common.DebloatedOAG;
 import qilin.pta.toolkits.common.OAG;
+import qilin.pta.toolkits.conch.Conch;
 import qilin.pta.toolkits.debloaterx.CollectionHeuristic;
 import qilin.pta.toolkits.debloaterx.DebloaterX;
-import qilin.pta.toolkits.conch.Conch;
 import qilin.stat.IEvaluator;
 import qilin.util.Stopwatch;
-import soot.*;
+import soot.Context;
+import soot.Local;
+import soot.MethodOrMethodContext;
+import soot.SootField;
+import soot.SootMethod;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
  * refer to "Context Debloating for Object-Sensitive Pointer Analysis" (ASE'21)

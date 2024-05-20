@@ -19,9 +19,16 @@
 package qilin.core;
 
 import qilin.util.DataFactory;
-import soot.*;
+import soot.AnySubType;
+import soot.ArrayType;
+import soot.NullType;
+import soot.RefType;
+import soot.Scene;
+import soot.SootClass;
+import soot.SootMethod;
+import soot.Type;
 import soot.jimple.SpecialInvokeExpr;
-import soot.util.*;
+import soot.util.NumberedString;
 import soot.util.queue.ChunkedQueue;
 
 import java.util.HashSet;

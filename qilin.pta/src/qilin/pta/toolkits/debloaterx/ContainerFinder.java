@@ -5,12 +5,17 @@ import qilin.core.pag.AllocNode;
 import qilin.core.pag.ArrayElement;
 import qilin.core.pag.PAG;
 import qilin.util.Stopwatch;
-import soot.*;
+import soot.ArrayType;
+import soot.RefType;
+import soot.Type;
+import soot.Value;
 import soot.jimple.IntConstant;
 import soot.jimple.internal.JNewArrayExpr;
 import soot.jimple.spark.pag.SparkField;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 

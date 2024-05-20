@@ -21,7 +21,15 @@ package qilin.pta.toolkits.eagle;
 import qilin.core.PTA;
 import qilin.core.PointsToAnalysis;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.Parm;
+import qilin.core.pag.ValNode;
+import qilin.core.pag.VarNode;
 import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Util;
@@ -30,13 +38,24 @@ import soot.RefLikeType;
 import soot.SootMethod;
 import soot.Unit;
 import soot.Value;
-import soot.jimple.*;
+import soot.jimple.AssignStmt;
+import soot.jimple.InstanceInvokeExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.NullConstant;
+import soot.jimple.Stmt;
 import soot.jimple.spark.pag.SparkField;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.queue.QueueReader;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 // implementation of Eagle (OOPSLA'19).
@@ -183,7 +202,7 @@ public class Eagle {
 
     public boolean reachValidReceiverObject(BNode from, BNode to) {
         BNode fromEI = getBNode(to.sparkNode, false);
-        if (from.sparkNode instanceof Field || from.sparkNode instanceof ArrayElement) {
+        if (from.sparkNode instanceof SparkField) {
             return getOutEdges(fromEI).contains(from);
         }
         return true;

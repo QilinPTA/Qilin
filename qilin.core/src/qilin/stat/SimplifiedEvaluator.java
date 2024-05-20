@@ -21,16 +21,33 @@ package qilin.stat;
 import qilin.core.PTA;
 import qilin.core.builder.FakeMainFactory;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
 import qilin.core.sets.PointsToSet;
 import qilin.util.PTAUtils;
 import qilin.util.Stopwatch;
-import soot.*;
-import soot.jimple.*;
+import soot.Local;
+import soot.MethodOrMethodContext;
+import soot.RefLikeType;
+import soot.SootMethod;
+import soot.Type;
+import soot.Unit;
+import soot.Value;
+import soot.jimple.AssignStmt;
+import soot.jimple.CastExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.StaticInvokeExpr;
+import soot.jimple.Stmt;
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 public class SimplifiedEvaluator implements IEvaluator {
     protected final PTA pta;

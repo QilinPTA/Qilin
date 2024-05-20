@@ -19,10 +19,15 @@
 package qilin.core.pag;
 
 import qilin.CoreConfig;
-import qilin.util.DataFactory;
 import qilin.core.builder.MethodNodeFactory;
+import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
-import soot.*;
+import soot.Body;
+import soot.PatchingChain;
+import soot.RefType;
+import soot.SootMethod;
+import soot.Trap;
+import soot.Unit;
 import soot.jimple.Jimple;
 import soot.jimple.StaticFieldRef;
 import soot.jimple.Stmt;
@@ -31,7 +36,11 @@ import soot.util.Chain;
 import soot.util.queue.ChunkedQueue;
 import soot.util.queue.QueueReader;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Part of a pointer assignment graph for a single method.

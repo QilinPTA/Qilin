@@ -25,7 +25,6 @@ import qilin.core.pag.PAG;
 import qilin.core.solver.Propagator;
 import qilin.core.solver.Solver;
 import qilin.stat.IEvaluator;
-import qilin.stat.PTAEvaluator;
 import qilin.stat.SimplifiedEvaluator;
 import qilin.util.PTAUtils;
 

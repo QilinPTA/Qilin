@@ -23,7 +23,10 @@ import qilin.core.pag.MergedNewExpr;
 import qilin.core.pag.PAG;
 import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
-import soot.*;
+import soot.RefLikeType;
+import soot.RefType;
+import soot.SootMethod;
+import soot.Type;
 
 import java.util.Set;
 

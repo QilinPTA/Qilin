@@ -18,19 +18,38 @@
 
 package qilin.pta.toolkits.selectx;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import qilin.core.PTA;
 import qilin.core.PointsToAnalysis;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
-import soot.*;
-import soot.jimple.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.CallSite;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.GlobalVarNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.Parm;
+import soot.RefLikeType;
+import soot.SootMethod;
+import soot.Unit;
+import soot.Value;
+import soot.jimple.AssignStmt;
+import soot.jimple.InstanceInvokeExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.NullConstant;
+import soot.jimple.Stmt;
 import soot.jimple.spark.pag.SparkField;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.queue.QueueReader;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Selectx {
     private final PTA prePTA;

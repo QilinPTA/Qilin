@@ -3,7 +3,14 @@ package qilin.pta.toolkits.debloaterx;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.FieldRefNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.MethodPAG;
+import qilin.core.pag.Node;
+import qilin.core.pag.PAG;
+import qilin.core.pag.VarNode;
+import qilin.core.pag.VirtualCallSite;
 import qilin.util.PTAUtils;
 import qilin.util.Stopwatch;
 import soot.ArrayType;
@@ -21,7 +28,12 @@ import soot.jimple.toolkits.callgraph.Edge;
 import soot.util.NumberedString;
 import soot.util.queue.QueueReader;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -282,8 +294,7 @@ public class XUtility {
                 for (AllocNode heap : this.o2Fields.keySet()) {
                     if (PTAScene.v().getOrMakeFastHierarchy().canStoreType(heap.getType(), refType)) {
                         for (SparkField sparkField : this.o2Fields.get(heap)) {
-                            if (sparkField instanceof Field f) {
-                                SootField sf = f.getField();
+                            if (sparkField instanceof SootField sf) {
                                 Type declType = sf.getDeclaringClass().getType();
                                 if (PTAScene.v().getOrMakeFastHierarchy().canStoreType(type, declType)) {
                                     ret.add(sparkField);

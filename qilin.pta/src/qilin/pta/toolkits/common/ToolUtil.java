@@ -19,7 +19,6 @@
 package qilin.pta.toolkits.common;
 
 import qilin.core.PTA;
-import qilin.core.PTAScene;
 import qilin.core.builder.MethodNodeFactory;
 import qilin.core.pag.PAG;
 import qilin.core.pag.VarNode;

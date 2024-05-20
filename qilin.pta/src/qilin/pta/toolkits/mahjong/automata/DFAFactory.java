@@ -5,7 +5,14 @@ import qilin.pta.toolkits.common.FieldPointstoGraph;
 import soot.Type;
 import soot.jimple.spark.pag.SparkField;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

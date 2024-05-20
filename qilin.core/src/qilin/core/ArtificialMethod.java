@@ -18,12 +18,29 @@
 
 package qilin.core;
 
-import soot.*;
+import soot.ArrayType;
+import soot.Body;
+import soot.Local;
+import soot.RefType;
+import soot.SootMethod;
+import soot.SootMethodRef;
+import soot.Type;
+import soot.Value;
 import soot.jimple.IntConstant;
 import soot.jimple.Jimple;
 import soot.jimple.ParameterRef;
 import soot.jimple.ThisRef;
-import soot.jimple.internal.*;
+import soot.jimple.internal.JArrayRef;
+import soot.jimple.internal.JAssignStmt;
+import soot.jimple.internal.JIdentityStmt;
+import soot.jimple.internal.JInterfaceInvokeExpr;
+import soot.jimple.internal.JInvokeStmt;
+import soot.jimple.internal.JNewArrayExpr;
+import soot.jimple.internal.JNewExpr;
+import soot.jimple.internal.JReturnStmt;
+import soot.jimple.internal.JStaticInvokeExpr;
+import soot.jimple.internal.JVirtualInvokeExpr;
+import soot.jimple.internal.JimpleLocal;
 
 import java.util.Arrays;
 import java.util.List;

@@ -2,13 +2,24 @@ package qilin.pta.toolkits.zipper.flowgraph;
 
 import qilin.core.PTA;
 import qilin.core.builder.MethodNodeFactory;
-import qilin.core.pag.*;
+import qilin.core.pag.ContextField;
+import qilin.core.pag.ContextVarNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.Node;
+import qilin.core.pag.ValNode;
+import qilin.core.pag.VarNode;
 import qilin.pta.toolkits.zipper.Global;
 import soot.SootMethod;
 import soot.Value;
-import soot.jimple.*;
+import soot.jimple.InstanceInvokeExpr;
+import soot.jimple.InvokeExpr;
+import soot.jimple.Stmt;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ObjectFlowGraph implements IObjectFlowGraph {
     private final PTA pta;

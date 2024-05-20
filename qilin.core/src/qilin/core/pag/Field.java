@@ -21,22 +21,25 @@ package qilin.core.pag;
 import soot.SootField;
 import soot.Type;
 import soot.jimple.spark.pag.SparkField;
+import soot.util.Numberable;
 
 import java.util.Objects;
 
 /**
  * a wrapper of normal field.
  */
-public class Field implements SparkField {
+public class Field implements SparkField, Numberable {
     private final SootField field;
+    private final int number;
 
-    public Field(SootField sf) {
+    public Field(SootField sf, int num) {
         this.field = sf;
+        this.number = num;
     }
 
     @Override
     public int getNumber() {
-        return field.getNumber();
+        return number;
     }
 
     @Override

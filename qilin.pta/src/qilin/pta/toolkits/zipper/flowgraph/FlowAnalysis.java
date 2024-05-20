@@ -1,20 +1,37 @@
 package qilin.pta.toolkits.zipper.flowgraph;
 
 import qilin.core.PTA;
-import qilin.core.pag.*;
+import qilin.core.pag.AllocNode;
+import qilin.core.pag.ContextField;
+import qilin.core.pag.ContextVarNode;
+import qilin.core.pag.LocalVarNode;
+import qilin.core.pag.Node;
+import qilin.core.pag.VarNode;
 import qilin.pta.toolkits.common.ToolUtil;
 import qilin.pta.toolkits.zipper.Global;
 import qilin.pta.toolkits.zipper.analysis.PotentialContextElement;
 import qilin.util.ANSIColor;
 import qilin.util.graph.ConcurrentDirectedGraphImpl;
 import qilin.util.graph.Reachability;
-import soot.*;
+import soot.RefLikeType;
+import soot.SootMethod;
+import soot.Type;
+import soot.Value;
 import soot.jimple.AssignStmt;
 import soot.jimple.InstanceInvokeExpr;
 import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static qilin.util.ANSIColor.color;

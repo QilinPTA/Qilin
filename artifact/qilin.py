@@ -1,7 +1,10 @@
 #!/usr/bin/python3
 
-import os, sys, subprocess
 import fnmatch
+import os
+import subprocess
+import sys
+
 from util.opt import *
 
 # HOME
@@ -9,6 +12,7 @@ PA_HOME = os.path.dirname(os.path.realpath(__file__))
 # heapsize
 XMX = '-Xmx512g'
 timeout = -1
+
 
 def qilinJarFile():
     qilinJars = []
@@ -28,7 +32,8 @@ def qilinJarFile():
     else:
         sys.exit('could not find Qilin executable file.')
 
-CLASSPATH = os.pathsep.join([os.path.join(PA_HOME, qilinJarFile()),])
+
+CLASSPATH = os.pathsep.join([os.path.join(PA_HOME, qilinJarFile()), ])
 
 runJava_cmd = 'java -Xms1g %s -cp ' + CLASSPATH + ' driver.Main %s'
 OPTIONMESSAGE = 'The valid OPTIONs are:\n' \

@@ -22,7 +22,21 @@ import qilin.util.PTAUtils;
 import soot.Body;
 import soot.SootMethod;
 import soot.Unit;
-import soot.jimple.*;
+import soot.jimple.AssignStmt;
+import soot.jimple.BreakpointStmt;
+import soot.jimple.EnterMonitorStmt;
+import soot.jimple.ExitMonitorStmt;
+import soot.jimple.GotoStmt;
+import soot.jimple.IdentityStmt;
+import soot.jimple.IfStmt;
+import soot.jimple.InvokeStmt;
+import soot.jimple.LookupSwitchStmt;
+import soot.jimple.NopStmt;
+import soot.jimple.RetStmt;
+import soot.jimple.ReturnStmt;
+import soot.jimple.ReturnVoidStmt;
+import soot.jimple.TableSwitchStmt;
+import soot.jimple.ThrowStmt;
 
 /*
  * features and formulas used in "Data-driven context-sensitivity for Points-to Analysis (OOPSLA 2017)"

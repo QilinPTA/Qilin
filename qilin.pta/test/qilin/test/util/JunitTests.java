@@ -38,6 +38,7 @@ import static org.junit.Assert.assertTrue;
 public abstract class JunitTests {
     protected static String appPath, jrePath, refLogPath;
     protected static boolean isSetUp = false;
+
     @BeforeClass
     public static void setUp() throws IOException {
         if (isSetUp) {

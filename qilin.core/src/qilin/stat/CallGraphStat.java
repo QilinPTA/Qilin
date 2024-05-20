@@ -160,7 +160,7 @@ public class CallGraphStat implements AbstractStat {
 
     @Override
     public void export(Exporter exporter) {
-        exporter.collectMetric("#Method (Static):", String.valueOf(PTAScene.v().getMethodNumberer().size() - 1));// -fakeMain
+        exporter.collectMetric("#Method (Static):", String.valueOf(PTAScene.v().getAllMethods().size() - 1));// -fakeMain
         exporter.collectMetric("#Reachable Method (CI):", String.valueOf(reachableMethods.size() - 1));// -fakeMain
         exporter.collectMetric("\t#Reachable-Static Method (CI):", String.valueOf(reachableStatic - 1));// -fakeMain
         exporter.collectMetric("#Reachable Method (CS):", String.valueOf(reachableParameterizedMethods.size() - 1));// -fakeMain
