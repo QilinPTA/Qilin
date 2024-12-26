@@ -11,11 +11,11 @@ plugins {
 
 group 'qilin'
 // version format: major.minor.patch
-version '0.9.5-SNAPSHOT'
+version '0.9.6-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -28,7 +28,7 @@ dependencies {
     implementation(project(':qilin.pta'))
     implementation(project(':qilin.core'))
     implementation(project(':qilin.util'))
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.13'
 }
 
 tasks.register('fatJar', Jar) {
@@ -69,8 +69,8 @@ subprojects {
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(16)
-            vendor = JvmVendorSpec.ADOPTIUM
+            languageVersion = JavaLanguageVersion.of(17)
+            // vendor = JvmVendorSpec.ADOPTIUM
         }
     }
     publishing.publications {
