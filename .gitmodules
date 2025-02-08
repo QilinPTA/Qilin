@@ -1,3 +1,6 @@
 [submodule "artifact/benchmarks"]
 	path = artifact/benchmarks
 	url = https://github.com/QiLinPTA/benchmarks.git
+[submodule "qilin.microben"]
+	path = qilin.microben
+	url = https://github.com/QilinPTA/microben.git

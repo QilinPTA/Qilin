@@ -11,11 +11,11 @@ plugins {
 
 group 'qilin'
 // version format: major.minor.patch
-version '0.9.6-SNAPSHOT'
+version '0.9.7-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -24,7 +24,6 @@ repositories {
 }
 
 dependencies {
-    implementation(project(':qilin.microben'))
     implementation(project(':qilin.pta'))
     implementation(project(':qilin.core'))
     implementation(project(':qilin.util'))
@@ -43,7 +42,7 @@ tasks.register('fatJar', Jar) {
     with jar
     doLast {
         copy {
-            from "$buildDir/libs/${archiveBaseName.get()}-${getArchiveVersion().get()}.jar"
+            from "${layout.buildDirectory.get()}/libs/${archiveBaseName.get()}-${getArchiveVersion().get()}.jar"
             into "$rootDir/artifact/"
         }
     }
@@ -69,7 +68,7 @@ subprojects {
 
     java {
         toolchain {
-            languageVersion = JavaLanguageVersion.of(17)
+            languageVersion = JavaLanguageVersion.of(21)
             // vendor = JvmVendorSpec.ADOPTIUM
         }
     }
