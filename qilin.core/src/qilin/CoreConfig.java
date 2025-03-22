@@ -157,6 +157,12 @@ public class CoreConfig {
          * if true, dump stats into files.
          */
         public boolean dumpStats = false;
+
+
+        /**
+         * if true, dump stats into files without Csv files.
+         */
+        public boolean dumpSimpleStats = false;
     }
 
     protected CorePTAConfiguration ptaConfig;
