@@ -74,6 +74,7 @@ public class PTAOption extends Options {
         addOption("cg", "dumpcallgraph", "Output .dot callgraph file (default value: false)");
         addOption("jimple", "dumpjimple", "Dump appclasses to jimple. (default value: false)");
         addOption("stats", "dumpstats", "Dump statistics into files. (default value: false)");
+        addOption("simplestats", "dumpsimplestats", "Dump statistics into files without csv files. (default value: false)");
         addOption("ptsall", "dumpallpts",
                 "Dump points-to of lib vars results to output/pts.txt (default value: false)");
         addOption("pag", "dumppag", "Print PAG to terminal. (default value: false)");
@@ -210,6 +211,9 @@ public class PTAOption extends Options {
         }
         if (cmd.hasOption("dumpstats")) {
             PTAConfig.v().getOutConfig().dumpStats = true;
+        }
+        if (cmd.hasOption("dumpsimplestats")) {
+            PTAConfig.v().getOutConfig().dumpSimpleStats = true;
         }
     }
 

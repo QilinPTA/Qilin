@@ -24,7 +24,9 @@ import qilin.core.builder.CallGraphBuilder;
 import qilin.core.pag.PAG;
 import qilin.core.solver.Propagator;
 import qilin.core.solver.Solver;
+import qilin.pta.PTAConfig;
 import qilin.stat.IEvaluator;
+import qilin.stat.PTAEvaluator;
 import qilin.stat.SimplifiedEvaluator;
 import qilin.util.PTAUtils;
 
@@ -32,8 +34,10 @@ public abstract class BasePTA extends CorePTA {
     protected IEvaluator evaluator;
 
     public BasePTA() {
-//        this.evaluator = new PTAEvaluator(this);
         this.evaluator = new SimplifiedEvaluator(this);
+        if (PTAConfig.v().getOutConfig().dumpStats) {
+            this.evaluator = new PTAEvaluator(this);
+        }
     }
 
     public IEvaluator evaluator() {

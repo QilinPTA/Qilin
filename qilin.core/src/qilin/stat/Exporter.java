@@ -290,7 +290,7 @@ public class Exporter {
 
     public String report() {
         String tmp = report.toString();
-        if (CoreConfig.v().getOutConfig().dumpStats) {
+        if (CoreConfig.v().getOutConfig().dumpStats || CoreConfig.v().getOutConfig().dumpSimpleStats) {
             String statistics = "Statistics.txt";
             String finalPath = getFilePath(statistics);
             Util.writeToFile(finalPath, tmp);
