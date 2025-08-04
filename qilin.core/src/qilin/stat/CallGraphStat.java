@@ -74,9 +74,6 @@ public class CallGraphStat implements AbstractStat {
             boolean toApp = m.getDeclaringClass().isApplicationClass();
             reachableParameterizedMethods.add(momc);
             reachableMethods.add(m);
-//            if (m.toString().equals("<sun.security.provider.PolicyParser: void read(java.io.Reader)>")) {
-//                System.out.println(PTAUtils.getMethodBody(m));
-//            }
 
             if (toApp) {
                 reachableAppParameterizedMethods.add(momc);
@@ -122,9 +119,6 @@ public class CallGraphStat implements AbstractStat {
             for (Iterator<Edge> iterator = ciCallGraph.edgesInto(sm); iterator.hasNext(); ) {
                 Edge e = iterator.next();
                 final SootMethod srcm = e.getSrc().method();
-//                if (sm.toString().equals("<java.lang.ClassNotFoundException: java.lang.Throwable getCause()>")) {
-//                    System.out.println("from:" + srcm);
-//                }
                 boolean fromApp = srcm.getDeclaringClass().isApplicationClass();
                 if (fromApp && toApp) {
                     CIApp2app++;

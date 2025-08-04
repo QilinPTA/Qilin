@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import qilin.core.PTA;
 import qilin.core.PTAScene;
+import qilin.core.builder.FakeMainFactory;
 import qilin.pta.PTAConfig;
 import qilin.util.MemoryWatcher;
 import qilin.util.PTAUtils;
@@ -233,7 +234,7 @@ public class Main {
             PackManager.v().getPack("cg").apply();
         }
         cg = PTAScene.v().getCallGraph();
-        System.out.println("#CALLGRAPH:" + cg.size());
+        System.out.println("#CALLGRAPH:" + (cg.size() - FakeMainFactory.implicitCallEdges));
         return cg;
     }
 
