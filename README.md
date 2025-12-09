@@ -5,7 +5,7 @@
 > :warning: [Documentation for Qilin](https://qilinpta.github.io/) is under development.
 
 # News
-
+* <b>[Moon](https://dl.acm.org/doi/10.1145/3763111) , another context debloating technique published in OOPSLA 2025, is now available in Qilin </b>
 * <b>[DebloaterX](https://github.com/DongjieHe/DebloaterX) published in
   our [OOPSLA paper](https://dongjiehe.github.io/mypaper/OOPSLA2023_DebloaterX_Preprint.pdf) is now available in
   Qilin</b>
