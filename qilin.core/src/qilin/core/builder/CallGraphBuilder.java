@@ -31,6 +31,7 @@ import qilin.core.pag.VarNode;
 import qilin.core.pag.VirtualCallSite;
 import qilin.core.sets.P2SetVisitor;
 import qilin.core.sets.PointsToSetInternal;
+import qilin.util.CallDetails;
 import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
 import soot.Context;
@@ -172,6 +173,9 @@ public class CallGraphBuilder {
         Node thisRef = pag.getMethodPAG(callee).nodeFactory().caseThis();
         thisRef = pta.parameterize(thisRef, cstarget.context());
         pag.addEdge(receiverNode, thisRef);
+
+        // Call detail recording for MOON
+        CallDetails.v().addCalleeToCtxAndCaller(callee, receiverNode, caller.method());
     }
 
     public void injectCallEdge(Object heapOrType, MethodOrMethodContext callee, Kind kind) {
@@ -188,6 +192,8 @@ public class CallGraphBuilder {
         Context typeContext = pta.createCalleeCtx(caller, null, new CallSite(callStmt), calleem);
         MethodOrMethodContext callee = pta.parameterize(calleem, typeContext);
         handleCallEdge(new Edge(caller, callStmt, callee, kind));
+        // Call detail recording for MOON
+        CallDetails.v().addCalleeToCtxAndCaller(calleem, CallDetails.STATIC_OBJ_CTX, caller.method());
     }
 
     protected void handleCallEdge(Edge edge) {
@@ -244,6 +250,9 @@ public class CallGraphBuilder {
             Node parm = tgtnf.caseParm(i);
             parm = pta.parameterize(parm, tgtContext);
             pag.addEdge(argNode, parm);
+
+            // Call detail recording for MOON
+            CallDetails.v().addArgToParamToRecvValue(argNode, parm, e.srcStmt());
         }
         // add normal return edge
         if (s instanceof AssignStmt) {
