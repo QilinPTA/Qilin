@@ -32,7 +32,9 @@ import qilin.pta.toolkits.common.OAG;
 import qilin.pta.toolkits.conch.Conch;
 import qilin.pta.toolkits.debloaterx.CollectionHeuristic;
 import qilin.pta.toolkits.debloaterx.DebloaterX;
+import qilin.pta.toolkits.moon.Moon;
 import qilin.stat.IEvaluator;
+import qilin.util.CallDetails;
 import qilin.util.Stopwatch;
 import soot.Context;
 import soot.Local;
@@ -48,7 +50,7 @@ import java.util.Set;
  * */
 public class DebloatedPTA extends StagedPTA {
     public enum DebloatApproach {
-        CONCH, DEBLOATERX, COLLECTION
+        CONCH, DEBLOATERX, COLLECTION, MOON
     }
 
     protected BasePTA basePTA;
@@ -80,7 +82,13 @@ public class DebloatedPTA extends StagedPTA {
     @Override
     protected void preAnalysis() {
         Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
+        if(debloatApproach == DebloatApproach.MOON){
+            CallDetails.v().enable();
+        }
         prePTA.pureRun();
+        if(debloatApproach == DebloatApproach.MOON){
+            CallDetails.v().disable();
+        }
         sparkTimer.stop();
         System.out.println(sparkTimer);
         if (debloatApproach == DebloatApproach.CONCH) {
@@ -109,7 +117,33 @@ public class DebloatedPTA extends StagedPTA {
             doag1.build();
             System.out.println("OAG #node:" + oag.nodeSize() + "; #edge:" + oag.edgeSize());
             System.out.println("DebloaterX OAG #node:" + doag1.nodeSize() + "; #edge:" + doag1.edgeSize());
-        } else {
+        } else if(debloatApproach.toString().startsWith("MOON")){
+            Stopwatch moonTimer = Stopwatch.newAndStart("MOON");
+            var ptaName = PTAConfig.v().getPtaConfig().ptaName;
+
+            int k;
+            try{
+                k = Integer.parseInt(ptaName.substring(0,1));
+            } catch (java.lang.Exception e) {
+                throw new RuntimeException("Context Depth extraction failed for: " + PTAConfig.v().getPtaConfig().ptaName);
+            }
+
+            Moon moon = new Moon(prePTA, k - 1);
+            var prObjs = moon.analyze();
+
+            moonTimer.stop();
+            System.out.println(moonTimer);
+            for (AllocNode obj : prObjs) {
+                this.ctxDepHeaps.add(obj.getNewExpr());
+            }
+
+            OAG oag = new OAG(prePTA);
+            oag.build();
+            OAG moonOAG = new DebloatedOAG(prePTA, prObjs);
+            moonOAG.build();
+            System.out.println("OAG #node:" + oag.nodeSize() + "; #edge:" + oag.edgeSize());
+            System.out.println("MOON OAG #node:" + moonOAG.nodeSize() + "; #edge:" + moonOAG.edgeSize());
+        }else {
             assert (debloatApproach == DebloatApproach.COLLECTION);
             Stopwatch collectionHeuristic = Stopwatch.newAndStart("COLLECTION");
             CollectionHeuristic ch = new CollectionHeuristic(prePTA);
