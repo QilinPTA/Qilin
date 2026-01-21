@@ -1,37 +1,20 @@
 package qilin.pta.toolkits.zipper.flowgraph;
 
 import qilin.core.PTA;
-import qilin.core.pag.AllocNode;
-import qilin.core.pag.ContextField;
-import qilin.core.pag.ContextVarNode;
-import qilin.core.pag.LocalVarNode;
-import qilin.core.pag.Node;
-import qilin.core.pag.VarNode;
+import qilin.core.pag.*;
 import qilin.pta.toolkits.common.ToolUtil;
 import qilin.pta.toolkits.zipper.Global;
 import qilin.pta.toolkits.zipper.analysis.PotentialContextElement;
 import qilin.util.ANSIColor;
 import qilin.util.graph.ConcurrentDirectedGraphImpl;
 import qilin.util.graph.Reachability;
-import soot.RefLikeType;
-import soot.SootMethod;
-import soot.Type;
-import soot.Value;
+import soot.*;
 import soot.jimple.AssignStmt;
 import soot.jimple.InstanceInvokeExpr;
 import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static qilin.util.ANSIColor.color;
@@ -48,13 +31,14 @@ public class FlowAnalysis {
     private Map<Node, Set<Edge>> wuEdges;
     private ConcurrentDirectedGraphImpl<Node> pollutionFlowGraph;
     private Reachability<Node> reachability;
-
+    private final ZOAG oag;
     public FlowAnalysis(PTA pta,
                         PotentialContextElement pce,
-                        ObjectFlowGraph ofg) {
+                        ObjectFlowGraph ofg, ZOAG oag) {
         this.pta = pta;
         this.pce = pce;
         this.objectFlowGraph = ofg;
+        this.oag = oag;
     }
 
     public void initialize(Type type, Set<SootMethod> inms, Set<SootMethod> outms) {
@@ -212,7 +196,7 @@ public class FlowAnalysis {
                                         .forEach(e -> addWUEdge(next, e));
                             }
                             nextEdges.add(edge);
-                        } else if (pce.allocateesOf(currentType).contains(base)) {
+                        } else if (oag.getAllocateesOf(currentType).contains(base)) {
                             // Optimization, similar as above.
                             if (Global.isEnableWrappedFlow()) {
                                 Set<VarNode> r = new HashSet<>();

@@ -90,7 +90,7 @@ public class PTAPattern {
             }
             break;
             case CALLSITE: {
-                if (approach != Approach.NONE && approach != Approach.ZIPPER && approach != Approach.MAHJONG
+                if (approach != Approach.NONE && approach != Approach.ZIPPER && approach != Approach.ZIPPERE && approach != Approach.MAHJONG
                         && approach != Approach.DATADRIVEN && approach != Approach.TUNNELING
                         && approach != Approach.SELECTX
                 ) {
@@ -99,7 +99,7 @@ public class PTAPattern {
             }
             break;
             case OBJECT: {
-                if (approach != Approach.EAGLE && approach != Approach.ZIPPER && approach != Approach.TURNER &&
+                if (approach != Approach.EAGLE && approach != Approach.ZIPPER && approach != Approach.ZIPPERE && approach != Approach.TURNER &&
                         approach != Approach.DATADRIVEN && approach != Approach.TUNNELING
                         && approach != Approach.MERCURIAL && approach != Approach.MAHJONG && approach != Approach.BEAN
                         && approach != Approach.NONE) {
@@ -170,6 +170,7 @@ public class PTAPattern {
         //
         BEAN,
         ZIPPER,
+        ZIPPERE,
         EAGLE,
         TURNER,
         DATADRIVEN,
@@ -183,6 +184,7 @@ public class PTAPattern {
         static {
             Util.add(approaches, BEAN, "bean", "B");
             Util.add(approaches, ZIPPER, "zipper", "Z");
+            Util.add(approaches, ZIPPERE, "zippere", "Ze");
             Util.add(approaches, EAGLE, "eagle", "E");
             Util.add(approaches, TURNER, "turner", "T");
             Util.add(approaches, MERCURIAL, "mercurial", "hg");
@@ -208,6 +210,7 @@ public class PTAPattern {
                 case TUNNELING -> "tunneling";
                 case BEAN -> "bean";
                 case ZIPPER -> "zipper";
+                case ZIPPERE -> "zippere";
                 case EAGLE -> "eagle";
                 case TURNER -> "turner";
                 case MERCURIAL -> "mercurial";

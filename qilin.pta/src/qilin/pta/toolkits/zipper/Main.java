@@ -28,10 +28,10 @@ import java.util.Set;
 
 public class Main {
 
-    public static void run(PTA pta, Set<SootMethod> zipperPCMOutput) {
+    public static void run(PTA pta, Set<SootMethod> zipperPCMOutput, boolean isExpress) {
         int numThreads = Runtime.getRuntime().availableProcessors();
         Global.setThread(numThreads);
-        Global.setExpress(false);
+        Global.setExpress(isExpress);
         String zipperStr = Global.isExpress() ? "Zipper-e" : "Zipper";
         System.out.println(ANSIColor.BOLD + ANSIColor.YELLOW + zipperStr + " starts ..." + ANSIColor.RESET);
         String flows = Global.getFlow() != null ? Global.getFlow() : "Direct+Wrapped+Unwrapped";
