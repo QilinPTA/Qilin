@@ -86,6 +86,7 @@ public class CallDetails {
 
 
     public void addInvokeExpr(LocalVarNode receiver, InstanceInvokeExpr invokeExpr){
+        if(!enabled) return;
         recvToInvokeExprs.put(receiver, invokeExpr);
     }
 
@@ -129,7 +130,13 @@ public class CallDetails {
     }
 
     public Set<Value> getRecvValueOfArgAndParam(LocalVarNode arg, LocalVarNode param){
+        checkInitialized();
         return argToParamToRecvValue.get(arg, param);
+    }
+
+    public Set<SootMethod> getCalleesOf(SootMethod caller) {
+        checkInitialized();
+        return callerToCallee.get(caller);
     }
 
 }

@@ -82,7 +82,16 @@ public class PTAFactory {
                     }
                     case ZIPPER -> {
                         CtxConstructor ctxCons = new ObjCtxConstructor();
-                        BasePTA zipperPTA = new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
+                        BasePTA zipperPTA = new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons, false);
+                        if (PTAConfig.v().getPtaConfig().ctxDebloating) {
+                            return new DebloatedPTA(zipperPTA, PTAConfig.v().getPtaConfig().debloatApproach);
+                        } else {
+                            return zipperPTA;
+                        }
+                    }
+                    case ZIPPERE -> {
+                        CtxConstructor ctxCons = new ObjCtxConstructor();
+                        BasePTA zipperPTA = new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons, true);
                         if (PTAConfig.v().getPtaConfig().ctxDebloating) {
                             return new DebloatedPTA(zipperPTA, PTAConfig.v().getPtaConfig().debloatApproach);
                         } else {
@@ -138,7 +147,11 @@ public class PTAFactory {
                 switch (ptaPattern.getApproach()) {
                     case ZIPPER -> {
                         CtxConstructor ctxCons = new CallsiteCtxConstructor();
-                        return new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons);
+                        return new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons, false);
+                    }
+                    case ZIPPERE -> {
+                        CtxConstructor ctxCons = new CallsiteCtxConstructor();
+                        return new ZipperPTA(ptaPattern.getContextDepth(), ptaPattern.getHeapContextDepth(), ctxCons, true);
                     }
                     case MAHJONG -> {
                         CtxConstructor ctxCons = new CallsiteCtxConstructor();

@@ -18,8 +18,8 @@ from util.benchmark import MAINCLASSES
 from util.benchmark import JREVERSION
 
 # ANALYSES = ['1o', 'Z-2o', 'E-2o', 'T-2o', '2o', 'Z-3o', 'T-3o', 'E-3o', '3o', '1c', '2c', 'M-2o', '2h', '2t', 'Z-2c', 'M-2c']
-ANALYSES = ['insens', '1o', 'Z-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c',
-            '3o', 'T-3o', 'E-3o', 'Z-3o']
+ANALYSES = ['insens', '1o', 'Z-2o', 'Ze-2o', 'E-2o', 'T-2o', '2o', '2t', '1c', 'M-2o', '2h', 'B-2o', '1c', 's-1c', 's-2c', '2c',
+            '3o', 'T-3o', 'E-3o', 'Z-3o', 'Ze-3o']
 
 # for ZIPPEROPTIONS
 OoM = {

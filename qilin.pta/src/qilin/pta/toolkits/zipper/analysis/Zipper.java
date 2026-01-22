@@ -1,17 +1,13 @@
 package qilin.pta.toolkits.zipper.analysis;
 
 import qilin.core.PTA;
-import qilin.core.pag.AllocNode;
-import qilin.core.pag.ContextField;
-import qilin.core.pag.LocalVarNode;
-import qilin.core.pag.Node;
-import qilin.core.pag.ValNode;
-import qilin.core.pag.VarNode;
+import qilin.core.pag.*;
 import qilin.pta.toolkits.common.OAG;
 import qilin.pta.toolkits.common.ToolUtil;
 import qilin.pta.toolkits.zipper.Global;
 import qilin.pta.toolkits.zipper.flowgraph.FlowAnalysis;
 import qilin.pta.toolkits.zipper.flowgraph.ObjectFlowGraph;
+import qilin.pta.toolkits.zipper.flowgraph.ZOAG;
 import qilin.util.ANSIColor;
 import qilin.util.Stopwatch;
 import qilin.util.graph.ConcurrentDirectedGraphImpl;
@@ -19,15 +15,7 @@ import soot.RefType;
 import soot.SootMethod;
 import soot.Type;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -51,10 +39,10 @@ public class Zipper {
     private final ConcurrentDirectedGraphImpl<Node> overallPFG = new ConcurrentDirectedGraphImpl<>();
     private final Map<SootMethod, Integer> methodPts;
     private final Map<Type, Collection<SootMethod>> pcmMap = new ConcurrentHashMap<>(1024);
-
+    private final ZOAG oag;
     public Zipper(PTA pta) {
         this.pta = pta;
-        OAG oag = new OAG(pta);
+        this.oag = new ZOAG(pta);
         oag.build();
         System.out.println("#OAG:" + oag.allNodes().size());
         this.pce = new PotentialContextElement(pta, oag);
@@ -140,7 +128,7 @@ public class Zipper {
     }
 
     private void computePCM(List<RefType> types) {
-        FlowAnalysis fa = new FlowAnalysis(pta, pce, ofg);
+        FlowAnalysis fa = new FlowAnalysis(pta, pce, ofg, oag);
         types.forEach(type -> analyze(type, fa));
     }
 
@@ -148,7 +136,7 @@ public class Zipper {
         ExecutorService executorService = Executors.newFixedThreadPool(nThread);
         types.forEach(type ->
                 executorService.execute(() -> {
-                    FlowAnalysis fa = new FlowAnalysis(pta, pce, ofg);
+                    FlowAnalysis fa = new FlowAnalysis(pta, pce, ofg, oag);
                     analyze(type, fa);
                 }));
         executorService.shutdown();
@@ -176,9 +164,6 @@ public class Zipper {
                 .map(pce::methodsInvokedOn)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
-        if (type.toString().equals("java.util.HashMap")) {
-            System.out.println("ssssss");
-        }
         // Obtain IN methods
         Set<SootMethod> inms = ms.stream()
                 .filter(m -> !m.isPrivate())

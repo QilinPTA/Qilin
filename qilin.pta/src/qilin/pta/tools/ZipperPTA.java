@@ -33,6 +33,7 @@ import qilin.parm.select.PartialMethodLvSelector;
 import qilin.parm.select.PipelineSelector;
 import qilin.pta.PTAConfig;
 import qilin.pta.toolkits.zipper.Main;
+import qilin.util.CallDetails;
 import qilin.util.Stopwatch;
 import soot.Local;
 import soot.MethodOrMethodContext;
@@ -56,12 +57,13 @@ import java.util.Set;
  * */
 public class ZipperPTA extends StagedPTA {
     private final Set<SootMethod> PCMs = new HashSet<>();
-
+    private final boolean isExpress;
     /*
      * Zipper support object-sensitivity, callsite-sensitivity by using corresponding
      * context-constructor.
      * */
-    public ZipperPTA(int k, int hk, CtxConstructor ctxCons) {
+    public ZipperPTA(int k, int hk, CtxConstructor ctxCons, boolean isExpress) {
+        this.isExpress = isExpress;
         this.ctxCons = ctxCons;
         CtxSelector us = new PartialMethodLvSelector(k, hk, PCMs);
         if (PTAConfig.v().getPtaConfig().enforceEmptyCtxForIgnoreTypes) {
@@ -79,12 +81,14 @@ public class ZipperPTA extends StagedPTA {
 
     @Override
     protected void preAnalysis() {
+        CallDetails.v().enable();
         Stopwatch sparkTimer = Stopwatch.newAndStart("Spark");
         prePTA.pureRun();
+        CallDetails.v().disable();
         sparkTimer.stop();
         System.out.println(sparkTimer);
         Stopwatch zipperTimer = Stopwatch.newAndStart("Zipper");
-        Main.run(prePTA, PCMs);
+        Main.run(prePTA, PCMs, this.isExpress);
         zipperTimer.stop();
         System.out.println(zipperTimer);
         extraStats();
