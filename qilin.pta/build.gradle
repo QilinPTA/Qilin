@@ -11,6 +11,7 @@ sourceSets.test {
 }
 
 repositories {
+    google()
     maven { url "https://repo.maven.apache.org/maven2/" }
     maven { url "https://repo1.maven.org/maven2/" }
 }
@@ -21,7 +22,7 @@ test {
 }
 
 dependencies {
-    implementation("org.soot-oss:soot:4.6.0")
+    implementation("org.soot-oss:soot:${rootProject.ext.sootVersion}")
     implementation(project(':qilin.core'))
     // https://mvnrepository.com/artifact/commons-cli/commons-cli
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.7.0'
