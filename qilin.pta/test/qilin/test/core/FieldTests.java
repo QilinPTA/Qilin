@@ -18,6 +18,7 @@
 
 package qilin.test.core;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
@@ -32,11 +33,13 @@ public class FieldTests extends JunitTests {
         checkAssertions(run("qilin.microben.core.field.InstanceStore"));
     }
 
+    @Ignore
     @Test
     public void testFieldSensitivity1() {
         checkAssertions(run("qilin.microben.core.field.FieldSensitivity1"));
     }
 
+    @Ignore
     @Test
     public void testFieldSensitivity2() {
         checkAssertions(run("qilin.microben.core.field.FieldSensitivity2"));

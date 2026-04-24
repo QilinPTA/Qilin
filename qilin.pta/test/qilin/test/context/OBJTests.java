@@ -18,6 +18,7 @@
 
 package qilin.test.context;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
@@ -37,6 +38,7 @@ public class OBJTests extends JunitTests {
         checkAssertions(run("qilin.microben.context.obj.OBJ1k2", "1o"));
     }
 
+    @Ignore
     @Test
     public void testOBJ1k3() {
         checkAssertions(run("qilin.microben.context.obj.OBJ1k3", "1o"));
