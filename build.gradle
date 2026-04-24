@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        google()
         mavenCentral()
     }
 }
@@ -11,7 +12,7 @@ plugins {
 
 group 'qilin'
 // version format: major.minor.patch
-version '0.9.7-SNAPSHOT'
+version '0.9.8-SNAPSHOT'
 
 java {
     toolchain {
@@ -20,6 +21,7 @@ java {
 }
 
 repositories {
+    google()
     mavenCentral()
 }
 
@@ -28,6 +30,10 @@ dependencies {
     implementation(project(':qilin.core'))
     implementation(project(':qilin.util'))
     testImplementation group: 'junit', name: 'junit', version: '4.13'
+}
+
+ext {
+    sootVersion = '4.7.1'
 }
 
 tasks.register('fatJar', Jar) {

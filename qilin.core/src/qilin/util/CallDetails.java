@@ -1,6 +1,5 @@
 package qilin.util;
 
-import org.checkerframework.checker.nullness.qual.Nullable;
 import qilin.core.pag.*;
 import qilin.util.collect.twokeymap.TwoKeyHashMap;
 import qilin.util.collect.twokeymap.TwoKeyMap;
@@ -108,7 +107,7 @@ public class CallDetails {
 
     }
 
-    private @Nullable Value getValue(Stmt callStmt) {
+    private Value getValue(Stmt callStmt) {
         InvokeExpr invokeExpr;
         if(callStmt instanceof JInvokeStmt invokeStmt){
             invokeExpr = invokeStmt.getInvokeExpr();
