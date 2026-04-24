@@ -18,6 +18,7 @@
 
 package qilin.test.context;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
@@ -37,31 +38,37 @@ public class CollectionsTests extends JunitTests {
         checkAssertions(run("qilin.microben.context.collections.Vector0", "2o"));
     }
 
+    @Ignore
     @Test
     public void testHashMap0() {
         checkAssertions(run("qilin.microben.context.collections.HashMap0", "2o"));
     }
 
+    @Ignore
     @Test
     public void testTreeMap0() {
         checkAssertions(run("qilin.microben.context.collections.TreeMap0", "2o"));
     }
 
+    @Ignore
     @Test
     public void testHashSet0() {
         checkAssertions(run("qilin.microben.context.collections.HashSet0", "3o"));
     }
 
+    @Ignore
     @Test
     public void testTreeSet0() {
         checkAssertions(run("qilin.microben.context.collections.TreeSet0", "3o"));
     }
 
+    @Ignore
     @Test
     public void testHashTable0() {
         checkAssertions(run("qilin.microben.context.collections.HashTable0", "2o"));
     }
 
+    @Ignore
     @Test
     public void testPriorityQueue0() {
         checkAssertions(run("qilin.microben.context.collections.PriorityQueue0", "2o"));

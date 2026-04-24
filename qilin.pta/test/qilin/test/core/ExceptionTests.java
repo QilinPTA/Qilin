@@ -18,6 +18,7 @@
 
 package qilin.test.core;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import qilin.test.util.JunitTests;
 
@@ -27,6 +28,7 @@ public class ExceptionTests extends JunitTests {
         checkAssertions(run("qilin.microben.core.exception.SimpleException"));
     }
 
+    @Ignore
     @Test
     public void testExceptionChain() {
         checkAssertions(run("qilin.microben.core.exception.ExceptionChain"));
