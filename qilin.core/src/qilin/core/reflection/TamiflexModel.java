@@ -122,7 +122,7 @@ public class TamiflexModel extends ReflectionModel {
     }
 
     @Override
-    protected Collection<Unit> transformContructorNewInstance(Stmt s) {
+    protected Collection<Unit> transformContructorNewInstance(Body body, Stmt s) {
         // <java.lang.reflect.Constructor: java.lang.Object newInstance(java.lang.Object[])>
         if (!(s instanceof AssignStmt)) {
             return Collections.emptySet();
@@ -135,7 +135,8 @@ public class TamiflexModel extends ReflectionModel {
             InvokeExpr iie = s.getInvokeExpr();
             Value args = iie.getArg(0);
             ArrayRef arrayRef = new JArrayRef(args, IntConstant.v(0));
-            Value arg = new JimpleLocal("intermediate/" + arrayRef, RefType.v("java.lang.Object"));
+            Local arg = new JimpleLocal("intermediate/" + arrayRef, RefType.v("java.lang.Object"));
+            body.getLocals().add(arg);
             ret.add(new JAssignStmt(arg, arrayRef));
             for (String constructorSignature : constructorSignatures) {
                 SootMethod constructor = PTAScene.v().getMethod(constructorSignature);
@@ -154,7 +155,7 @@ public class TamiflexModel extends ReflectionModel {
     }
 
     @Override
-    protected Collection<Unit> transformMethodInvoke(Stmt s) {
+    protected Collection<Unit> transformMethodInvoke(Body body, Stmt s) {
         // <java.lang.reflect.Method: java.lang.Object invoke(java.lang.Object,java.lang.Object[])>
         Collection<Unit> ret = DataFactory.createSet();
         Map<Stmt, Set<String>> methodInvokes = reflectionMap.getOrDefault(ReflectionKind.MethodInvoke, Collections.emptyMap());
@@ -163,10 +164,11 @@ public class TamiflexModel extends ReflectionModel {
             InvokeExpr iie = s.getInvokeExpr();
             Value base = iie.getArg(0);
             Value args = iie.getArg(1);
-            Value arg = null;
+            Local arg = null;
             if (args.getType() instanceof ArrayType) {
                 ArrayRef arrayRef = new JArrayRef(args, IntConstant.v(0));
                 arg = new JimpleLocal("intermediate/" + arrayRef, RefType.v("java.lang.Object"));
+                body.getLocals().add(arg);
                 ret.add(new JAssignStmt(arg, arrayRef));
             }
 
@@ -270,7 +272,7 @@ public class TamiflexModel extends ReflectionModel {
     }
 
     @Override
-    Collection<Unit> transformArrayGet(Stmt s) {
+    Collection<Unit> transformArrayGet(Body body, Stmt s) {
         Collection<Unit> ret = DataFactory.createSet();
         InvokeExpr iie = s.getInvokeExpr();
         Value base = iie.getArg(0);
@@ -281,6 +283,7 @@ public class TamiflexModel extends ReflectionModel {
                 arrayRef = new JArrayRef(base, IntConstant.v(0));
             } else if (base.getType() == RefType.v("java.lang.Object")) {
                 Local local = new JimpleLocal("intermediate/" + base, ArrayType.v(RefType.v("java.lang.Object"), 1));
+                body.getLocals().add(local);
                 ret.add(new JAssignStmt(local, base));
                 arrayRef = new JArrayRef(local, IntConstant.v(0));
             }

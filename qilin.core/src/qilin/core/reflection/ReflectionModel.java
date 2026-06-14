@@ -21,6 +21,7 @@ package qilin.core.reflection;
 import qilin.core.PTAScene;
 import qilin.util.DataFactory;
 import qilin.util.PTAUtils;
+import soot.Body;
 import soot.SootMethod;
 import soot.Unit;
 import soot.UnitPatchingChain;
@@ -51,17 +52,17 @@ public abstract class ReflectionModel {
     protected final String sigReifiedMethodArray = "<java.lang.Class: java.lang.reflect.Method[] getMethods()>";
     protected final String sigReifiedDeclaredMethodArray = "<java.lang.Class: java.lang.reflect.Method[] getDeclaredMethods()>";
 
-    private Collection<Unit> transform(Stmt s) {
+    private Collection<Unit> transform(Body body, Stmt s) {
         InvokeExpr ie = s.getInvokeExpr();
         return switch (ie.getMethodRef().getSignature()) {
             case sigForName, sigForName2 -> transformClassForName(s);
             case sigClassNewInstance -> transformClassNewInstance(s);
-            case sigConstructorNewInstance -> transformContructorNewInstance(s);
-            case sigMethodInvoke -> transformMethodInvoke(s);
+            case sigConstructorNewInstance -> transformContructorNewInstance(body, s);
+            case sigMethodInvoke -> transformMethodInvoke(body, s);
             case sigFieldSet -> transformFieldSet(s);
             case sigFieldGet -> transformFieldGet(s);
             case sigArrayNewInstance -> transformArrayNewInstance(s);
-            case sigArrayGet -> transformArrayGet(s);
+            case sigArrayGet -> transformArrayGet(body, s);
             case sigArraySet -> transformArraySet(s);
             default -> Collections.emptySet();
         };
@@ -75,11 +76,12 @@ public abstract class ReflectionModel {
             return;
         }
         Map<Unit, Collection<Unit>> newUnits = DataFactory.createMap();
-        UnitPatchingChain units = PTAUtils.getMethodBody(m).getUnits();
+        Body body = PTAUtils.getMethodBody(m);
+        UnitPatchingChain units = body.getUnits();
         for (final Unit u : units) {
             final Stmt s = (Stmt) u;
             if (s.containsInvokeExpr()) {
-                newUnits.put(u, transform(s));
+                newUnits.put(u, transform(body, s));
             }
         }
         for (Unit unit : newUnits.keySet()) {
@@ -91,9 +93,9 @@ public abstract class ReflectionModel {
 
     abstract Collection<Unit> transformClassNewInstance(Stmt s);
 
-    abstract Collection<Unit> transformContructorNewInstance(Stmt s);
+    abstract Collection<Unit> transformContructorNewInstance(Body body, Stmt s);
 
-    abstract Collection<Unit> transformMethodInvoke(Stmt s);
+    abstract Collection<Unit> transformMethodInvoke(Body body, Stmt s);
 
     abstract Collection<Unit> transformFieldSet(Stmt s);
 
@@ -101,7 +103,7 @@ public abstract class ReflectionModel {
 
     abstract Collection<Unit> transformArrayNewInstance(Stmt s);
 
-    abstract Collection<Unit> transformArrayGet(Stmt s);
+    abstract Collection<Unit> transformArrayGet(Body body, Stmt s);
 
     abstract Collection<Unit> transformArraySet(Stmt s);
 }

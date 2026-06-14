@@ -12,7 +12,7 @@ plugins {
 
 group 'qilin'
 // version format: major.minor.patch
-version '0.9.8-SNAPSHOT'
+version '0.9.9-SNAPSHOT'
 
 java {
     toolchain {

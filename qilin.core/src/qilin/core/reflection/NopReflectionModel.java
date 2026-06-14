@@ -18,6 +18,7 @@
 
 package qilin.core.reflection;
 
+import soot.Body;
 import soot.Unit;
 import soot.jimple.Stmt;
 
@@ -41,12 +42,12 @@ public class NopReflectionModel extends ReflectionModel {
     }
 
     @Override
-    Collection<Unit> transformContructorNewInstance(Stmt s) {
+    Collection<Unit> transformContructorNewInstance(Body body, Stmt s) {
         return Collections.emptySet();
     }
 
     @Override
-    Collection<Unit> transformMethodInvoke(Stmt s) {
+    Collection<Unit> transformMethodInvoke(Body body, Stmt s) {
         return Collections.emptySet();
     }
 
@@ -66,7 +67,7 @@ public class NopReflectionModel extends ReflectionModel {
     }
 
     @Override
-    Collection<Unit> transformArrayGet(Stmt s) {
+    Collection<Unit> transformArrayGet(Body body, Stmt s) {
         return Collections.emptySet();
     }
 
