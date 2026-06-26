@@ -19,10 +19,9 @@
 package driver;
 
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,18 +40,22 @@ public class PTAOption extends Options {
      * add option "-brief -option" with description
      */
     protected void addOption(String brief, String option, String description) {
-        addOption(new Option(brief, option, false, description));
+        addOption(Option.builder(brief)
+                .longOpt(option)
+                .desc(description)
+                .build());
     }
 
     /**
      * add option "-brief -option <arg>" with description
      */
     protected void addOption(String brief, String option, String arg, String description) {
-        OptionBuilder.withLongOpt(option);
-        OptionBuilder.withArgName(arg);
-        OptionBuilder.hasArg();
-        OptionBuilder.withDescription(description);
-        addOption(OptionBuilder.create(brief));
+        addOption(Option.builder(brief)
+                .longOpt(option)
+                .argName(arg)
+                .hasArg()
+                .desc(description)
+                .build());
     }
 
     public PTAOption() {
@@ -109,7 +112,7 @@ public class PTAOption extends Options {
 
     public void parseCommandLine(String[] args) {
         try {
-            CommandLine cmd = new GnuParser().parse(this, args);
+            CommandLine cmd = new DefaultParser().parse(this, args);
             if (cmd.hasOption("help")) {
                 new HelpFormatter().printHelp("qilin", this);
                 System.exit(0);
